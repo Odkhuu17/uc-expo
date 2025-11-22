@@ -9,16 +9,18 @@ import {
 } from '@expo-google-fonts/roboto';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@shopify/restyle';
-import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { InstantSearch } from 'react-instantsearch';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { ApolloClientProvider } from '@/apollo/apollo.client';
 import { theme } from '@/components/Theme';
-import { useAuthStore } from '@/stores';
+import Navigations from '@/Navigations';
+import { persistor, store } from '@/redux/store.instance';
 import searchClient from '@/utils/searchkit';
 
 // SplashScreen.setOptions({
@@ -33,8 +35,6 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
@@ -52,34 +52,21 @@ export default function RootLayout() {
     <ApolloClientProvider>
       <SafeAreaProvider>
         <GestureHandlerRootView>
-          <ThemeProvider theme={theme}>
-            <BottomSheetModalProvider>
-              <InstantSearch
-                indexName="supp_tracks"
-                searchClient={searchClient}
-              >
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Protected guard={!isAuthenticated}>
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="auth/login" />
-                    <Stack.Screen name="auth/register" />
-                    <Stack.Screen name="auth/forgot" />
-                  </Stack.Protected>
-                  <Stack.Protected guard={isAuthenticated}>
-                    <Stack.Screen name="(drawer)" />
-                  </Stack.Protected>
-                  <Stack.Screen
-                    name="modal"
-                    options={{
-                      animation: 'fade',
-                      presentation: 'containedTransparentModal',
-                    }}
-                  />
-                </Stack>
-              </InstantSearch>
-              <StatusBar style="auto" />
-            </BottomSheetModalProvider>
-          </ThemeProvider>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <ThemeProvider theme={theme}>
+                <BottomSheetModalProvider>
+                  <InstantSearch
+                    indexName="supp_tracks"
+                    searchClient={searchClient}
+                  >
+                    <Navigations />
+                  </InstantSearch>
+                  <StatusBar style="auto" />
+                </BottomSheetModalProvider>
+              </ThemeProvider>
+            </PersistGate>
+          </Provider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </ApolloClientProvider>

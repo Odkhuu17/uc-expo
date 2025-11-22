@@ -2,20 +2,21 @@ import { useRouter } from 'expo-router';
 
 import { Button, Container, Content, LogoHeader } from '@/components';
 import { Box } from '@/components/Theme';
-import { useGeneralStore } from '@/stores/generalStore';
+import { useAppDispatch } from '@/redux/hooks';
+import generalSlice from '@/redux/slices/general';
 import SingleButton from './SingleButton';
 
 const HomeScreen = () => {
   const router = useRouter();
-  const { setMode } = useGeneralStore();
+  const dispatch = useAppDispatch();
 
   const onPressDriver = () => {
-    setMode('driver');
+    dispatch(generalSlice.actions.changeMode('driver'));
     router.navigate('/auth/login');
   };
 
   const onPressShipper = () => {
-    setMode('shipper');
+    dispatch(generalSlice.actions.changeMode('shipper'));
     router.navigate('/auth/login');
   };
 

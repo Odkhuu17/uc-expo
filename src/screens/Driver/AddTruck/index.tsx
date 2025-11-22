@@ -18,7 +18,7 @@ import { Box, useTheme } from '@/components/Theme';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
 import { useGetMarksQuery } from '@/gql/query/getMarks.generated';
 import { useGetModelsQuery } from '@/gql/query/getModels.generated';
-import { useAuthStore } from '@/stores';
+import { useAppSelector } from '@/redux/hooks';
 
 const schema = yup.object().shape({
   markId: yup.string().required('Марк сонгоно уу!'),
@@ -33,7 +33,7 @@ const schema = yup.object().shape({
 });
 
 const AddTruckScreen = () => {
-  const user = useAuthStore(state => state.user);
+  const { user } = useAppSelector(state => state.auth);
   const [createTruck, { loading }] = useCreateTruckMutation();
   const { data: marksData } = useGetMarksQuery();
   const insets = useSafeAreaInsets();

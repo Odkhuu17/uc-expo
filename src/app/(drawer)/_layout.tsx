@@ -1,10 +1,10 @@
 import { Drawer } from 'expo-router/drawer';
 
 import CustomDrawerContent from '@/components/CustomDrawerContent';
-import { useGeneralStore } from '@/stores';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function DrawerLayout() {
-  const mode = useGeneralStore(state => state.mode);
+  const { mode } = useAppSelector(state => state.general);
 
   return (
     <Drawer

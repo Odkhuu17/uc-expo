@@ -13,9 +13,9 @@ import {
 import Input from '@/components/Input';
 import { Box } from '@/components/Theme';
 import { useGetUserLazyQuery } from '@/gql/query/getUserQuery.generated';
+import { useAppDispatch } from '@/redux/hooks';
+import authSlice from '@/redux/slices/auth';
 import { loginService } from '@/services/auth/auth.service';
-import { useGeneralStore } from '@/stores';
-import { useAuthStore } from '@/stores/authStore';
 
 const schema = yup.object().shape({
   username: yup
@@ -31,9 +31,7 @@ const schema = yup.object().shape({
 const LoginScreen = () => {
   const router = useRouter();
   const [getUser] = useGetUserLazyQuery();
-  const mode = useGeneralStore(state => state.mode);
-
-  const { login, setUser } = useAuthStore();
+  const dispatch = useAppDispatch();
 
   const {
     handleSubmit,
@@ -50,8 +48,8 @@ const LoginScreen = () => {
       try {
         await loginService(values);
         const { data } = await getUser();
-        setUser(data?.me);
-        login();
+        dispatch(authSlice.actions.changeUser(data?.me));
+        dispatch(authSlice.actions.login());
       } catch {
         router.navigate({
           pathname: '/modal',

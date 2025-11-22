@@ -1,10 +1,10 @@
 import { UserOctagon } from 'iconsax-react-nativejs';
 
-import { useAuthStore } from '@/stores';
+import { useAppSelector } from '@/redux/hooks';
 import { Box, Text, useTheme } from '../Theme';
 
 const UserInfo = () => {
-  const { user } = useAuthStore();
+  const { user } = useAppSelector(state => state.auth);
   const theme = useTheme();
 
   return (

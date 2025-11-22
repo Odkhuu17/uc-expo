@@ -18,20 +18,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, FitImage } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
-import { useAuthStore, useGeneralStore } from '@/stores';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import authSlice from '@/redux/slices/auth';
 import SingleLinkButton from './SingleLinkButton';
 import UserInfo from './UserInfo';
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const { logout } = useAuthStore();
+  const dispatch = useAppDispatch();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const mode = useGeneralStore(state => state.mode);
+  const { mode } = useAppSelector(state => state.general);
 
   const onLogout = async () => {
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshToken');
-    logout();
+    dispatch(authSlice.actions.logout());
     router.replace('/auth/login');
   };
 

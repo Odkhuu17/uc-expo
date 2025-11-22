@@ -1,16 +1,16 @@
+import { useRouter } from 'expo-router';
 import { Box as BoxIcon, Truck, UserOctagon } from 'iconsax-react-nativejs';
 
 import { BoxContainer, Container, Content, NormalHeader } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
-import { useAuthStore, useGeneralStore } from '@/stores';
-import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/redux/hooks';
 import SingleMenu from './SingleMenu';
 
 const ProfileScreen = () => {
-  const user = useAuthStore(state => state.user);
   const theme = useTheme();
   const router = useRouter();
-  const mode = useGeneralStore(state => state.mode);
+  const { user } = useAppSelector(state => state.auth);
+  const { mode } = useAppSelector(state => state.general);
 
   return (
     <Container>

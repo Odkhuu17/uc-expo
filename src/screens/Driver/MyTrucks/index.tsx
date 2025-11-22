@@ -12,12 +12,12 @@ import {
   GetMyTrucksQuery,
   useGetMyTrucksQuery,
 } from '@/gql/query/getMyTrucks.generated';
-import { useAuthStore } from '@/stores';
+import { useAppSelector } from '@/redux/hooks';
 import { useRouter } from 'expo-router';
 import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {
-  const user = useAuthStore(state => state.user);
+  const {user} = useAppSelector(state => state.auth);
   const { data, loading, refetch } = useGetMyTrucksQuery({
     variables: { userId: user?.id || '' },
   });

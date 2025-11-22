@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { Button, MessageModal } from '@/components';
 import Input from '@/components/Input';
 import { useAuthRegisterMutation } from '@/gql/auth/authRegister.generated';
-import { useGeneralStore } from '@/stores';
+import { useAppSelector } from '@/redux/hooks';
 
 interface Props {
   phoneNumber: string;
@@ -27,7 +27,7 @@ const Step2 = ({ phoneNumber }: Props) => {
   const [authRegister, { loading }] = useAuthRegisterMutation();
   const [successModal, setSuccessModal] = useState(false);
   const router = useRouter();
-  const mode = useGeneralStore(state => state.mode);
+  const { mode } = useAppSelector(state => state.general);
 
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({

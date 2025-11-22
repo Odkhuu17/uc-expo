@@ -1,13 +1,13 @@
 import { useRouter, useSegments } from 'expo-router';
 import { ReactNode, useEffect } from 'react';
 
-import { useAuthStore } from '@/stores/authStore';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const segments = useSegments();
 
-  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const { isAuthenticated } = useAppSelector(state => state.auth);
 
   useEffect(() => {
     const inAuthGroup = segments[0] === 'auth';
