@@ -1,9 +1,9 @@
 import React from 'react';
 
-import FindDriversScreen from '@/screens/Shipper/FindDrivers';
+import ChooseOrderLocationScreen from '@/screens/Shipper/ChooseOrderLocation';
 
-const Orders = () => {
-  return <FindDriversScreen />;
+const ChooseOrderLocation = () => {
+  return <ChooseOrderLocationScreen />;
 };
 
-export default Orders;
+export default ChooseOrderLocation;

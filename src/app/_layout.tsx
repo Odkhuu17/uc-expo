@@ -10,7 +10,6 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@shopify/restyle';
 import { StatusBar } from 'expo-status-bar';
-import { InstantSearch } from 'react-instantsearch';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -21,7 +20,6 @@ import { ApolloClientProvider } from '@/apollo/apollo.client';
 import { theme } from '@/components/Theme';
 import Navigations from '@/Navigations';
 import { persistor, store } from '@/redux/store.instance';
-import searchClient from '@/utils/searchkit';
 
 // SplashScreen.setOptions({
 //   duration: 1000,
@@ -56,12 +54,12 @@ export default function RootLayout() {
             <PersistGate loading={null} persistor={persistor}>
               <ThemeProvider theme={theme}>
                 <BottomSheetModalProvider>
-                  <InstantSearch
+                  {/* <InstantSearch
                     indexName="supp_tracks"
                     searchClient={searchClient}
-                  >
+                  > */}
                     <Navigations />
-                  </InstantSearch>
+                  {/* </InstantSearch> */}
                   <StatusBar style="auto" />
                 </BottomSheetModalProvider>
               </ThemeProvider>

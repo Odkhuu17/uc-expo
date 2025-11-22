@@ -21,7 +21,7 @@ const schema = yup.object().shape({
   username: yup
     .string()
     .required('Энэ талбар хоосон байна!')
-    .min(8, 'Утасны дугаар 8 оронтой байна'),
+    .length(8, 'Утасны дугаар 8 оронтой байна'),
   password: yup
     .string()
     .required('Энэ талбар хоосон байна!')
@@ -123,7 +123,7 @@ const LoginScreen = () => {
                 title="Бүртгүүлэх"
                 onPress={onPressRegister}
                 backgroundColor="lightBlue2"
-                width={120}
+                width={130}
                 size="s"
                 textColor="white"
               />
@@ -131,7 +131,7 @@ const LoginScreen = () => {
                 title="Нууц үг сэргээх"
                 onPress={onPressForgot}
                 backgroundColor="lightBlue2"
-                width={120}
+                width={130}
                 size="s"
                 textColor="white"
               />

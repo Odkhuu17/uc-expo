@@ -13,6 +13,8 @@ import {
   SearchAddressQuery,
   useSearchAddressQuery,
 } from '@/gql/query/searchAddressQuery.generated';
+import { useAppDispatch } from '@/redux/hooks';
+import orderSlice from '@/redux/slices/order';
 import SingleAddress from './SingleAddress';
 
 const useStyles = makeStyles(theme => ({
@@ -25,11 +27,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FindDriversScreen = () => {
+const ChooseOrderLocationScreen = () => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
   const styles = useStyles();
+  const dispatch = useAppDispatch();
 
   const [selected, setSelected] = useState<'origin' | 'destination'>('origin');
   const [origin, setOrigin] = useState<
@@ -110,12 +113,21 @@ const FindDriversScreen = () => {
           ],
         },
       });
+
+      dispatch(
+        orderSlice.actions.changeOrderLocation({
+          origin: originData?.createAddress,
+          destination: destinationData?.createAddress,
+        })
+      );
+
+      router.navigate('/shipper/orders/create');
     } else {
       router.navigate({
         pathname: '/modal',
         params: {
           type: 'error',
-          message: 'Та ачих болон буулгах хаягаа оруулна уу!',
+          message: 'Та очиж авах хаяг болон хүргэх хаягаа оруулна уу!',
         },
       });
     }
@@ -210,7 +222,7 @@ const FindDriversScreen = () => {
   );
 };
 
-export default FindDriversScreen;
+export default ChooseOrderLocationScreen;
 
 const css = StyleSheet.create({
   map: {

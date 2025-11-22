@@ -37,7 +37,11 @@ const Button = ({
         {loading ? (
           <ActivityIndicator />
         ) : (
-          <Text variant={size === 'm' ? 'button' : 'button2'} color={textColor}>
+          <Text
+            numberOfLines={1}
+            variant={size === 'm' ? 'button' : 'button2'}
+            color={textColor}
+          >
             {title}
           </Text>
         )}

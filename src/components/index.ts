@@ -17,6 +17,6 @@ export { default as LogoHeader } from './LogoHeader';
 export { default as Marquee } from './Marquee';
 export { default as MessageModal } from './MessageModal';
 export { default as NormalHeader } from './NormalHeader';
+export { default as OrderLocation } from './OrderLocation';
 export { default as Select } from './Select';
 export { default as TextArea } from './TextArea';
-
