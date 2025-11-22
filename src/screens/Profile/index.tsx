@@ -1,0 +1,53 @@
+import { Box as BoxIcon, Truck, UserOctagon } from 'iconsax-react-nativejs';
+
+import { BoxContainer, Container, Content, NormalHeader } from '@/components';
+import { Box, Text, useTheme } from '@/components/Theme';
+import { useAuthStore, useGeneralStore } from '@/stores';
+import { useRouter } from 'expo-router';
+import SingleMenu from './SingleMenu';
+
+const ProfileScreen = () => {
+  const user = useAuthStore(state => state.user);
+  const theme = useTheme();
+  const router = useRouter();
+  const mode = useGeneralStore(state => state.mode);
+
+  return (
+    <Container>
+      <NormalHeader title="Миний мэдээлэл" />
+      <Content edges={[]}>
+        <Box gap="m">
+          <BoxContainer flexDirection="row" alignItems="center" gap="m">
+            <UserOctagon size={theme.icon.l} />
+            <Box>
+              <Text variant="header" numberOfLines={1}>
+                {`${user?.lastName}`} {user?.firstName}
+              </Text>
+              <Text variant="body1" opacity={0.8}>
+                {user?.mobile}
+              </Text>
+            </Box>
+          </BoxContainer>
+          <BoxContainer>
+            {mode === 'shipper' && (
+              <SingleMenu
+                title="Миний захиалгууд"
+                icon={BoxIcon}
+                onPress={() => router.navigate('/profile/orders')}
+              />
+            )}
+            {mode === 'driver' && (
+              <SingleMenu
+                title="Миний машин"
+                icon={Truck}
+                onPress={() => router.navigate('/profile/trucks')}
+              />
+            )}
+          </BoxContainer>
+        </Box>
+      </Content>
+    </Container>
+  );
+};
+
+export default ProfileScreen;

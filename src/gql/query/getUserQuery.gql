@@ -1,0 +1,25 @@
+query GetUser {
+  me {
+    id
+    firstName
+    lastName
+    email
+    mobile
+    gender
+    nickName
+    registerNum
+    role
+    roles {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+    isAdmin
+    subscribed
+    validPasswordLocal
+    validPasswordVehicle
+    createdAt
+    updatedAt
+  }
+}

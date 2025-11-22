@@ -1,0 +1,95 @@
+query GetMyOrders($ordersFirst: Int, $after: String) {
+  me {
+    id
+    orders(first: $ordersFirst, after: $after) {
+      edges {
+        node {
+          id
+          number
+          title
+          status
+          published
+          my
+          requested
+          subscribed
+          packageType
+          packageWeight
+          packageDimensions
+          price
+          carType
+          carWeight
+          senderName
+          senderMobile
+          receiverName
+          receiverMobile
+          travelAt
+          travelDistance
+          travelDuration
+          createdAt
+          updatedAt
+          origin {
+            id
+            address {
+              id
+              name
+              address1
+              address2
+              latitude
+              longitude
+              country {
+                id
+                name
+              }
+              state {
+                id
+                name
+              }
+              district {
+                id
+                name
+              }
+              quarter {
+                id
+                name
+              }
+            }
+          }
+          destination {
+            id
+            address {
+              id
+              name
+              address1
+              address2
+              latitude
+              longitude
+              country {
+                id
+                name
+              }
+              state {
+                id
+                name
+              }
+              district {
+                id
+                name
+              }
+              quarter {
+                id
+                name
+              }
+            }
+          }
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+}

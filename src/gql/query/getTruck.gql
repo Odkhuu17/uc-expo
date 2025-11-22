@@ -1,0 +1,40 @@
+query GetTruck($id: ID!) {
+  truck(id: $id) {
+    id
+    plateNumber
+    serial
+    weight
+    netWeight
+    importedDate
+    manufacturedDate
+    mark {
+      id
+      name
+      code
+    }
+    model {
+      id
+      name
+      code
+      mark {
+        id
+        name
+        code
+      }
+    }
+    user {
+      id
+      email
+      firstName
+      lastName
+    }
+    currentTrack {
+      id
+      latitude
+      longitude
+      createdAt
+    }
+    createdAt
+    updatedAt
+  }
+}

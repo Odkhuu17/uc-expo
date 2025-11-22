@@ -1,0 +1,62 @@
+mutation createTruck(
+  $markId: ID!
+  $modelId: ID!
+  $userId: ID!
+  $plateNumber: String
+  $serial: String
+  $weight: Int
+  $netWeight: Int
+  $importedDate: ISO8601DateTime
+  $manufacturedDate: ISO8601DateTime
+) {
+  createTruck(
+    input: {
+      markId: $markId
+      modelId: $modelId
+      userId: $userId
+      plateNumber: $plateNumber
+      serial: $serial
+      weight: $weight
+      netWeight: $netWeight
+      importedDate: $importedDate
+      manufacturedDate: $manufacturedDate
+    }
+  ) {
+    id
+    plateNumber
+    serial
+    weight
+    netWeight
+    importedDate
+    manufacturedDate
+    mark {
+      id
+      name
+      code
+    }
+    model {
+      id
+      name
+      code
+      mark {
+        id
+        name
+        code
+      }
+    }
+    user {
+      id
+      email
+      firstName
+      lastName
+    }
+    currentTrack {
+      id
+      latitude
+      longitude
+      createdAt
+    }
+    createdAt
+    updatedAt
+  }
+}

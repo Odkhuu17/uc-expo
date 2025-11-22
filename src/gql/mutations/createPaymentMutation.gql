@@ -1,0 +1,5 @@
+mutation createPayment($action: PaymentMethodEnum!, $subscriptionPlanId: ID!) {
+  createPayment(
+    input: { action: $action, subscriptionPlanId: $subscriptionPlanId }
+  )
+}

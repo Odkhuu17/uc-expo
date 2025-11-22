@@ -1,0 +1,160 @@
+import type * as Types from '../graphql';
+
+import { gql } from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
+const defaultOptions = {} as const;
+export type CreateOrderMutationVariables = Types.Exact<{
+  title?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  packageType?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  packageWeight?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  packageDimensions?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  price?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  senderName?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  senderMobile?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  receiverName?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  receiverMobile?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  carType?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  carWeight?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  travelAt?: Types.InputMaybe<Types.Scalars['ISO8601DateTime']['input']>;
+  travelDistance?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  travelDuration?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  originId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
+  destinationId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
+  published?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, status?: string, published?: boolean, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, carType?: string, carWeight?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, createdAt: any, updatedAt: any, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string } } };
+
+
+export const CreateOrderDocument = gql`
+    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean) {
+  createOrder(
+    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published}
+  ) {
+    id
+    number
+    title
+    packageType
+    packageWeight
+    packageDimensions
+    price
+    status
+    published
+    senderName
+    senderMobile
+    receiverName
+    receiverMobile
+    carType
+    carWeight
+    travelAt
+    travelDistance
+    travelDuration
+    origin {
+      id
+      address {
+        id
+        address1
+        address2
+        latitude
+        longitude
+        name
+        country {
+          id
+          name
+        }
+        state {
+          id
+          name
+        }
+        district {
+          id
+          name
+        }
+        quarter {
+          id
+          name
+        }
+      }
+    }
+    destination {
+      id
+      address {
+        id
+        address1
+        address2
+        latitude
+        longitude
+        name
+        country {
+          id
+          name
+        }
+        state {
+          id
+          name
+        }
+        district {
+          id
+          name
+        }
+        quarter {
+          id
+          name
+        }
+      }
+    }
+    user {
+      id
+      email
+      firstName
+      lastName
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateOrderMutationFn = ApolloReactCommon.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      packageType: // value for 'packageType'
+ *      packageWeight: // value for 'packageWeight'
+ *      packageDimensions: // value for 'packageDimensions'
+ *      price: // value for 'price'
+ *      senderName: // value for 'senderName'
+ *      senderMobile: // value for 'senderMobile'
+ *      receiverName: // value for 'receiverName'
+ *      receiverMobile: // value for 'receiverMobile'
+ *      carType: // value for 'carType'
+ *      carWeight: // value for 'carWeight'
+ *      travelAt: // value for 'travelAt'
+ *      travelDistance: // value for 'travelDistance'
+ *      travelDuration: // value for 'travelDuration'
+ *      originId: // value for 'originId'
+ *      destinationId: // value for 'destinationId'
+ *      published: // value for 'published'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = ApolloReactCommon.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;

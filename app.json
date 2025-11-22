@@ -1,0 +1,73 @@
+{
+  "expo": {
+    "name": "UC Logistics",
+    "slug": "uc-mobile",
+    "version": "1.0.5",
+    "orientation": "portrait",
+    "icon": "./assets/images/app-icon.png",
+    "scheme": "uclogistics",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "co6m.munkhsukhj.ucapp",
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/app-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "co6m.munkhsukhj.ucapp"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/app-icon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "cover",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/roboto/400Regular/Roboto_400Regular.ttf",
+            "node_modules/@expo-google-fonts/roboto/500Medium/Roboto_500Medium.ttf",
+            "node_modules/@expo-google-fonts/roboto/700Bold/Roboto_700Bold.ttf",
+            "node_modules/@expo-google-fonts/roboto/400Regular_Italic/Roboto_400Regular_Italic.ttf",
+            "node_modules/@expo-google-fonts/roboto/500Medium_Italic/Roboto_500Medium_Italic.ttf",
+            "node_modules/@expo-google-fonts/roboto/700Bold_Italic/Roboto_700Bold_Italic.ttf"
+          ]
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+        }
+      ],
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

@@ -1,0 +1,15 @@
+query GetModels($markId: ID) {
+  models(filter: { mark: { id: { eq: $markId } } }) {
+    nodes {
+      id
+      name
+      code
+      markId
+      mark {
+        id
+        name
+        code
+      }
+    }
+  }
+}

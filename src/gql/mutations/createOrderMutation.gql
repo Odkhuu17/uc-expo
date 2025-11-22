@@ -1,0 +1,122 @@
+mutation createOrder(
+  $title: String
+  $packageType: String
+  $packageWeight: Float
+  $packageDimensions: Float
+  $price: String
+  $senderName: String
+  $senderMobile: String
+  $receiverName: String
+  $receiverMobile: String
+  $carType: String
+  $carWeight: String
+  $travelAt: ISO8601DateTime
+  $travelDistance: Float
+  $travelDuration: Float
+  $originId: ID
+  $destinationId: ID
+  $published: Boolean
+) {
+  createOrder(
+    input: {
+      title: $title
+      packageType: $packageType
+      packageWeight: $packageWeight
+      packageDimensions: $packageDimensions
+      price: $price
+      senderName: $senderName
+      senderMobile: $senderMobile
+      receiverName: $receiverName
+      receiverMobile: $receiverMobile
+      carType: $carType
+      carWeight: $carWeight
+      travelAt: $travelAt
+      originId: $originId
+      destinationId: $destinationId
+      travelDistance: $travelDistance
+      travelDuration: $travelDuration
+      published: $published
+    }
+  ) {
+    id
+    number
+    title
+    packageType
+    packageWeight
+    packageDimensions
+    price
+    status
+    published
+    senderName
+    senderMobile
+    receiverName
+    receiverMobile
+    carType
+    carWeight
+    travelAt
+    travelDistance
+    travelDuration
+    origin {
+      id
+      address {
+        id
+        address1
+        address2
+        latitude
+        longitude
+        name
+        country {
+          id
+          name
+        }
+        state {
+          id
+          name
+        }
+        district {
+          id
+          name
+        }
+        quarter {
+          id
+          name
+        }
+      }
+    }
+    destination {
+      id
+      address {
+        id
+        address1
+        address2
+        latitude
+        longitude
+        name
+        country {
+          id
+          name
+        }
+        state {
+          id
+          name
+        }
+        district {
+          id
+          name
+        }
+        quarter {
+          id
+          name
+        }
+      }
+    }
+    user {
+      id
+      email
+      firstName
+      lastName
+    }
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,136 @@
+query getOrders(
+  $first: Int
+  $after: String
+  $filter: OrderFilter
+  $sort: SortFilter
+  $deliveryRequestsFirst: Int
+) {
+  orders(first: $first, after: $after, filter: $filter, sort: $sort) {
+    edges {
+      node {
+        id
+        number
+        title
+        status
+        published
+        my
+        requested
+        subscribed
+        packageType
+        packageWeight
+        packageDimensions
+        price
+        carType
+        carWeight
+        senderName
+        senderMobile
+        receiverName
+        receiverMobile
+        travelAt
+        travelDistance
+        travelDuration
+        audio
+        images
+        imageObjects {
+          id
+          url
+          fileName
+          recordId
+          recordType
+        }
+        origin {
+          id
+          address {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+        }
+        destination {
+          id
+          address {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+        }
+        user {
+          id
+          email
+          firstName
+          lastName
+          mobile
+          role
+          isAdmin
+        }
+        deliveryRequests(first: $deliveryRequestsFirst) {
+          edges {
+            node {
+              id
+              price
+              travelAt
+              status
+              user {
+                id
+                firstName
+                lastName
+                mobile
+                email
+              }
+            }
+          }
+          totalCount
+        }
+        validPasswordLocal
+        createdAt
+        updatedAt
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}

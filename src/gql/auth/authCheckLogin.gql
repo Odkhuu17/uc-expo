@@ -1,0 +1,3 @@
+mutation authCheckLogin($login: String!, $sendToken: Boolean, $clientMutationId: String) {
+  exists: authCheckLogin(input: { login: $login, sendToken: $sendToken, clientMutationId: $clientMutationId})
+}

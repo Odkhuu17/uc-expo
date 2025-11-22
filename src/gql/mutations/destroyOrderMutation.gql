@@ -1,0 +1,5 @@
+mutation destroyOrder($id: ID!) {
+  destroyOrder(input: { id: $id }) {
+    id
+  }
+}

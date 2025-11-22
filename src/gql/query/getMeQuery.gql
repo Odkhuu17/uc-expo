@@ -1,0 +1,165 @@
+query GetMe(
+  $ordersFirst: Int
+  $trucksFirst: Int
+  $deliveryRequestsFirst: Int
+  $subscriptionsFirst: Int
+) {
+  me {
+    id
+    firstName
+    lastName
+    email
+    mobile
+    gender
+    nickName
+    registerNum
+    role
+    roles {
+      id
+      name
+      createdAt
+      updatedAt
+    }
+    isAdmin
+    subscribed
+    validPasswordLocal
+    validPasswordVehicle
+    orders(first: $ordersFirst) {
+      edges {
+        node {
+          id
+          number
+          title
+          status
+          published
+          my
+          requested
+          subscribed
+          packageType
+          packageWeight
+          packageDimensions
+          price
+          carType
+          carWeight
+          senderName
+          senderMobile
+          receiverName
+          receiverMobile
+          travelAt
+          travelDistance
+          travelDuration
+          createdAt
+          updatedAt
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+    trucks {
+      id
+      plateNumber
+      serial
+      weight
+      netWeight
+      importedDate
+      manufacturedDate
+      mark {
+        id
+        name
+        code
+      }
+      model {
+        id
+        name
+        code
+        mark {
+          id
+          name
+          code
+        }
+      }
+      currentTrack {
+        id
+        latitude
+        longitude
+        status
+        createdAt
+      }
+      createdAt
+      updatedAt
+    }
+    deliveryRequests(first: $deliveryRequestsFirst) {
+      edges {
+        node {
+          id
+          price
+          travelAt
+          status
+          active
+          order {
+            id
+            number
+            title
+            status
+          }
+          createdAt
+          updatedAt
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+    subscriptions(first: $subscriptionsFirst) {
+      edges {
+        node {
+          id
+          active
+          autoRenew
+          paymentStatus
+          startAt
+          endAt
+          valid
+          subscriptionPlan {
+            id
+            name
+            code
+            price
+            duration
+            active
+          }
+          createdAt
+          updatedAt
+        }
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+    passwordLocal {
+      id
+      firstName
+      lastName
+      registerNumber
+      status
+      active
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}

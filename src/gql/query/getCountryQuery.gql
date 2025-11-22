@@ -1,0 +1,6 @@
+query GetCountry {
+  country(iso: "MN") {
+    id
+    sdq
+  }
+}

@@ -1,0 +1,3 @@
+mutation checkPayment($invoiceNo: ID!) {
+  checkPayment(input: { invoiceNo: $invoiceNo })
+}

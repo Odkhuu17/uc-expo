@@ -1,0 +1,38 @@
+query GetMyTrucks($userId: ID!) {
+  trucks(filter: { user: { id: { eq: $userId } } }) {
+    nodes {
+      id
+      plateNumber
+      serial
+      weight
+      netWeight
+      importedDate
+      manufacturedDate
+      mark {
+        id
+        name
+        code
+      }
+      model {
+        id
+        name
+        code
+        mark {
+          id
+          name
+          code
+        }
+      }
+      currentTrack {
+        id
+        latitude
+        longitude
+        status
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
