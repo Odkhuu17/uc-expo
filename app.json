@@ -63,7 +63,8 @@
           "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,
