@@ -22,8 +22,6 @@ query GetMe(
     }
     isAdmin
     subscribed
-    validPasswordLocal
-    validPasswordVehicle
     orders(first: $ordersFirst) {
       edges {
         node {
@@ -148,16 +146,6 @@ query GetMe(
         startCursor
         endCursor
       }
-    }
-    passwordLocal {
-      id
-      firstName
-      lastName
-      registerNumber
-      status
-      active
-      createdAt
-      updatedAt
     }
     createdAt
     updatedAt

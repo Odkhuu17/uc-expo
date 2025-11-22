@@ -1,21 +1,19 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Location } from 'iconsax-react-nativejs';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, FitImage } from '@/components';
+import { Button, FitImage, OrderLocation } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { useCreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import {
   SearchAddressQuery,
   useSearchAddressQuery,
 } from '@/gql/query/searchAddressQuery.generated';
-import { useAppDispatch } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import orderSlice from '@/redux/slices/order';
-import SingleAddress from './SingleAddress';
 
 const useStyles = makeStyles(theme => ({
   bottomView: {
@@ -33,8 +31,8 @@ const ChooseOrderLocationScreen = () => {
   const router = useRouter();
   const styles = useStyles();
   const dispatch = useAppDispatch();
+  const { orderLocation } = useAppSelector(state => state.order);
 
-  const [selected, setSelected] = useState<'origin' | 'destination'>('origin');
   const [origin, setOrigin] = useState<
     NonNullable<SearchAddressQuery['searchAddress']>[0] | null
   >(null);
@@ -67,7 +65,7 @@ const ChooseOrderLocationScreen = () => {
         longitude: region.longitude,
       },
     });
-    if (selected === 'origin') {
+    if (orderLocation?.selected === 'origin') {
       setOrigin(data?.searchAddress?.[0] || null);
     } else {
       setDestination(data?.searchAddress?.[0] || null);
@@ -118,6 +116,7 @@ const ChooseOrderLocationScreen = () => {
         orderSlice.actions.changeOrderLocation({
           origin: originData?.createAddress,
           destination: destinationData?.createAddress,
+          selected: orderLocation?.selected || 'origin',
         })
       );
 
@@ -174,47 +173,35 @@ const ChooseOrderLocationScreen = () => {
             />
           </LinearGradient>
           <Box
-            borderWidth={2}
-            backgroundColor="white"
-            borderColor="baseBlue"
-            px="m"
-            py="m"
-            borderRadius="m"
             position="absolute"
-            bottom={insets.bottom + theme.spacing.m + 40 + theme.spacing.m}
+            bottom={
+              insets.bottom + theme.spacing.m + theme.button.m + theme.spacing.m
+            }
             left={theme.spacing.xl}
             right={theme.spacing.xl}
           >
-            <Box flexDirection="row" alignItems="center" gap="s">
-              <Box flex={1}>
-                <SingleAddress
-                  loading={searchLoading}
-                  onPress={() => setSelected('origin')}
-                  data={origin}
-                  selected={selected === 'origin'}
-                  title="Очиж авах хаяг"
-                />
-                <Box width="100%" height={1} backgroundColor="border" my="s" />
-                <SingleAddress
-                  loading={searchLoading}
-                  onPress={() => setSelected('destination')}
-                  data={destination}
-                  selected={selected === 'destination'}
-                  title="Хүргэх хаяг"
-                />
-              </Box>
-              <Box alignItems="center" gap="xs" py="m">
-                <Box
-                  height={15}
-                  width={15}
-                  borderRadius="full"
-                  borderWidth={2}
-                  borderColor="baseBlue"
-                />
-                <Box width={1} flex={1} backgroundColor="border" />
-                <Location size={theme.icon.m} />
-              </Box>
-            </Box>
+            <OrderLocation
+              origin={origin?._source?.nameFullMn}
+              destination={destination?._source?.nameFullMn}
+              selected={orderLocation?.selected || 'origin'}
+              onPressOrigin={() =>
+                dispatch(
+                  orderSlice.actions.changeOrderLocation({
+                    ...orderLocation,
+                    selected: 'origin',
+                  })
+                )
+              }
+              onPressDestination={() =>
+                dispatch(
+                  orderSlice.actions.changeOrderLocation({
+                    ...orderLocation,
+                    selected: 'destination',
+                  })
+                )
+              }
+              loading={searchLoading}
+            />
           </Box>
         </Box>
       </MapView>

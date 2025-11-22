@@ -7,6 +7,7 @@ export { default as CustomBottomSheetModal } from './CustomBottomSheetModal';
 export { default as CustomFlatList } from './CustomFlatList';
 export { default as CustomKeyboardAvoidingView } from './CustomKeyboardAvoidingView';
 export { default as CustomMaskInput } from './CustomMaskInput';
+export { default as DateInput } from './DateInput';
 export { default as Empty } from './Empty';
 export { default as FitImage } from './FitImage';
 export { default as GradientButton } from './GradientButton';
@@ -20,3 +21,4 @@ export { default as NormalHeader } from './NormalHeader';
 export { default as OrderLocation } from './OrderLocation';
 export { default as Select } from './Select';
 export { default as TextArea } from './TextArea';
+

@@ -396,6 +396,7 @@ export type ModelFilter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  approveVerification?: Maybe<Verification>;
   authCheckLogin: Scalars['JSON']['output'];
   authRegister?: Maybe<User>;
   checkPayment?: Maybe<Scalars['JSON']['output']>;
@@ -406,9 +407,7 @@ export type Mutation = {
   createIndexElastic?: Maybe<Scalars['JSON']['output']>;
   createMark?: Maybe<Mark>;
   createModel?: Maybe<Model>;
-  createOrUpdatePasswordLocal?: Maybe<PasswordLocal>;
   createOrder?: Maybe<Order>;
-  createPasswordVehicle?: Maybe<PasswordVehicle>;
   createPayment?: Maybe<Scalars['JSON']['output']>;
   createPaymentMethod?: Maybe<PaymentMethod>;
   createSendEmail?: Maybe<SendEmail>;
@@ -441,8 +440,6 @@ export type Mutation = {
   updateMark?: Maybe<Mark>;
   updateModel?: Maybe<Model>;
   updateOrder?: Maybe<Order>;
-  updatePasswordLocal?: Maybe<PasswordLocal>;
-  updatePasswordVehicle?: Maybe<PasswordVehicle>;
   updatePaymentMethod?: Maybe<PaymentMethod>;
   updateSendEmail?: Maybe<SendEmail>;
   updateSubscription?: Maybe<Subscription>;
@@ -450,6 +447,12 @@ export type Mutation = {
   updateSystemMenu?: Maybe<SystemMenu>;
   updateTruck?: Maybe<Truck>;
   updateUser?: Maybe<User>;
+  verifyRequest?: Maybe<Verification>;
+};
+
+
+export type MutationApproveVerificationArgs = {
+  input: ApproveVerificationInput;
 };
 
 
@@ -503,18 +506,8 @@ export type MutationCreateModelArgs = {
 };
 
 
-export type MutationCreateOrUpdatePasswordLocalArgs = {
-  input: CreateOrUpdatePasswordLocalInput;
-};
-
-
 export type MutationCreateOrderArgs = {
   input: CreateOrderInput;
-};
-
-
-export type MutationCreatePasswordVehicleArgs = {
-  input: CreatePasswordVehicleInput;
 };
 
 
@@ -678,16 +671,6 @@ export type MutationUpdateOrderArgs = {
 };
 
 
-export type MutationUpdatePasswordLocalArgs = {
-  input: UpdatePasswordLocalInput;
-};
-
-
-export type MutationUpdatePasswordVehicleArgs = {
-  input: UpdatePasswordVehicleInput;
-};
-
-
 export type MutationUpdatePaymentMethodArgs = {
   input: UpdatePaymentMethodInput;
 };
@@ -722,6 +705,11 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
+
+export type MutationVerifyRequestArgs = {
+  input: VerifyRequestInput;
+};
+
 export type Node = {
   id: Scalars['ID']['output'];
 };
@@ -732,7 +720,9 @@ export type Order = BaseModelInterface & {
   carType?: Maybe<Scalars['String']['output']>;
   carWeight?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['ISO8601DateTime']['output'];
+  data: Scalars['JSON']['output'];
   deliveryRequests: DeliveryRequestConnection;
+  description?: Maybe<Scalars['String']['output']>;
   destination?: Maybe<UserAddress>;
   id: Scalars['ID']['output'];
   imageObjects?: Maybe<Array<ImageObject>>;
@@ -758,7 +748,8 @@ export type Order = BaseModelInterface & {
   travelDuration?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user?: Maybe<User>;
-  validPasswordLocal?: Maybe<Scalars['Boolean']['output']>;
+  vatIncluded?: Maybe<Scalars['Boolean']['output']>;
+  video?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -814,91 +805,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean']['output'];
   hasPreviousPage: Scalars['Boolean']['output'];
   startCursor?: Maybe<Scalars['String']['output']>;
-};
-
-export type PasswordLocal = BaseModelInterface & {
-  __typename?: 'PasswordLocal';
-  active: Scalars['Boolean']['output'];
-  createdAt: Scalars['ISO8601DateTime']['output'];
-  firstName: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  images: Array<Scalars['String']['output']>;
-  lastName: Scalars['String']['output'];
-  number?: Maybe<Scalars['String']['output']>;
-  preferences?: Maybe<Scalars['JSON']['output']>;
-  registerNumber: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  updatedAt: Scalars['ISO8601DateTime']['output'];
-  user: User;
-};
-
-
-export type PasswordLocalImagesArgs = {
-  size?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PasswordLocalConnection = {
-  __typename?: 'PasswordLocalConnection';
-  edges: Array<PasswordLocalEdge>;
-  nodes: Array<PasswordLocal>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type PasswordLocalEdge = {
-  __typename?: 'PasswordLocalEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<PasswordLocal>;
-};
-
-export type PasswordLocalFilter = {
-  createdAt?: InputMaybe<DateFilter>;
-  id?: InputMaybe<IdFilter>;
-  status?: InputMaybe<StringFilter>;
-  updatedAt?: InputMaybe<DateFilter>;
-};
-
-export type PasswordVehicle = BaseModelInterface & {
-  __typename?: 'PasswordVehicle';
-  category: Scalars['String']['output'];
-  chassisNumber?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['ISO8601DateTime']['output'];
-  id: Scalars['ID']['output'];
-  images: Array<Scalars['String']['output']>;
-  loadingCapacity?: Maybe<Scalars['String']['output']>;
-  plateNumber: Scalars['String']['output'];
-  preferences?: Maybe<Scalars['JSON']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
-  type?: Maybe<Scalars['String']['output']>;
-  updatedAt: Scalars['ISO8601DateTime']['output'];
-  user: User;
-  vin?: Maybe<Scalars['String']['output']>;
-  weight?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type PasswordVehicleImagesArgs = {
-  size?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PasswordVehicleConnection = {
-  __typename?: 'PasswordVehicleConnection';
-  edges: Array<PasswordVehicleEdge>;
-  nodes: Array<PasswordVehicle>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type PasswordVehicleEdge = {
-  __typename?: 'PasswordVehicleEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<PasswordVehicle>;
-};
-
-export type PasswordVehicleFilter = {
-  createdAt?: InputMaybe<DateFilter>;
-  id?: InputMaybe<IdFilter>;
-  updatedAt?: InputMaybe<DateFilter>;
 };
 
 export type Payment = BaseModelInterface & {
@@ -1042,10 +948,6 @@ export type Query = {
   nodes: Array<Maybe<Node>>;
   order?: Maybe<Order>;
   orders: OrderConnection;
-  passwordLocal?: Maybe<PasswordLocal>;
-  passwordLocals: PasswordLocalConnection;
-  passwordVehicle?: Maybe<PasswordVehicle>;
-  passwordVehicles: PasswordVehicleConnection;
   payment?: Maybe<Payment>;
   paymentMethod: PaymentMethod;
   paymentMethods: PaymentMethodConnection;
@@ -1070,6 +972,8 @@ export type Query = {
   user?: Maybe<User>;
   userAddresses: UserAddressConnection;
   users: UserConnection;
+  verification?: Maybe<Verification>;
+  verifications: VerificationConnection;
 };
 
 
@@ -1199,38 +1103,6 @@ export type QueryOrdersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<OrderFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<SortFilter>;
-};
-
-
-export type QueryPasswordLocalArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type QueryPasswordLocalsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PasswordLocalFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<SortFilter>;
-};
-
-
-export type QueryPasswordVehicleArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueryPasswordVehiclesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PasswordVehicleFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1432,6 +1304,23 @@ export type QueryUsersArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortFilter>;
+};
+
+
+export type QueryVerificationArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryVerificationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  kind?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Role = BaseModelInterface & {
@@ -1715,6 +1604,8 @@ export type Truck = BaseModelInterface & {
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
   userId: Scalars['ID']['output'];
+  verified: Scalars['Boolean']['output'];
+  verifiedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   weight?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -1744,6 +1635,7 @@ export type TruckFilter = {
   serial?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateFilter>;
   user?: InputMaybe<UserFilter>;
+  verifiedAt?: InputMaybe<DateFilter>;
   weight?: InputMaybe<IntFilter>;
 };
 
@@ -1823,18 +1715,18 @@ export type User = BaseModelInterface & {
   mobile?: Maybe<Scalars['String']['output']>;
   nickName?: Maybe<Scalars['String']['output']>;
   orders: OrderConnection;
-  passwordLocal?: Maybe<PasswordLocal>;
-  passwordVehicles: PasswordVehicleConnection;
   registerNum?: Maybe<Scalars['String']['output']>;
   role?: Maybe<Scalars['String']['output']>;
   roles?: Maybe<Array<Role>>;
+  state?: Maybe<State>;
+  stateId?: Maybe<Scalars['ID']['output']>;
   subscribed?: Maybe<Scalars['Boolean']['output']>;
   subscriptions: SubscriptionConnection;
   trucks: Array<Truck>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   userAddresses: UserAddressConnection;
-  validPasswordLocal?: Maybe<Scalars['Boolean']['output']>;
-  validPasswordVehicle?: Maybe<Scalars['Boolean']['output']>;
+  verified: Scalars['Boolean']['output'];
+  verifiedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
 };
 
 
@@ -1864,22 +1756,6 @@ export type UserOrdersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<OrderFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<SortFilter>;
-};
-
-
-export type UserPasswordLocalArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-export type UserPasswordVehiclesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PasswordVehicleFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1963,6 +1839,48 @@ export type UserFilter = {
   registerNum?: InputMaybe<StringFilter>;
   role?: InputMaybe<IntFilter>;
   updatedAt?: InputMaybe<DateFilter>;
+  verifiedAt?: InputMaybe<DateFilter>;
+};
+
+export type Verification = BaseModelInterface & {
+  __typename?: 'Verification';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['ISO8601DateTime']['output'];
+  field1?: Maybe<Scalars['String']['output']>;
+  field2?: Maybe<Scalars['String']['output']>;
+  field3?: Maybe<Scalars['String']['output']>;
+  field4?: Maybe<Scalars['String']['output']>;
+  field5?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  images?: Maybe<Array<Scalars['String']['output']>>;
+  respondedBy?: Maybe<User>;
+  status: Scalars['String']['output'];
+  targetId: Scalars['ID']['output'];
+  targetType: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
+  user: User;
+  userId: Scalars['ID']['output'];
+};
+
+export type VerificationConnection = {
+  __typename?: 'VerificationConnection';
+  edges: Array<VerificationEdge>;
+  nodes: Array<Verification>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type VerificationEdge = {
+  __typename?: 'VerificationEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Verification>;
+};
+
+export type ApproveVerificationInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  comment: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+  status: Scalars['String']['input'];
 };
 
 export type AuthCheckLoginInput = {
@@ -2047,21 +1965,13 @@ export type CreateModelInput = {
   name: Scalars['String']['input'];
 };
 
-export type CreateOrUpdatePasswordLocalInput = {
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  firstName: Scalars['String']['input'];
-  images: Array<Scalars['Upload']['input']>;
-  lastName: Scalars['String']['input'];
-  number?: InputMaybe<Scalars['String']['input']>;
-  registerNumber: Scalars['String']['input'];
-  userId?: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type CreateOrderInput = {
   audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Array<Scalars['Upload']['input']>>;
@@ -2081,20 +1991,8 @@ export type CreateOrderInput = {
   travelDistance?: InputMaybe<Scalars['Float']['input']>;
   travelDuration?: InputMaybe<Scalars['Float']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type CreatePasswordVehicleInput = {
-  category: Scalars['String']['input'];
-  chassisNumber: Scalars['String']['input'];
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  images: Array<Scalars['Upload']['input']>;
-  loadingCapacity: Scalars['String']['input'];
-  plateNumber: Scalars['String']['input'];
-  preferences?: InputMaybe<Scalars['JSON']['input']>;
-  userId?: InputMaybe<Scalars['ID']['input']>;
-  vehicleType: Scalars['String']['input'];
-  vin: Scalars['String']['input'];
-  weight: Scalars['String']['input'];
+  vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
+  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type CreatePaymentInput = {
@@ -2368,33 +2266,6 @@ export type UpdateOrderInput = {
   travelDuration?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdatePasswordLocalInput = {
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  firstName?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  preferences?: InputMaybe<Scalars['JSON']['input']>;
-  registerNumber?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type UpdatePasswordVehicleInput = {
-  category?: InputMaybe<Scalars['String']['input']>;
-  chassisNumber?: InputMaybe<Scalars['String']['input']>;
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
-  loadingCapacity?: InputMaybe<Scalars['String']['input']>;
-  plateNumber?: InputMaybe<Scalars['String']['input']>;
-  preferences?: InputMaybe<Scalars['JSON']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  userId?: InputMaybe<Scalars['ID']['input']>;
-  vehicleType?: InputMaybe<Scalars['String']['input']>;
-  vin?: InputMaybe<Scalars['String']['input']>;
-  weight?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdatePaymentMethodInput = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
@@ -2471,4 +2342,12 @@ export type UpdateUserInput = {
   id: Scalars['ID']['input'];
   lastName?: InputMaybe<Scalars['String']['input']>;
   nickName?: InputMaybe<Scalars['String']['input']>;
+  stateId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type VerifyRequestInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  images: Array<Scalars['Upload']['input']>;
+  kind: Scalars['String']['input'];
+  targetId: Scalars['ID']['input'];
 };

@@ -1,13 +1,13 @@
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
-import { Box, Text, Theme } from './Theme';
+import { Box, Text, Theme, useTheme } from './Theme';
 
 interface Props {
   title: string;
   onPress: () => void;
   backgroundColor?: keyof Theme['colors'];
   width?: number;
-  size?: 's' | 'm';
+  size?: keyof Theme['button'];
   textColor?: keyof Theme['colors'];
   loading?: boolean;
 }
@@ -21,6 +21,8 @@ const Button = ({
   textColor = 'white',
   loading,
 }: Props) => {
+  const theme = useTheme();
+
   return (
     <TouchableOpacity onPress={onPress}>
       <Box
@@ -29,7 +31,7 @@ const Button = ({
         backgroundColor={backgroundColor}
         borderRadius="full"
         alignItems="center"
-        height={size === 'm' ? 40 : 30}
+        height={theme.button[size]}
         width={width}
         justifyContent="center"
         px="l"

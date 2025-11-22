@@ -1,30 +1,28 @@
-import { Icon as IconType, TickCircle } from 'iconsax-react-nativejs';
-import React, { useRef } from 'react';
-import {
-  TextInput,
-  TextInputProps,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
-
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import {
+  ArrowDown2,
+  Icon as IconType,
+  TickCircle,
+} from 'iconsax-react-nativejs';
+import React, { useRef } from 'react';
+import { TouchableOpacity, ViewStyle } from 'react-native';
+
 import CustomBottomSheetModal from './CustomBottomSheetModal';
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 
-interface Props<G = any> extends TextInputProps {
+interface Props<G = any> {
   width?: ViewStyle['width'];
   error?: string;
   icon?: IconType;
   options: { value: G; label: string }[];
   setSelectedOption: (value: G) => void;
   selectedOption?: G;
-  label?: string;
-  isRequired?: boolean;
+  placeholder: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
-    textAlign: 'right',
+    textAlign: 'center',
     flex: 1,
     paddingHorizontal: theme.spacing.s,
   },
@@ -34,36 +32,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function Select(props: Props) {
-  const {
-    width,
-    error,
-    selectedOption,
-    setSelectedOption,
-    options,
-    label,
-    isRequired,
-    ...textInputProps
-  } = props;
+function Select({
+  width,
+  error,
+  selectedOption,
+  setSelectedOption,
+  options,
+  icon: IconComp,
+  placeholder,
+}: Props) {
   const styles = useStyles();
   const ref = useRef<BottomSheetModal | null>(null);
   const theme = useTheme();
 
-  const IconComp = props.icon;
-
   return (
     <>
       <Box>
-        {label && (
-          <Box flexDirection="row" gap="xs">
-            <Text variant="label" color="black" mb="xs">
-              {label}
-            </Text>
-            {isRequired && <Text color="error">*</Text>}
-          </Box>
-        )}
         <Box
-          height={40}
+          height={theme.button.m}
           width={width}
           borderRadius="xl"
           borderColor="border"
@@ -75,16 +61,20 @@ function Select(props: Props) {
         >
           {IconComp && (
             <Box ml="s">
-              <IconComp size={theme.icon.m} color={theme.colors.grey2} />
+              <IconComp size={theme.icon.m} color={theme.colors.baseBlue} />
             </Box>
           )}
-          <TextInput
-            {...textInputProps}
+          <Text
             style={styles.input}
-            editable={false}
-            placeholderTextColor={theme.colors.grey2}
+            color={selectedOption ? 'black' : 'grey2'}
             onPress={() => ref.current?.present()}
-          />
+            variant="body2"
+          >
+            {selectedOption || placeholder}
+          </Text>
+          <Box mr="s">
+            <ArrowDown2 size={theme.icon.m} />
+          </Box>
         </Box>
         {error && (
           <Text color="red" mt="xs" textAlign="right" px="s" variant="error">
@@ -107,9 +97,10 @@ function Select(props: Props) {
                   justifyContent="space-between"
                   flexDirection="row"
                   alignItems="center"
-                  backgroundColor="grey"
+                  backgroundColor="grey3"
                   borderRadius="xl"
-                  p="m"
+                  py="s"
+                  px="m"
                 >
                   <Text key={option.value}>{option.label}</Text>
                   {option.value === selectedOption && (

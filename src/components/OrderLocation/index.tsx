@@ -4,9 +4,9 @@ import { Box, useTheme } from '../Theme';
 import SingleLocation from './SingleLocation';
 
 interface Props {
-  selected: 'origin' | 'destination';
-  origin: string;
-  destination: string;
+  selected?: 'origin' | 'destination';
+  origin?: string;
+  destination?: string;
   onPressOrigin: () => void;
   onPressDestination: () => void;
   loading?: boolean;

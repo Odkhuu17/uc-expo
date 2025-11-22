@@ -22,16 +22,20 @@ export type CreateOrderMutationVariables = Types.Exact<{
   originId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   destinationId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   published?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  images?: Types.InputMaybe<Array<Types.Scalars['Upload']['input']> | Types.Scalars['Upload']['input']>;
+  audio?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
+  video?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
+  vatIncluded?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, status?: string, published?: boolean, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, carType?: string, carWeight?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, createdAt: any, updatedAt: any, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string } } };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, status?: string, published?: boolean, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, carType?: string, carWeight?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, images?: Array<string>, audio?: string, video?: string, vatIncluded?: boolean, createdAt: any, updatedAt: any, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string } } };
 
 
 export const CreateOrderDocument = gql`
-    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean) {
+    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean) {
   createOrder(
-    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published}
+    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded}
   ) {
     id
     number
@@ -51,6 +55,10 @@ export const CreateOrderDocument = gql`
     travelAt
     travelDistance
     travelDuration
+    images
+    audio
+    video
+    vatIncluded
     origin {
       id
       address {
@@ -148,6 +156,10 @@ export type CreateOrderMutationFn = ApolloReactCommon.MutationFunction<CreateOrd
  *      originId: // value for 'originId'
  *      destinationId: // value for 'destinationId'
  *      published: // value for 'published'
+ *      images: // value for 'images'
+ *      audio: // value for 'audio'
+ *      video: // value for 'video'
+ *      vatIncluded: // value for 'vatIncluded'
  *   },
  * });
  */

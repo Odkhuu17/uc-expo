@@ -71,6 +71,11 @@ export const theme = createTheme({
     xl: 35,
     xl2: 50,
   },
+  button: {
+    s: 30,
+    m: 40,
+    l: 60,
+  },
   textVariants: {
     defaults: { fontSize: 16, fontFamily: 'Roboto_400Regular' },
     body1: { fontSize: 16, fontFamily: 'Roboto_400Regular' },

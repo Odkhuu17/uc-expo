@@ -119,7 +119,6 @@ query getOrders(
           }
           totalCount
         }
-        validPasswordLocal
         createdAt
         updatedAt
       }

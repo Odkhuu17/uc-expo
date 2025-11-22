@@ -16,6 +16,10 @@ mutation createOrder(
   $originId: ID
   $destinationId: ID
   $published: Boolean
+  $images: [Upload!]
+  $audio: Upload
+  $video: Upload
+  $vatIncluded: Boolean
 ) {
   createOrder(
     input: {
@@ -36,6 +40,10 @@ mutation createOrder(
       travelDistance: $travelDistance
       travelDuration: $travelDuration
       published: $published
+      images: $images
+      audio: $audio
+      video: $video
+      vatIncluded: $vatIncluded
     }
   ) {
     id
@@ -56,6 +64,10 @@ mutation createOrder(
     travelAt
     travelDistance
     travelDuration
+    images
+    audio
+    video
+    vatIncluded
     origin {
       id
       address {

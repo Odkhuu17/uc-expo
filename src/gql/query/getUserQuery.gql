@@ -17,8 +17,6 @@ query GetUser {
     }
     isAdmin
     subscribed
-    validPasswordLocal
-    validPasswordVehicle
     createdAt
     updatedAt
   }

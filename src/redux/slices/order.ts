@@ -4,13 +4,18 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface IOrderReduxState {
   orderLocation?: {
-    origin: CreateAddressMutation['createAddress'];
-    destination: CreateAddressMutation['createAddress'];
+    origin?: CreateAddressMutation['createAddress'];
+    destination?: CreateAddressMutation['createAddress'];
+    selected: 'origin' | 'destination';
   };
   order?: GetOrderQuery['order'];
 }
 
-const initialState = {} as IOrderReduxState;
+const initialState = {
+  orderLocation: {
+    selected: 'origin',
+  },
+} as IOrderReduxState;
 
 const orderSlice = createSlice({
   name: 'order',

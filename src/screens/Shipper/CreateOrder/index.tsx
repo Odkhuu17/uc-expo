@@ -2,6 +2,14 @@ import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
+import {
+  Box as BoxIcon,
+  Calendar,
+  Clock,
+  Image,
+  Microphone2,
+  VideoPlay,
+} from 'iconsax-react-nativejs';
 import { useState } from 'react';
 import { Masks } from 'react-native-mask-input';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,15 +21,20 @@ import {
   Content,
   CustomKeyboardAvoidingView,
   CustomMaskInput,
+  DateInput,
   Input,
   MessageModal,
   NormalHeader,
+  OrderLocation,
+  Select,
 } from '@/components';
 import { Box } from '@/components/Theme';
-import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
+import { packageType } from '@/constants';
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import orderSlice from '@/redux/slices/order';
 import { moneyMask } from '@/utils/helpers';
-import Address from './Address';
+import OrderIconButton from './OrderIconButton';
 
 const schema = yup.object().shape({
   title: yup.string().required('Энэ талбар хоосон байна!'),
@@ -40,14 +53,11 @@ const CreateOrderScreen = () => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [successModal, setSuccessModal] = useState(false);
+  const dispatch = useAppDispatch();
 
   const [createOrder, { loading }] = useCreateOrderMutation();
-  const [origin, setOrigin] = useState<
-    CreateAddressMutation['createAddress'] | undefined
-  >();
-  const [destination, setDestination] = useState<
-    CreateAddressMutation['createAddress'] | undefined
-  >();
+
+  const { orderLocation } = useAppSelector(state => state.order);
 
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({
@@ -65,35 +75,25 @@ const CreateOrderScreen = () => {
       },
       validationSchema: schema,
       onSubmit: async () => {
-        if (origin && destination) {
-          await createOrder({
-            variables: {
-              destinationId: destination.id,
-              originId: origin.id,
-              title: values.title,
-              packageType: values.packageType,
-              packageWeight: Number(values.packageWeight),
-              packageDimensions: Number(values.packageDimensions),
-              receiverName: values.receiverName,
-              receiverMobile: values.receiverMobile,
-              senderName: values.senderName,
-              senderMobile: values.senderMobile,
-              travelAt: dayjs(values.travelAt),
-              price: values.price,
-              published: true,
-            },
-          });
+        await createOrder({
+          variables: {
+            originId: orderLocation?.origin?.id,
+            destinationId: orderLocation?.destination?.id,
+            title: values.title,
+            packageType: values.packageType,
+            packageWeight: Number(values.packageWeight),
+            packageDimensions: Number(values.packageDimensions),
+            receiverName: values.receiverName,
+            receiverMobile: values.receiverMobile,
+            senderName: values.senderName,
+            senderMobile: values.senderMobile,
+            travelAt: dayjs(values.travelAt),
+            price: values.price,
+            published: true,
+          },
+        });
 
-          setSuccessModal(true);
-        } else {
-          router.push({
-            pathname: '/modal',
-            params: {
-              type: 'error',
-              message: 'Та ачаа буулгах болон авах хаягаа оруулна уу!',
-            },
-          });
-        }
+        setSuccessModal(true);
       },
     });
 
@@ -104,64 +104,91 @@ const CreateOrderScreen = () => {
         <CustomKeyboardAvoidingView noWrapper>
           <Content edges={[]} scrollable>
             <Box gap="s">
-              <BoxContainer gap="m">
-                <Address
-                  title="Ачих хаяг"
-                  onSave={setOrigin}
-                  addressData={origin}
-                />
-                <Address
-                  title="Буулах хаяг"
-                  onSave={setDestination}
-                  addressData={destination}
-                />
+              <OrderLocation
+                origin={orderLocation?.origin?.address1}
+                destination={orderLocation?.destination?.address1}
+                onPressOrigin={() => {
+                  router.back();
+                  dispatch(
+                    orderSlice.actions.changeOrderLocation({
+                      ...orderLocation,
+                      selected: 'origin',
+                    })
+                  );
+                }}
+                onPressDestination={() => {
+                  router.back();
+                  dispatch(
+                    orderSlice.actions.changeOrderLocation({
+                      ...orderLocation,
+                      selected: 'destination',
+                    })
+                  );
+                }}
+              />
+              <BoxContainer
+                flexDirection="row"
+                justifyContent="space-between"
+                gap="s"
+              >
+                <Box flex={1}>
+                  <OrderIconButton
+                    icon={Microphone2}
+                    title="Дуу хоолой нэмэх"
+                  />
+                </Box>
+                <Box flex={1}>
+                  <OrderIconButton icon={Image} title="Зураг нэмэх" />
+                </Box>
+                <Box flex={1}>
+                  <OrderIconButton icon={VideoPlay} title="Бичлэг нэмэх" />
+                </Box>
               </BoxContainer>
               <BoxContainer gap="m">
-                <Input
-                  label="Захиалгын утга"
-                  value={values.title}
-                  onBlur={handleBlur('title')}
-                  onChangeText={handleChange('title')}
-                  error={
-                    touched.title && errors.title ? errors.title : undefined
-                  }
-                />
-                <Input
-                  label="Ачааны төрөл"
-                  value={values.packageType}
-                  onBlur={handleBlur('packageType')}
-                  onChangeText={handleChange('packageType')}
+                <Select
+                  icon={BoxIcon}
+                  placeholder="Ачааны төрөл"
+                  options={packageType.map(p => ({
+                    label: p,
+                    value: p,
+                  }))}
+                  selectedOption={values.packageType}
+                  setSelectedOption={handleChange('packageType')}
                   error={
                     touched.packageType && errors.packageType
                       ? errors.packageType
                       : undefined
                   }
                 />
-                <Input
-                  label="Ачааны жин"
-                  unit="кг"
-                  value={values.packageWeight}
-                  keyboardType="numeric"
-                  onBlur={handleBlur('packageWeight')}
-                  onChangeText={handleChange('packageWeight')}
-                  error={
-                    touched.packageWeight && errors.packageWeight
-                      ? errors.packageWeight
-                      : undefined
-                  }
-                />
-                <Input
-                  label="Ачааны эзэлхүүн"
-                  unit="м3"
+                <DateInput
+                  icon={Calendar}
+                  label="Ачих өдөр"
                   keyboardType="number-pad"
-                  value={values.packageDimensions}
-                  onBlur={handleBlur('packageDimensions')}
-                  onChangeText={handleChange('packageDimensions')}
+                  value={values.travelAt}
+                  placeholder="YYYY/MM/DD"
+                  onBlur={handleBlur('travelAt')}
+                  onChangeText={handleChange('travelAt')}
                   error={
-                    touched.packageDimensions && errors.packageDimensions
-                      ? errors.packageDimensions
+                    touched.travelAt && errors.travelAt
+                      ? errors.travelAt
                       : undefined
                   }
+                  mask={Masks.DATE_YYYYMMDD}
+                />
+                <DateInput
+                  icon={Clock}
+                  label="Ачих цаг"
+                  keyboardType="number-pad"
+                  value={values.travelAt}
+                  placeholder="HH:mm"
+                  onBlur={handleBlur('travelAt')}
+                  onChangeText={handleChange('travelAt')}
+                  error={
+                    touched.travelAt && errors.travelAt
+                      ? errors.travelAt
+                      : undefined
+                  }
+                  mask={[/[0-2]/, /\d/, ':', /[0-5]/, /\d/]}
                 />
               </BoxContainer>
               <BoxContainer gap="m">
@@ -215,19 +242,6 @@ const CreateOrderScreen = () => {
                 />
               </BoxContainer>
               <BoxContainer gap="m">
-                <CustomMaskInput
-                  label="Огноо"
-                  keyboardType="number-pad"
-                  value={values.travelAt}
-                  onBlur={handleBlur('travelAt')}
-                  onChangeText={handleChange('travelAt')}
-                  error={
-                    touched.travelAt && errors.travelAt
-                      ? errors.travelAt
-                      : undefined
-                  }
-                  mask={Masks.DATE_YYYYMMDD}
-                />
                 <CustomMaskInput
                   label="Захиалгын үнэ"
                   unit="MNT"
