@@ -17,7 +17,7 @@ export type GetOrdersQuery = { __typename?: 'Query', orders: { __typename?: 'Ord
 
 
 export const GetOrdersDocument = gql`
-    query getOrders($first: Int, $after: String, $filter: OrderFilter, $sort: SortFilter, $deliveryRequestsFirst: Int) {
+    query getOrders($first: Int, $after: String, $filter: OrderFilter, $sort: SortFilter = {field: "created_at", direction: desc}, $deliveryRequestsFirst: Int) {
   orders(first: $first, after: $after, filter: $filter, sort: $sort) {
     edges {
       node {

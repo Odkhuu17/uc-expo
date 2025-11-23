@@ -1,12 +1,14 @@
+import { DrawerActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
+import { HamburgerMenu } from 'iconsax-react-nativejs';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, FitImage, OrderLocation } from '@/components';
-import { Box, makeStyles, useTheme } from '@/components/Theme';
+import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
 import { useCreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import {
   SearchAddressQuery,
@@ -23,6 +25,19 @@ const useStyles = makeStyles(theme => ({
     borderTopRightRadius: theme.borderRadii.xl2,
     alignItems: 'center',
   },
+  map: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gradient: {
+    paddingVertical: theme.spacing.s,
+    paddingHorizontal: theme.spacing.m,
+    borderTopRightRadius: theme.borderRadii.m,
+    borderTopLeftRadius: theme.borderRadii.m,
+    transform: 'rotate(90deg)',
+    transformOrigin: 'left bottom',
+  },
 }));
 
 const ChooseOrderLocationScreen = () => {
@@ -32,6 +47,11 @@ const ChooseOrderLocationScreen = () => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const { orderLocation } = useAppSelector(state => state.order);
+  const navigation = useNavigation();
+
+  const onShowDrawer = () => {
+    navigation.dispatch(DrawerActions.openDrawer());
+  };
 
   const [origin, setOrigin] = useState<
     NonNullable<SearchAddressQuery['searchAddress']>[0] | null
@@ -135,7 +155,7 @@ const ChooseOrderLocationScreen = () => {
   return (
     <>
       <MapView
-        style={css.map}
+        style={styles.map}
         initialRegion={{
           latitude: 47.92123,
           longitude: 106.918556,
@@ -144,6 +164,21 @@ const ChooseOrderLocationScreen = () => {
         }}
         onRegionChangeComplete={onRegionChangeComplete}
       >
+        <Box position="absolute" top={insets.top + theme.spacing.m} left={0}>
+          <TouchableOpacity onPress={onShowDrawer}>
+            <LinearGradient
+              style={styles.gradient}
+              colors={theme.gradients.primary}
+            >
+              <Box flexDirection="row" alignItems="center" gap="s">
+                <Text color="white" variant="label">
+                  Цэсүүд
+                </Text>
+                <HamburgerMenu size={theme.icon.m} color={theme.colors.white} />
+              </Box>
+            </LinearGradient>
+          </TouchableOpacity>
+        </Box>
         <Box
           position="absolute"
           flex={1}
@@ -210,11 +245,3 @@ const ChooseOrderLocationScreen = () => {
 };
 
 export default ChooseOrderLocationScreen;
-
-const css = StyleSheet.create({
-  map: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

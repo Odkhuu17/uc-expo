@@ -1,8 +1,8 @@
 import { AddCircle } from 'iconsax-react-nativejs';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
-import { Marquee } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
+import Marquee from '../Marquee';
 
 interface Props {
   selected: boolean;

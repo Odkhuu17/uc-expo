@@ -38,7 +38,7 @@ import OrderVideoButton from './OrderVideoButton';
 
 const schema = yup.object().shape({
   packageType: yup.string().required('Энэ талбар хоосон байна!'),
-  travelAt: yup.string().required('Энэ талбар хоосон байна!'),
+  travelHour: yup.string().required('Энэ талбар хоосон байна!'),
   travelTime: yup.string().required('Энэ талбар хоосон байна!'),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
   receiverMobile: yup
@@ -96,6 +96,12 @@ const CreateOrderScreen = () => {
     },
     validationSchema: schema,
     onSubmit: async () => {
+      const imageFiles = images.length > 0 ? await imagesToFiles(images) : [];
+      const videoFile = video ? await videoToFile(video) : null;
+      const audioFile = audio ? await audioToFile(audio) : null;
+
+      console.log(imageFiles);
+
       await createOrder({
         variables: {
           originId: orderLocation?.origin?.id,
@@ -113,9 +119,9 @@ const CreateOrderScreen = () => {
             additionalInfo: values.additionalInfo,
           },
           vatIncluded: values.vatIncluded,
-          images: images,
-          video: video,
-          audio: audio,
+          images: imageFiles.length > 0 ? imageFiles : undefined,
+          video: videoFile,
+          audio: audioFile,
         },
       });
 
@@ -194,8 +200,8 @@ const CreateOrderScreen = () => {
                   keyboardType="number-pad"
                   value={values.travelHour}
                   placeholder="YYYY/MM/DD"
-                  onBlur={handleBlur('travelAt')}
-                  onChangeText={handleChange('travelAt')}
+                  onBlur={handleBlur('travelHour')}
+                  onChangeText={handleChange('travelHour')}
                   error={
                     touched.travelHour && errors.travelHour
                       ? errors.travelHour
@@ -254,6 +260,7 @@ const CreateOrderScreen = () => {
                   keyboardType="number-pad"
                   value={values.quantity}
                   onBlur={handleBlur('quantity')}
+                  onChangeText={handleChange('quantity')}
                   error={
                     touched.quantity && errors.quantity
                       ? errors.quantity
@@ -278,24 +285,24 @@ const CreateOrderScreen = () => {
                 </Text>
                 <Input
                   placeholder="Овог нэр"
-                  value={values.receiverName}
-                  onBlur={handleBlur('receiverName')}
-                  onChangeText={handleChange('receiverName')}
+                  value={values.senderName}
+                  onBlur={handleBlur('senderName')}
+                  onChangeText={handleChange('senderName')}
                   error={
-                    touched.receiverName && errors.receiverName
-                      ? errors.receiverName
+                    touched.senderName && errors.senderName
+                      ? errors.senderName
                       : undefined
                   }
                 />
                 <Input
                   placeholder="Утасны дугаар"
                   keyboardType="number-pad"
-                  value={values.receiverMobile}
-                  onBlur={handleBlur('receiverMobile')}
-                  onChangeText={handleChange('receiverMobile')}
+                  value={values.senderMobile}
+                  onBlur={handleBlur('senderMobile')}
+                  onChangeText={handleChange('senderMobile')}
                   error={
-                    touched.receiverMobile && errors.receiverMobile
-                      ? errors.receiverMobile
+                    touched.senderMobile && errors.senderMobile
+                      ? errors.senderMobile
                       : undefined
                   }
                 />

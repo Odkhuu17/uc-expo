@@ -1,39 +1,26 @@
 import dayjs from 'dayjs';
+import { Link } from 'expo-router';
+import { Box as BoxIcon, LocationDiscover } from 'iconsax-react-nativejs';
 import React, { useState } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { TouchableOpacity } from 'react-native';
 
 import {
   BoxContainer,
   Container,
+  CustomFlatList,
   Empty,
   Loader,
   NormalHeader,
 } from '@/components';
-import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
+import { Box, Text, useTheme } from '@/components/Theme';
 import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
-import { Link } from 'expo-router';
 
-const useStyles = makeStyles(theme => ({
-  listContainer: {
-    paddingHorizontal: theme.spacing.m,
-    paddingTop: theme.spacing.m,
-    gap: theme.spacing.m,
-  },
-  emptyContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-}));
-
-const OrdersScreen = () => {
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
-  const styles = useStyles();
+const DriverOrdersScreen = () => {
   const [isRefetching, setIsRefetching] = useState(false);
+  const theme = useTheme();
 
   const { data, loading, fetchMore, refetch } = useGetOrdersQuery({
     variables: {
@@ -60,7 +47,7 @@ const OrdersScreen = () => {
       fetchMore({
         variables: {
           after: endCursor,
-          first: 5,
+          first: 10,
         },
         updateQuery: (previousResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) return previousResult;
@@ -85,32 +72,78 @@ const OrdersScreen = () => {
     item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
   }) => {
     return (
-      <Link href={`/profile/orders/${item?.number}`} asChild>
+      <Link href={`/orders/${item?.number}`} asChild>
         <TouchableOpacity>
           <BoxContainer gap="s">
             <Text color="lightBlue2" fontFamily="Roboto_500Medium">
-              {item?.title}
+              {item?.packageType}
             </Text>
-            <Text>
-              {item?.user?.firstName} {item?.user?.lastName}
-            </Text>
-            {item?.travelAt && (
-              <Box flexDirection="row" gap="xs">
-                <Text color="lightBlue2" variant="body2">
-                  Ачих:
-                </Text>
-                <Text variant="body2" color="grey2">
-                  {dayjs(item?.travelAt).format('YYYY-MM-DD HH:mm')}
-                </Text>
-              </Box>
-            )}
             <Box flexDirection="row" gap="xs">
-              <Text color="lightBlue2" variant="body2">
-                Захиалсан:
-              </Text>
-              <Text variant="body2" color="grey2">
+              <Text variant="body3" color="grey2">
                 {dayjs(item?.createdAt).format('YYYY-MM-DD')}
               </Text>
+            </Box>
+            <Box flexDirection="row" alignItems="center" gap="s">
+              <Box>
+                <BoxIcon size={theme.icon.xl2} color={theme.colors.grey2} />
+              </Box>
+              <Box flex={1}>
+                <Box flexDirection="row" alignItems="center" gap="xs">
+                  <Box alignItems="center">
+                    <LocationDiscover
+                      color={theme.colors.lightBlue2}
+                      size={theme.icon.s}
+                    />
+                  </Box>
+                  <Box>
+                    <Text variant="body2">
+                      {item?.origin?.address?.address1}
+                    </Text>
+                    <Text variant="body2">
+                      {item?.origin?.address?.address2}
+                    </Text>
+                  </Box>
+                </Box>
+                <Box
+                  alignItems="center"
+                  width={theme.icon.s}
+                  justifyContent="center"
+                >
+                  <Box height={20}>
+                    <Box
+                      width={1}
+                      overflow="hidden"
+                      top={-5}
+                      bottom={-5}
+                      position="absolute"
+                    >
+                      <Box
+                        borderWidth={1}
+                        width={1}
+                        height="100%"
+                        borderStyle="dashed"
+                        borderColor="baseBlue"
+                      ></Box>
+                    </Box>
+                  </Box>
+                </Box>
+                <Box flexDirection="row" alignItems="center" gap="xs">
+                  <Box>
+                    <LocationDiscover
+                      color={theme.colors.lightBlue2}
+                      size={theme.icon.s}
+                    />
+                  </Box>
+                  <Box>
+                    <Text variant="body2">
+                      {item?.destination?.address?.address1}
+                    </Text>
+                    <Text variant="body2">
+                      {item?.destination?.address?.address2}
+                    </Text>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </BoxContainer>
         </TouchableOpacity>
@@ -128,33 +161,23 @@ const OrdersScreen = () => {
   return (
     <Container>
       <NormalHeader title="Захиалгууд" />
-      <FlatList
+      <CustomFlatList
         data={orders}
+        loading={loading}
         refreshing={isRefetching}
         onRefresh={onRefresh}
         renderItem={renderItem}
-        keyExtractor={item => item?.id || ''}
-        contentContainerStyle={[
-          styles.listContainer,
-          { paddingBottom: insets.bottom + theme.spacing.m },
-          orders.length === 0 && styles.emptyContainer,
-        ]}
         ListEmptyComponent={
-          loading ? (
-            <Loader />
-          ) : (
-            <Empty
-              title="Захиалга олдсонгүй"
-              description="Одоогоор захиалга үүсээгүй байна."
-            />
-          )
+          <Empty
+            title="Захиалга олдсонгүй"
+            description="Одоогоор захиалга үүсээгүй байна."
+          />
         }
         onEndReached={onLoadMore}
-        onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
     </Container>
   );
 };
 
-export default OrdersScreen;
+export default DriverOrdersScreen;

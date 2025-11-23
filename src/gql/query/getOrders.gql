@@ -2,7 +2,7 @@ query getOrders(
   $first: Int
   $after: String
   $filter: OrderFilter
-  $sort: SortFilter
+  $sort: SortFilter = { field: "created_at", direction: desc }
   $deliveryRequestsFirst: Int
 ) {
   orders(first: $first, after: $after, filter: $filter, sort: $sort) {
@@ -29,7 +29,6 @@ query getOrders(
         travelAt
         travelDistance
         travelDuration
-        audio
         images
         imageObjects {
           id
@@ -100,24 +99,6 @@ query getOrders(
           mobile
           role
           isAdmin
-        }
-        deliveryRequests(first: $deliveryRequestsFirst) {
-          edges {
-            node {
-              id
-              price
-              travelAt
-              status
-              user {
-                id
-                firstName
-                lastName
-                mobile
-                email
-              }
-            }
-          }
-          totalCount
         }
         createdAt
         updatedAt

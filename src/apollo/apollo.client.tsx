@@ -1,8 +1,7 @@
 import {
   ApolloClient,
-  HttpLink,
   InMemoryCache,
-  ServerError,
+  ServerError
 } from '@apollo/client';
 import {
   CombinedGraphQLErrors,
@@ -13,6 +12,7 @@ import { ErrorLink } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { ApolloProvider } from '@apollo/client/react';
 import { Observable } from '@apollo/client/utilities';
+import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { ReactNode, useMemo } from 'react';
@@ -95,7 +95,7 @@ export const useCreateApolloClient = () => {
       return;
     });
 
-    const httpLink = new HttpLink({
+    const uploadLink = new UploadHttpLink({
       uri: process.env.EXPO_PUBLIC_API_URL,
     });
 
@@ -118,7 +118,7 @@ export const useCreateApolloClient = () => {
       .concat(resetToken)
       .concat(errorLink)
       .concat(retryLink)
-      .concat(httpLink);
+      .concat(uploadLink);
 
     return new ApolloClient({
       link: authFlowLink,

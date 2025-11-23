@@ -9,7 +9,6 @@ import {
   Box as BoxIcon,
   Call,
   Note1,
-  Truck,
   User,
   UserAdd,
 } from 'iconsax-react-nativejs';
@@ -65,33 +64,23 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 href="/profile"
               />
               {mode === 'shipper' && (
-                <>
-                  <SingleLinkButton
-                    icon={Truck}
-                    title="Жолооч хайх"
-                    href="/shipper"
-                  />
-                  <SingleLinkButton
-                    icon={BoxIcon}
-                    title="Миний захиалгууд"
-                    href="/profile/orders"
-                  />
-                </>
+                <SingleLinkButton
+                  icon={BoxIcon}
+                  title="Захиалга үүсгэх"
+                  href="/shipper"
+                />
               )}
+              <SingleLinkButton
+                icon={BoxIcon}
+                title="Захиалгууд"
+                href="/orders"
+              />
               {mode === 'driver' && (
-                <>
-                  <SingleLinkButton
-                    icon={BoxIcon}
-                    title="Захиалгууд"
-                    href="/driver/orders"
-                  />
-
-                  <SingleLinkButton
-                    icon={UserAdd}
-                    title="Гишүүнчлэл"
-                    href="/driver/membership"
-                  />
-                </>
+                <SingleLinkButton
+                  icon={UserAdd}
+                  title="Гишүүнчлэл"
+                  href="/driver/membership"
+                />
               )}
             </Box>
             <Box gap="l">
