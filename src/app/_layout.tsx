@@ -20,6 +20,7 @@ import { ApolloClientProvider } from '@/apollo/apollo.client';
 import { theme } from '@/components/Theme';
 import Navigations from '@/Navigations';
 import { persistor, store } from '@/redux/store.instance';
+import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 // SplashScreen.setOptions({
 //   duration: 1000,
@@ -58,7 +59,7 @@ export default function RootLayout() {
                     indexName="supp_tracks"
                     searchClient={searchClient}
                   > */}
-                    <Navigations />
+                  <Navigations />
                   {/* </InstantSearch> */}
                   <StatusBar style="auto" />
                 </BottomSheetModalProvider>
@@ -67,6 +68,7 @@ export default function RootLayout() {
           </Provider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
+      <ReducedMotionConfig mode={ReduceMotion.Never} />
     </ApolloClientProvider>
   );
 }

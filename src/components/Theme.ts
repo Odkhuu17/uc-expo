@@ -34,10 +34,11 @@ export const theme = createTheme({
     warning: '#FAAD14',
   },
   gradients: {
-    primary: ['#003A91', '#1265FF', '#00235C'] as const,
-    primaryLocations: [0.005, 0.4844, 1.0] as const,
+    primary: ['#003A91', '#1265FF'] as const,
+    primaryLocations: [0, 1] as const,
   },
   spacing: {
+    xs2: 3,
     xs: 5,
     s: 10,
     m: 15,
@@ -85,6 +86,10 @@ export const theme = createTheme({
     },
     body3: {
       fontSize: 12,
+      fontFamily: 'Roboto_400Regular',
+    },
+    body4: {
+      fontSize: 10,
       fontFamily: 'Roboto_400Regular',
     },
     error: { fontSize: 14, fontFamily: 'Roboto_400Regular' },

@@ -1,3 +1,4 @@
+import { carTypes2 } from '@/constants';
 import { createNumberMask } from 'react-native-mask-input';
 
 export const moneyFormat = (
@@ -28,4 +29,10 @@ export const formatDuration = (durationMillis?: number | null) => {
 
 export const getImageUrl = (url: string) => {
   return `${process.env.EXPO_PUBLIC_IMAGE_URL}${url}`;
+};
+
+export const isRentOrder = (carType: string) => {
+  const found = carTypes2.find(car => car.name === carType);
+
+  return found ? true : false;
 };

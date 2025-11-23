@@ -5,8 +5,9 @@ export interface IOrderReduxState {
   orderLocation?: {
     origin?: CreateAddressMutation['createAddress'];
     destination?: CreateAddressMutation['createAddress'];
-    selected: 'origin' | 'destination';
   };
+  selectedLocation?: 'origin' | 'destination';
+  carType: string;
   order?: {
     packageType: string;
     travelHour: string;
@@ -26,16 +27,24 @@ export interface IOrderReduxState {
   };
 }
 
-const initialState = {
-  orderLocation: {
-    selected: 'origin',
-  },
-} as IOrderReduxState;
+const initialState = {} as IOrderReduxState;
 
 const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
+    changeSelectedLocation: (
+      state,
+      action: { payload: IOrderReduxState['selectedLocation'] }
+    ) => {
+      return { ...state, selectedLocation: action.payload };
+    },
+    changeCarType: (
+      state,
+      action: { payload: IOrderReduxState['carType'] }
+    ) => {
+      return { ...state, carType: action.payload };
+    },
     changeOrderLocation: (
       state,
       action: { payload: IOrderReduxState['orderLocation'] }

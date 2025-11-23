@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/app-icon.png",
     "scheme": "uclogistics",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "co6m.munkhsukhj.ucapp",

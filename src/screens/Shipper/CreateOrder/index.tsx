@@ -2,7 +2,13 @@ import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
-import { Box as BoxIcon, Calendar, Clock } from 'iconsax-react-nativejs';
+import {
+  ArchiveBox,
+  Box as BoxIcon,
+  Calendar,
+  Clock,
+  TruckFast,
+} from 'iconsax-react-nativejs';
 import { useEffect, useState } from 'react';
 import { Masks } from 'react-native-mask-input';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -24,12 +30,12 @@ import {
   TextArea,
 } from '@/components';
 import { Box, Text } from '@/components/Theme';
-import { packageType } from '@/constants';
+import { carTypes, carTypes2, packageTypes } from '@/constants';
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import orderSlice from '@/redux/slices/order';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
-import { moneyMask } from '@/utils/helpers';
+import { isRentOrder, moneyMask } from '@/utils/helpers';
 import OrderAudio from './OrderAudio';
 import OrderAudioPlayer from './OrderAudioPlayer';
 import OrderImageButton from './OrderImageButton';
@@ -42,15 +48,9 @@ const schema = yup.object().shape({
   travelHour: yup.string().required('Энэ талбар хоосон байна!'),
   travelTime: yup.string().required('Энэ талбар хоосон байна!'),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
-  receiverMobile: yup
-    .string()
-    .length(8, 'Буруу дугаар оруулсан байна!')
-    .required('Энэ талбар хоосон байна!'),
-  senderName: yup.string().required('Энэ талбар хоосон байна!'),
-  senderMobile: yup
-    .string()
-    .length(8, 'Буруу дугаар оруулсан байна!')
-    .required('Энэ талбар хоосон байна!'),
+  receiverMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
+  senderName: yup.string(),
+  senderMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
   price: yup.string().when('priceNegotiable', {
     is: false,
     then: schema => schema.required('Энэ талбар хоосон байна!'),
@@ -71,6 +71,9 @@ const CreateOrderScreen = () => {
   const [createOrder, { loading }] = useCreateOrderMutation();
   const { order } = useAppSelector(state => state.order);
   const { orderLocation } = useAppSelector(state => state.order);
+  const { carType } = useAppSelector(state => state.order);
+
+  const isRent = isRentOrder(carType);
 
   const {
     handleSubmit,
@@ -94,6 +97,10 @@ const CreateOrderScreen = () => {
       receiverMobile: '',
       senderName: '',
       senderMobile: '',
+      packageWeight: '',
+      carWeight: '',
+      motTime: '',
+      workDay: '',
     },
     validationSchema: schema,
     onSubmit: async () => {
@@ -113,9 +120,11 @@ const CreateOrderScreen = () => {
           travelAt: dayjs(`${values.travelHour} ${values.travelTime}`),
           price: values.priceNegotiable ? undefined : values.price,
           published: true,
+          carWeight: isRent ? values.carWeight : undefined,
           data: {
             quantity: values.quantity,
             additionalInfo: values.additionalInfo,
+            packageWeight: values.packageWeight,
           },
           vatIncluded: values.vatIncluded,
           images: imageFiles.length > 0 ? imageFiles : undefined,
@@ -123,29 +132,6 @@ const CreateOrderScreen = () => {
           audio: audioFile,
         },
       });
-
-      // await createOrder({
-      //   variables: {
-      //     originId: '1',
-      //     destinationId: '1',
-      //     packageType: 'test',
-      //     receiverName: 'test123',
-      //     receiverMobile: '99999999',
-      //     senderName: 'values.senderName',
-      //     senderMobile: '99999999',
-      //     travelAt: dayjs(`2025/12/12 12:00`),
-      //     price: '100000',
-      //     published: true,
-      //     data: {
-      //       quantity: 5,
-      //       additionalInfo: 'values.additionalInfo',
-      //     },
-      //     vatIncluded: true,
-      //     images: imageFiles.length > 0 ? imageFiles : undefined,
-      //     video: videoFile,
-      //     audio: audioFile,
-      //   },
-      // });
 
       setSuccessModal(true);
       dispatch(orderSlice.actions.changeOrder());
@@ -160,20 +146,23 @@ const CreateOrderScreen = () => {
           setFieldValue(key, order[key as keyof typeof order]);
         }
       });
+
       setVideo(order.video || '');
       setAudio(order.audio || '');
       setImages(order.images || []);
     }
   }, [order]);
 
+  useEffect(() => {
+    setFieldValue('carWeight', '');
+  }, [carType]);
+
   const onPressOrigin = () => {
     router.back();
     dispatch(
-      orderSlice.actions.changeOrderLocation({
-        ...orderLocation,
-        selected: 'origin',
-      })
+      orderSlice.actions.changeOrder({ ...values, images, audio, video })
     );
+    dispatch(orderSlice.actions.changeSelectedLocation('origin'));
   };
 
   const onPressDestination = () => {
@@ -181,12 +170,7 @@ const CreateOrderScreen = () => {
     dispatch(
       orderSlice.actions.changeOrder({ ...values, images, audio, video })
     );
-    dispatch(
-      orderSlice.actions.changeOrderLocation({
-        ...orderLocation,
-        selected: 'destination',
-      })
-    );
+    dispatch(orderSlice.actions.changeSelectedLocation('destination'));
   };
 
   return (
@@ -226,7 +210,7 @@ const CreateOrderScreen = () => {
                 <Select
                   icon={BoxIcon}
                   placeholder="Ачааны төрөл"
-                  options={packageType.map(p => ({
+                  options={packageTypes.map(p => ({
                     label: p,
                     value: p,
                   }))}
@@ -238,6 +222,39 @@ const CreateOrderScreen = () => {
                       : undefined
                   }
                 />
+                <Select
+                  icon={TruckFast}
+                  placeholder="Машины төрөл"
+                  options={[...carTypes, ...carTypes2].map(p => ({
+                    label: p.name,
+                    value: p.name,
+                  }))}
+                  selectedOption={carType}
+                  setSelectedOption={value =>
+                    dispatch(orderSlice.actions.changeCarType(value))
+                  }
+                />
+                {isRent && (
+                  <Select
+                    icon={ArchiveBox}
+                    placeholder="Даац/Хэмжээ"
+                    options={
+                      carTypes2
+                        .find(c => c.name === carType)
+                        ?.options?.map(p => ({
+                          label: p,
+                          value: p,
+                        })) || []
+                    }
+                    selectedOption={values.carWeight}
+                    setSelectedOption={handleChange('carWeight')}
+                    error={
+                      touched.carWeight && errors.carWeight
+                        ? errors.carWeight
+                        : undefined
+                    }
+                  />
+                )}
                 <DateInput
                   icon={Calendar}
                   label="Ачих өдөр"
@@ -299,18 +316,20 @@ const CreateOrderScreen = () => {
                 )}
               </BoxContainer>
               <BoxContainer gap="m">
-                <Input
-                  placeholder="Тоо ширхэг"
-                  keyboardType="number-pad"
-                  value={values.quantity}
-                  onBlur={handleBlur('quantity')}
-                  onChangeText={handleChange('quantity')}
-                  error={
-                    touched.quantity && errors.quantity
-                      ? errors.quantity
-                      : undefined
-                  }
-                />
+                {!isRent && (
+                  <Input
+                    placeholder="Тоо ширхэг"
+                    keyboardType="number-pad"
+                    value={values.quantity}
+                    onBlur={handleBlur('quantity')}
+                    onChangeText={handleChange('quantity')}
+                    error={
+                      touched.quantity && errors.quantity
+                        ? errors.quantity
+                        : undefined
+                    }
+                  />
+                )}
                 <TextArea
                   placeholder="Нэмэлт мэдээлэл"
                   value={values.additionalInfo}
@@ -323,62 +342,66 @@ const CreateOrderScreen = () => {
                   }
                 />
               </BoxContainer>
-              <BoxContainer gap="m">
-                <Text variant="body2" fontFamily="Roboto_500Medium">
-                  Илгээгчийн мэдээлэл
-                </Text>
-                <Input
-                  placeholder="Овог нэр"
-                  value={values.senderName}
-                  onBlur={handleBlur('senderName')}
-                  onChangeText={handleChange('senderName')}
-                  error={
-                    touched.senderName && errors.senderName
-                      ? errors.senderName
-                      : undefined
-                  }
-                />
-                <Input
-                  placeholder="Утасны дугаар"
-                  keyboardType="number-pad"
-                  value={values.senderMobile}
-                  onBlur={handleBlur('senderMobile')}
-                  onChangeText={handleChange('senderMobile')}
-                  error={
-                    touched.senderMobile && errors.senderMobile
-                      ? errors.senderMobile
-                      : undefined
-                  }
-                />
-              </BoxContainer>
-              <BoxContainer gap="m">
-                <Text variant="body2" fontFamily="Roboto_500Medium">
-                  Хүлээн авагчийн мэдээлэл
-                </Text>
-                <Input
-                  placeholder="Овог нэр"
-                  value={values.receiverName}
-                  onBlur={handleBlur('receiverName')}
-                  onChangeText={handleChange('receiverName')}
-                  error={
-                    touched.receiverName && errors.receiverName
-                      ? errors.receiverName
-                      : undefined
-                  }
-                />
-                <Input
-                  placeholder="Утасны дугаар"
-                  keyboardType="number-pad"
-                  value={values.receiverMobile}
-                  onBlur={handleBlur('receiverMobile')}
-                  onChangeText={handleChange('receiverMobile')}
-                  error={
-                    touched.receiverMobile && errors.receiverMobile
-                      ? errors.receiverMobile
-                      : undefined
-                  }
-                />
-              </BoxContainer>
+              {!isRent && (
+                <>
+                  <BoxContainer gap="m">
+                    <Text variant="body2" fontFamily="Roboto_500Medium">
+                      Илгээгчийн мэдээлэл
+                    </Text>
+                    <Input
+                      placeholder="Овог нэр"
+                      value={values.senderName}
+                      onBlur={handleBlur('senderName')}
+                      onChangeText={handleChange('senderName')}
+                      error={
+                        touched.senderName && errors.senderName
+                          ? errors.senderName
+                          : undefined
+                      }
+                    />
+                    <Input
+                      placeholder="Утасны дугаар"
+                      keyboardType="number-pad"
+                      value={values.senderMobile}
+                      onBlur={handleBlur('senderMobile')}
+                      onChangeText={handleChange('senderMobile')}
+                      error={
+                        touched.senderMobile && errors.senderMobile
+                          ? errors.senderMobile
+                          : undefined
+                      }
+                    />
+                  </BoxContainer>
+                  <BoxContainer gap="m">
+                    <Text variant="body2" fontFamily="Roboto_500Medium">
+                      Хүлээн авагчийн мэдээлэл
+                    </Text>
+                    <Input
+                      placeholder="Овог нэр"
+                      value={values.receiverName}
+                      onBlur={handleBlur('receiverName')}
+                      onChangeText={handleChange('receiverName')}
+                      error={
+                        touched.receiverName && errors.receiverName
+                          ? errors.receiverName
+                          : undefined
+                      }
+                    />
+                    <Input
+                      placeholder="Утасны дугаар"
+                      keyboardType="number-pad"
+                      value={values.receiverMobile}
+                      onBlur={handleBlur('receiverMobile')}
+                      onChangeText={handleChange('receiverMobile')}
+                      error={
+                        touched.receiverMobile && errors.receiverMobile
+                          ? errors.receiverMobile
+                          : undefined
+                      }
+                    />
+                  </BoxContainer>
+                </>
+              )}
             </Box>
           </Content>
         </CustomKeyboardAvoidingView>

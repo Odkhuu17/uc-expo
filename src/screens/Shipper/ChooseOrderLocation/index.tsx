@@ -1,14 +1,11 @@
-import { DrawerActions } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, useRouter } from 'expo-router';
-import { HamburgerMenu } from 'iconsax-react-nativejs';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, FitImage, OrderLocation } from '@/components';
-import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
+import { Button, OrderLocation } from '@/components';
+import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { useCreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import {
   SearchAddressQuery,
@@ -16,6 +13,10 @@ import {
 } from '@/gql/query/searchAddressQuery.generated';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import orderSlice from '@/redux/slices/order';
+import CarTypes from './CarTypes';
+import CarTypes2 from './CarTypes2';
+import MapPin from './MapPin';
+import MenuButton from './MenuButton';
 
 const useStyles = makeStyles(theme => ({
   bottomView: {
@@ -30,14 +31,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  gradient: {
-    paddingVertical: theme.spacing.s,
-    paddingHorizontal: theme.spacing.m,
-    borderTopRightRadius: theme.borderRadii.m,
-    borderTopLeftRadius: theme.borderRadii.m,
-    transform: 'rotate(90deg)',
-    transformOrigin: 'left bottom',
-  },
 }));
 
 const ChooseOrderLocationScreen = () => {
@@ -46,12 +39,7 @@ const ChooseOrderLocationScreen = () => {
   const router = useRouter();
   const styles = useStyles();
   const dispatch = useAppDispatch();
-  const { orderLocation } = useAppSelector(state => state.order);
-  const navigation = useNavigation();
-
-  const onShowDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
-  };
+  const { selectedLocation } = useAppSelector(state => state.order);
 
   const [origin, setOrigin] = useState<
     NonNullable<SearchAddressQuery['searchAddress']>[0] | null
@@ -85,7 +73,7 @@ const ChooseOrderLocationScreen = () => {
         longitude: region.longitude,
       },
     });
-    if (orderLocation?.selected === 'origin') {
+    if (selectedLocation === 'origin') {
       setOrigin(data?.searchAddress?.[0] || null);
     } else {
       setDestination(data?.searchAddress?.[0] || null);
@@ -136,9 +124,10 @@ const ChooseOrderLocationScreen = () => {
         orderSlice.actions.changeOrderLocation({
           origin: originData?.createAddress,
           destination: destinationData?.createAddress,
-          selected: orderLocation?.selected || 'origin',
         })
       );
+
+      dispatch(orderSlice.actions.changeSelectedLocation('origin'));
 
       router.navigate('/shipper/orders/create');
     } else {
@@ -150,6 +139,14 @@ const ChooseOrderLocationScreen = () => {
         },
       });
     }
+  };
+
+  const onPressOrigin = () => {
+    dispatch(orderSlice.actions.changeSelectedLocation('origin'));
+  };
+
+  const onPressDestination = () => {
+    dispatch(orderSlice.actions.changeSelectedLocation('destination'));
   };
 
   return (
@@ -164,36 +161,28 @@ const ChooseOrderLocationScreen = () => {
         }}
         onRegionChangeComplete={onRegionChangeComplete}
       >
-        <Box position="absolute" top={insets.top + theme.spacing.m} left={0}>
-          <TouchableOpacity onPress={onShowDrawer}>
-            <LinearGradient
-              style={styles.gradient}
-              colors={theme.gradients.primary}
-            >
-              <Box flexDirection="row" alignItems="center" gap="s">
-                <Text color="white" variant="label">
-                  Цэсүүд
-                </Text>
-                <HamburgerMenu size={theme.icon.m} color={theme.colors.white} />
-              </Box>
-            </LinearGradient>
-          </TouchableOpacity>
+        <Box
+          position="absolute"
+          top={insets.top + theme.spacing.m}
+          left={0}
+          gap="m"
+        >
+          <MenuButton />
+          <CarTypes />
         </Box>
         <Box
           position="absolute"
-          flex={1}
-          height={60}
-          style={{
-            transform: [{ translateY: -30 }],
-          }}
-          alignItems="center"
-          justifyContent="center"
+          top={insets.top + theme.spacing.m}
+          right={0}
+          gap="m"
         >
-          <FitImage source={require('assets/images/map_pin.png')} height={60} />
+          <Box height={100} />
+          <CarTypes2 />
         </Box>
+        <MapPin />
         <Box bottom={0} position="absolute" left={0} right={0}>
           <LinearGradient
-            colors={['#003A91', '#1265FF']}
+            colors={theme.gradients.primary}
             style={[
               styles.bottomView,
               { paddingBottom: theme.spacing.m + insets.bottom },
@@ -218,23 +207,9 @@ const ChooseOrderLocationScreen = () => {
             <OrderLocation
               origin={origin?._source?.nameFullMn}
               destination={destination?._source?.nameFullMn}
-              selected={orderLocation?.selected || 'origin'}
-              onPressOrigin={() =>
-                dispatch(
-                  orderSlice.actions.changeOrderLocation({
-                    ...orderLocation,
-                    selected: 'origin',
-                  })
-                )
-              }
-              onPressDestination={() =>
-                dispatch(
-                  orderSlice.actions.changeOrderLocation({
-                    ...orderLocation,
-                    selected: 'destination',
-                  })
-                )
-              }
+              selected={selectedLocation || 'origin'}
+              onPressOrigin={onPressOrigin}
+              onPressDestination={onPressDestination}
               loading={searchLoading}
             />
           </Box>

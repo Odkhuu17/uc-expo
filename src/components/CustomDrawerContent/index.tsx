@@ -5,12 +5,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import {
-  Box as BoxIcon,
-  Call,
-  Note1,
-  UserAdd
-} from 'iconsax-react-nativejs';
+import { Box as BoxIcon, Call, Note1, UserAdd } from 'iconsax-react-nativejs';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -38,7 +33,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     <DrawerContentScrollView {...props} contentContainerStyle={css.container}>
       <LinearGradient
         colors={theme.gradients.primary}
-        locations={theme.gradients.primaryLocations}
         style={[
           css.gradient,
           {
