@@ -9,7 +9,7 @@ interface Props {
   title: string;
 }
 
-const OrderIconButton = ({ icon: Icon, onPress, title, width }: Props) => {
+const OrderIconButton = ({ icon: Icon, onPress, title }: Props) => {
   const theme = useTheme();
 
   return (

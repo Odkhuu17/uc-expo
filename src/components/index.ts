@@ -1,6 +1,7 @@
 export { default as BoxContainer } from './BoxContainer';
 export { default as Button } from './Button';
 export { default as Button2 } from './Button2';
+export { default as Checkbox } from './Checkbox';
 export { default as Container } from './Container';
 export { default as Content } from './Content';
 export { default as CustomBottomSheetModal } from './CustomBottomSheetModal';

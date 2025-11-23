@@ -20,6 +20,7 @@ mutation createOrder(
   $audio: Upload
   $video: Upload
   $vatIncluded: Boolean
+  $data: JSON
 ) {
   createOrder(
     input: {
@@ -44,6 +45,7 @@ mutation createOrder(
       audio: $audio
       video: $video
       vatIncluded: $vatIncluded
+      data: $data
     }
   ) {
     id

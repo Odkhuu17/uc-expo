@@ -26,10 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1,
     paddingHorizontal: theme.spacing.s,
   },
-  backdrop: {
-    flex: 1,
-    backgroundColor: theme.colors.backdrop,
-  },
 }));
 
 function Select({
@@ -84,6 +80,9 @@ function Select({
       </Box>
       <CustomBottomSheetModal ref={ref}>
         <BottomSheetScrollView>
+          <Text variant="label" textAlign="center" mb="m">
+            {placeholder}
+          </Text>
           <Box px="m" gap="s">
             {options.map(option => (
               <TouchableOpacity

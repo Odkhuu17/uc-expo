@@ -16,7 +16,6 @@ interface BaseProps extends TextInputProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
-    textAlign: 'right',
     flex: 1,
     paddingHorizontal: theme.spacing.s,
   },

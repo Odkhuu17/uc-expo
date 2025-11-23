@@ -26,6 +26,7 @@ export type CreateOrderMutationVariables = Types.Exact<{
   audio?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
   video?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
   vatIncluded?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
+  data?: Types.InputMaybe<Types.Scalars['JSON']['input']>;
 }>;
 
 
@@ -33,9 +34,9 @@ export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __t
 
 
 export const CreateOrderDocument = gql`
-    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean) {
+    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
   createOrder(
-    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded}
+    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded, data: $data}
   ) {
     id
     number
@@ -160,6 +161,7 @@ export type CreateOrderMutationFn = ApolloReactCommon.MutationFunction<CreateOrd
  *      audio: // value for 'audio'
  *      video: // value for 'video'
  *      vatIncluded: // value for 'vatIncluded'
+ *      data: // value for 'data'
  *   },
  * });
  */

@@ -19,5 +19,9 @@ export const packageType = [
 ];
 
 export const carType = [
-    
+  'Задгай',
+  'Бүхээгтэй',
+  'Хөргүүртэй',
+  'Крантай',
+  'Трейлэр',
 ];
