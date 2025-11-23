@@ -25,3 +25,7 @@ export const formatDuration = (durationMillis?: number | null) => {
 
   return `${minutes}:${seconds}`;
 };
+
+export const getImageUrl = (url: string) => {
+  return `${process.env.EXPO_PUBLIC_IMAGE_URL}${url}`;
+};
