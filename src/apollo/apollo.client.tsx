@@ -97,6 +97,22 @@ export const useCreateApolloClient = () => {
 
     const uploadLink = new UploadHttpLink({
       uri: process.env.EXPO_PUBLIC_API_URL,
+      isExtractableFile: (value: any): value is { uri: string; name: string; type: string } => {
+        return (
+          value != null &&
+          typeof value === 'object' &&
+          typeof value.uri === 'string' &&
+          typeof value.name === 'string' &&
+          typeof value.type === 'string'
+        );
+      },
+      formDataAppendFile: (formData: FormData, fieldName: string, file: any) => {
+        formData.append(fieldName, {
+          uri: file.uri,
+          name: file.name,
+          type: file.type,
+        } as any);
+      },
     });
 
     const retryLink = new RetryLink({

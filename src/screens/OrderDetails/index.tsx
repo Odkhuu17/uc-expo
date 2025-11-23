@@ -15,6 +15,8 @@ const OrderDetail = () => {
     },
   });
 
+  console.log(data);
+
   return (
     <Container>
       <NormalHeader title={number as string} hasBack />

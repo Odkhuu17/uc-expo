@@ -28,6 +28,7 @@ import { packageType } from '@/constants';
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import orderSlice from '@/redux/slices/order';
+import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
 import { moneyMask } from '@/utils/helpers';
 import OrderAudio from './OrderAudio';
 import OrderAudioPlayer from './OrderAudioPlayer';
@@ -94,31 +95,54 @@ const CreateOrderScreen = () => {
       senderName: '',
       senderMobile: '',
     },
-    validationSchema: schema,
+    // validationSchema: schema,
     onSubmit: async () => {
-      const imageFiles = images.length > 0 ? await imagesToFiles(images) : [];
-      const videoFile = video ? await videoToFile(video) : null;
-      const audioFile = audio ? await audioToFile(audio) : null;
+      const imageFiles = images.length > 0 ? imagesToFiles(images) : [];
+      const videoFile = video ? videoToFile(video) : null;
+      const audioFile = audio ? audioToFile(audio) : null;
 
-      console.log(imageFiles);
+      console.log(imageFiles, videoFile, audioFile);
+
+      // await createOrder({
+      //   variables: {
+      //     originId: orderLocation?.origin?.id,
+      //     destinationId: orderLocation?.destination?.id,
+      //     packageType: values.packageType,
+      //     receiverName: values.receiverName,
+      //     receiverMobile: values.receiverMobile,
+      //     senderName: values.senderName,
+      //     senderMobile: values.senderMobile,
+      //     travelAt: dayjs(`${values.travelHour} ${values.travelTime}`),
+      //     price: values.priceNegotiable ? undefined : values.price,
+      //     published: true,
+      //     data: {
+      //       quantity: values.quantity,
+      //       additionalInfo: values.additionalInfo,
+      //     },
+      //     vatIncluded: values.vatIncluded,
+      //     images: imageFiles.length > 0 ? imageFiles : undefined,
+      //     video: videoFile,
+      //     audio: audioFile,
+      //   },
+      // });
 
       await createOrder({
         variables: {
-          originId: orderLocation?.origin?.id,
-          destinationId: orderLocation?.destination?.id,
-          packageType: values.packageType,
-          receiverName: values.receiverName,
-          receiverMobile: values.receiverMobile,
-          senderName: values.senderName,
-          senderMobile: values.senderMobile,
-          travelAt: dayjs(`${values.travelHour} ${values.travelTime}`),
-          price: values.priceNegotiable ? undefined : values.price,
+          originId: '1',
+          destinationId: '1',
+          packageType: 'test',
+          receiverName: 'test123',
+          receiverMobile: '99999999',
+          senderName: 'values.senderName',
+          senderMobile: '99999999',
+          travelAt: dayjs(`2025/12/12 12:00`),
+          price: '100000',
           published: true,
           data: {
-            quantity: values.quantity,
-            additionalInfo: values.additionalInfo,
+            quantity: 5,
+            additionalInfo: 'values.additionalInfo',
           },
-          vatIncluded: values.vatIncluded,
+          vatIncluded: true,
           images: imageFiles.length > 0 ? imageFiles : undefined,
           video: videoFile,
           audio: audioFile,
