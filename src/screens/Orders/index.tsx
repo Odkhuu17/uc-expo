@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 
 import {
@@ -11,6 +12,7 @@ import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
+import { Image } from 'expo-image';
 import SingleOrder from './SingleOrder';
 
 const DriverOrdersScreen = () => {
@@ -75,10 +77,21 @@ const DriverOrdersScreen = () => {
     return null;
   };
 
+  const onPressBack = () => {
+    router.navigate('/shipper');
+  };
+
   return (
     <Container>
-      <NormalHeader title="Захиалгууд" />
+      <NormalHeader title="Захиалгууд" onPressBack={onPressBack} />
       <CustomFlatList
+        ListHeaderComponent={
+          <Image
+            source={require('assets/images/order-banner.jpg')}
+            style={{ width: '100%', height: 200 }}
+            contentFit="cover"
+          />
+        }
         data={orders}
         loading={loading}
         refreshing={isRefetching}

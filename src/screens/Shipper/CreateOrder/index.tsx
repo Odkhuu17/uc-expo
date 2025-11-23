@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { Box as BoxIcon, Calendar, Clock } from 'iconsax-react-nativejs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Masks } from 'react-native-mask-input';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
@@ -69,7 +69,7 @@ const CreateOrderScreen = () => {
   const [video, setVideo] = useState('');
 
   const [createOrder, { loading }] = useCreateOrderMutation();
-
+  const { order } = useAppSelector(state => state.order);
   const { orderLocation } = useAppSelector(state => state.order);
 
   const {
@@ -95,63 +95,99 @@ const CreateOrderScreen = () => {
       senderName: '',
       senderMobile: '',
     },
-    // validationSchema: schema,
+    validationSchema: schema,
     onSubmit: async () => {
       const imageFiles = images.length > 0 ? imagesToFiles(images) : [];
       const videoFile = video ? videoToFile(video) : null;
       const audioFile = audio ? audioToFile(audio) : null;
 
-      console.log(imageFiles, videoFile, audioFile);
-
-      // await createOrder({
-      //   variables: {
-      //     originId: orderLocation?.origin?.id,
-      //     destinationId: orderLocation?.destination?.id,
-      //     packageType: values.packageType,
-      //     receiverName: values.receiverName,
-      //     receiverMobile: values.receiverMobile,
-      //     senderName: values.senderName,
-      //     senderMobile: values.senderMobile,
-      //     travelAt: dayjs(`${values.travelHour} ${values.travelTime}`),
-      //     price: values.priceNegotiable ? undefined : values.price,
-      //     published: true,
-      //     data: {
-      //       quantity: values.quantity,
-      //       additionalInfo: values.additionalInfo,
-      //     },
-      //     vatIncluded: values.vatIncluded,
-      //     images: imageFiles.length > 0 ? imageFiles : undefined,
-      //     video: videoFile,
-      //     audio: audioFile,
-      //   },
-      // });
-
       await createOrder({
         variables: {
-          originId: '1',
-          destinationId: '1',
-          packageType: 'test',
-          receiverName: 'test123',
-          receiverMobile: '99999999',
-          senderName: 'values.senderName',
-          senderMobile: '99999999',
-          travelAt: dayjs(`2025/12/12 12:00`),
-          price: '100000',
+          originId: orderLocation?.origin?.id,
+          destinationId: orderLocation?.destination?.id,
+          packageType: values.packageType,
+          receiverName: values.receiverName,
+          receiverMobile: values.receiverMobile,
+          senderName: values.senderName,
+          senderMobile: values.senderMobile,
+          travelAt: dayjs(`${values.travelHour} ${values.travelTime}`),
+          price: values.priceNegotiable ? undefined : values.price,
           published: true,
           data: {
-            quantity: 5,
-            additionalInfo: 'values.additionalInfo',
+            quantity: values.quantity,
+            additionalInfo: values.additionalInfo,
           },
-          vatIncluded: true,
+          vatIncluded: values.vatIncluded,
           images: imageFiles.length > 0 ? imageFiles : undefined,
           video: videoFile,
           audio: audioFile,
         },
       });
 
+      // await createOrder({
+      //   variables: {
+      //     originId: '1',
+      //     destinationId: '1',
+      //     packageType: 'test',
+      //     receiverName: 'test123',
+      //     receiverMobile: '99999999',
+      //     senderName: 'values.senderName',
+      //     senderMobile: '99999999',
+      //     travelAt: dayjs(`2025/12/12 12:00`),
+      //     price: '100000',
+      //     published: true,
+      //     data: {
+      //       quantity: 5,
+      //       additionalInfo: 'values.additionalInfo',
+      //     },
+      //     vatIncluded: true,
+      //     images: imageFiles.length > 0 ? imageFiles : undefined,
+      //     video: videoFile,
+      //     audio: audioFile,
+      //   },
+      // });
+
       setSuccessModal(true);
+      dispatch(orderSlice.actions.changeOrder());
+      dispatch(orderSlice.actions.changeOrderLocation());
     },
   });
+
+  useEffect(() => {
+    if (order) {
+      Object.keys(order).forEach(key => {
+        if (key in values) {
+          setFieldValue(key, order[key as keyof typeof order]);
+        }
+      });
+      setVideo(order.video || '');
+      setAudio(order.audio || '');
+      setImages(order.images || []);
+    }
+  }, [order]);
+
+  const onPressOrigin = () => {
+    router.back();
+    dispatch(
+      orderSlice.actions.changeOrderLocation({
+        ...orderLocation,
+        selected: 'origin',
+      })
+    );
+  };
+
+  const onPressDestination = () => {
+    router.back();
+    dispatch(
+      orderSlice.actions.changeOrder({ ...values, images, audio, video })
+    );
+    dispatch(
+      orderSlice.actions.changeOrderLocation({
+        ...orderLocation,
+        selected: 'destination',
+      })
+    );
+  };
 
   return (
     <>
@@ -163,24 +199,8 @@ const CreateOrderScreen = () => {
               <OrderLocation
                 origin={orderLocation?.origin?.address1}
                 destination={orderLocation?.destination?.address1}
-                onPressOrigin={() => {
-                  router.back();
-                  dispatch(
-                    orderSlice.actions.changeOrderLocation({
-                      ...orderLocation,
-                      selected: 'origin',
-                    })
-                  );
-                }}
-                onPressDestination={() => {
-                  router.back();
-                  dispatch(
-                    orderSlice.actions.changeOrderLocation({
-                      ...orderLocation,
-                      selected: 'destination',
-                    })
-                  );
-                }}
+                onPressOrigin={onPressOrigin}
+                onPressDestination={onPressDestination}
               />
               <BoxContainer
                 flexDirection="row"

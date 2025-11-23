@@ -1,5 +1,4 @@
 import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
-import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface IOrderReduxState {
@@ -8,7 +7,23 @@ export interface IOrderReduxState {
     destination?: CreateAddressMutation['createAddress'];
     selected: 'origin' | 'destination';
   };
-  order?: GetOrderQuery['order'];
+  order?: {
+    packageType: string;
+    travelHour: string;
+    travelTime: string;
+    vatIncluded: boolean;
+    priceNegotiable: boolean;
+    price: string;
+    quantity: string;
+    additionalInfo: string;
+    receiverName: string;
+    receiverMobile: string;
+    senderName: string;
+    senderMobile: string;
+    video: string;
+    images: string[];
+    audio: string;
+  };
 }
 
 const initialState = {

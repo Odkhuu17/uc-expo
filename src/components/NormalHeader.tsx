@@ -9,6 +9,7 @@ import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 interface Props {
   title: string;
   hasBack?: boolean;
+  onPressBack?: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header = ({ title, hasBack }: Props) => {
+const Header = ({ title, hasBack, onPressBack }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
@@ -43,11 +44,21 @@ const Header = ({ title, hasBack }: Props) => {
     navigation.dispatch(DrawerActions.openDrawer());
   };
 
+  const canGoBack = (router.canGoBack() && hasBack) || onPressBack;
+
+  const onPressBack2 = () => {
+    if (onPressBack) {
+      onPressBack();
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <Box style={{ paddingTop: insets.top }} backgroundColor="white">
       <Box height={40} alignItems="center" justifyContent="center">
-        {hasBack && (
-          <TouchableOpacity onPress={router.back} style={styles.backButton}>
+        {canGoBack && (
+          <TouchableOpacity onPress={onPressBack2} style={styles.backButton}>
             <ArrowLeft2 size={theme.icon.m} />
           </TouchableOpacity>
         )}
