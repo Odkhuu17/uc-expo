@@ -24,7 +24,7 @@
     "@react-navigation/drawer": "^7.5.0",
     "@react-navigation/elements": "^2.6.5",
     "@react-navigation/native": "^7.1.8",
-    "@reduxjs/toolkit": "^2.10.1",
+    "@reduxjs/toolkit": "^2.11.0",
     "@searchkit/instantsearch-client": "^4.14.1",
     "@shopify/restyle": "^2.4.5",
     "apollo-upload-client": "^19.0.0",

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import OrderDetailsScreen from '@/screens/OrderDetails';
+import OrderDetailsScreen from '@/screens/OrderDetail';
 
 const OrderDetails = () => {
   return <OrderDetailsScreen />;

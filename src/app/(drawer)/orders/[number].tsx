@@ -1,9 +1,9 @@
 import React from 'react';
 
-import OrderDetailsScreen from '@/screens/OrderDetails';
+import OrderDetailScreen from '@/screens/OrderDetail';
 
-const OrderDetails = () => {
-  return <OrderDetailsScreen />;
+const OrderDetail = () => {
+  return <OrderDetailScreen />;
 };
 
-export default OrderDetails;
+export default OrderDetail;

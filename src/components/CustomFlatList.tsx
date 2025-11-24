@@ -1,5 +1,6 @@
 import { FlatList, FlatListProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import Loader from './Loader';
 import { makeStyles, useTheme } from './Theme';
 
