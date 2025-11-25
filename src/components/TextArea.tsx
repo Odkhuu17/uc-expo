@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput, TextInputProps, ViewStyle } from 'react-native';
 
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { Box, makeStyles, Text, Theme } from './Theme';
 
 interface Props extends TextInputProps {
@@ -11,6 +12,7 @@ interface Props extends TextInputProps {
   label?: string;
   isRequired?: boolean;
   labelColor?: keyof Theme['colors'];
+  keyboardAvoiding?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,6 +36,7 @@ function TextArea(props: Props) {
     label,
     labelColor,
     isRequired,
+    keyboardAvoiding,
     ...textInputProps
   } = props;
   const styles = useStyles();
@@ -49,7 +52,15 @@ function TextArea(props: Props) {
         </Box>
       )}
       <Box width={width} height={height}>
-        <TextInput {...textInputProps} style={styles.input} multiline />
+        {keyboardAvoiding ? (
+          <BottomSheetTextInput
+            {...textInputProps}
+            style={styles.input}
+            multiline
+          />
+        ) : (
+          <TextInput {...textInputProps} style={styles.input} multiline />
+        )}
       </Box>
       {error && (
         <Text color={errorColor || 'red'} mt="xs" px="s" variant="error">

@@ -60,7 +60,7 @@ function Input(props: BaseProps) {
       >
         {IconComp && (
           <Box ml="s">
-            <IconComp size={theme.icon.m} color={theme.colors.grey2} />
+            <IconComp size={theme.icon.m} color={theme.colors.baseBlue} />
           </Box>
         )}
         <TextInput

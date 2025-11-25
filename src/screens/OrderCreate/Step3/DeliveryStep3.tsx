@@ -1,0 +1,321 @@
+import { useTheme } from '@shopify/restyle';
+import { useFormik } from 'formik';
+import {
+  ArchiveBox,
+  Box as BoxIcon,
+  Calendar,
+  Clock,
+  TruckFast,
+} from 'iconsax-react-nativejs';
+import { Dispatch, SetStateAction } from 'react';
+import { Masks } from 'react-native-mask-input';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import {
+  BoxContainer,
+  Button,
+  Checkbox,
+  Content,
+  CustomKeyboardAvoidingView,
+  CustomMaskInput,
+  DateInput,
+  Input,
+  OrderInput,
+  OrderLocation,
+  Select,
+  TextArea,
+} from '@/components';
+import { Box, Text } from '@/components/Theme';
+import { carTypes, packageTypes } from '@/constants';
+import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
+import { moneyMask } from '@/utils/helpers';
+import OrderAudio from './OrderAudio';
+import OrderAudioPlayer from './OrderAudioPlayer';
+import OrderImageButton from './OrderImageButton';
+import OrderImages from './OrderImages';
+import OrderVideo from './OrderVideo';
+import OrderVideoButton from './OrderVideoButton';
+
+interface Props {
+  selectedCarType?: string;
+  setSelectedCarType: Dispatch<SetStateAction<string>>;
+  setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
+  createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
+  createdDestination?: NonNullable<
+    CreateAddressMutation['createAddress']
+  > | null;
+  audio: string;
+  images: string[];
+  video: string;
+  setAudio: Dispatch<SetStateAction<string>>;
+  setImages: Dispatch<SetStateAction<string[]>>;
+  setVideo: Dispatch<SetStateAction<string>>;
+  formik: ReturnType<typeof useFormik<any>>;
+  setStep: Dispatch<SetStateAction<number>>;
+}
+
+const DeliveryStep3 = ({
+  selectedCarType,
+  setSelectedCarType,
+  setSelectedLocation,
+  createdOrigin,
+  createdDestination,
+  audio,
+  images,
+  video,
+  formik,
+  setStep,
+  setAudio,
+  setImages,
+  setVideo,
+}: Props) => {
+  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+
+  const {
+    handleSubmit,
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    setFieldValue,
+    isSubmitting,
+  } = formik;
+
+  const onPressOrigin = () => {
+    setStep(2);
+    setSelectedLocation('origin');
+  };
+
+  const onPressDestination = () => {
+    setStep(2);
+    setSelectedLocation('destination');
+  };
+
+  return (
+    <>
+      <CustomKeyboardAvoidingView noWrapper>
+        <Content edges={[]} scrollable>
+          <Box gap="s">
+            <OrderLocation
+              origin={createdOrigin?.address1}
+              destination={createdDestination?.address1}
+              onPressOrigin={onPressOrigin}
+              onPressDestination={onPressDestination}
+            />
+            <BoxContainer
+              flexDirection="row"
+              justifyContent="space-between"
+              gap="s"
+            >
+              <Box flex={1}>
+                <OrderAudio setAudio={setAudio} audio={audio} />
+              </Box>
+              <Box flex={1}>
+                <OrderImageButton images={images} setImages={setImages} />
+              </Box>
+              <Box flex={1}>
+                <OrderVideoButton video={video} setVideo={setVideo} />
+              </Box>
+            </BoxContainer>
+            {audio && <OrderAudioPlayer audio={audio} setAudio={setAudio} />}
+            {video && <OrderVideo video={video} setVideo={setVideo} />}
+            {images.length > 0 && (
+              <OrderImages images={images} setImages={setImages} />
+            )}
+            <BoxContainer gap="m">
+              <Select
+                icon={BoxIcon}
+                placeholder="Ачааны төрөл"
+                options={packageTypes.map(p => ({
+                  label: p,
+                  value: p,
+                }))}
+                selectedOption={values.packageType}
+                setSelectedOption={handleChange('packageType')}
+                error={
+                  touched.packageType && errors.packageType
+                    ? errors.packageType
+                    : undefined
+                }
+              />
+              <Select
+                icon={TruckFast}
+                placeholder="Машины төрөл"
+                options={carTypes.map(p => ({
+                  label: p.name,
+                  value: p.name,
+                }))}
+                selectedOption={selectedCarType}
+                setSelectedOption={setSelectedCarType}
+              />
+              <OrderInput
+                icon={ArchiveBox}
+                label="Ачааны жин (кг)"
+                keyboardType='number-pad'
+                value={values.packageWeight}
+                onBlur={handleBlur('packageWeight')}
+                onChangeText={handleChange('packageWeight')}
+                error={
+                  touched.packageWeight && errors.packageWeight
+                    ? errors.packageWeight
+                    : undefined
+                }
+              />
+              <DateInput
+                icon={Calendar}
+                label="Ачих өдөр"
+                keyboardType="number-pad"
+                value={values.travelDay}
+                placeholder="YYYY/MM/DD"
+                onBlur={handleBlur('travelDay')}
+                onChangeText={handleChange('travelDay')}
+                error={
+                  touched.travelDay && errors.travelDay
+                    ? errors.travelDay
+                    : undefined
+                }
+                mask={Masks.DATE_YYYYMMDD}
+              />
+              <DateInput
+                icon={Clock}
+                label="Ачих цаг"
+                keyboardType="number-pad"
+                value={values.travelHour}
+                placeholder="HH:mm"
+                onBlur={handleBlur('travelHour')}
+                onChangeText={handleChange('travelHour')}
+                error={
+                  touched.travelHour && errors.travelHour
+                    ? errors.travelHour
+                    : undefined
+                }
+                mask={[/[0-2]/, /\d/, ':', /[0-5]/, /\d/]}
+              />
+            </BoxContainer>
+            <BoxContainer gap="m">
+              <Box flexDirection="row" justifyContent="space-between">
+                <Checkbox
+                  label="НӨАТ"
+                  value={values.vatIncluded}
+                  onChange={val => setFieldValue('vatIncluded', val)}
+                />
+                <Checkbox
+                  label="Үнэ тохирно"
+                  value={values.priceNegotiable}
+                  onChange={val => setFieldValue('priceNegotiable', val)}
+                />
+              </Box>
+              {!values.priceNegotiable && (
+                <CustomMaskInput
+                  placeholder="Ачуулах үнэ"
+                  keyboardType="number-pad"
+                  value={values.price}
+                  onBlur={handleBlur('price')}
+                  onChangeText={(_, unmasked) =>
+                    handleChange('price')(unmasked)
+                  }
+                  error={
+                    touched.price && errors.price ? errors.price : undefined
+                  }
+                  mask={moneyMask}
+                />
+              )}
+            </BoxContainer>
+            <BoxContainer gap="m">
+              <Input
+                placeholder="Тоо ширхэг"
+                keyboardType="number-pad"
+                value={values.quantity}
+                onBlur={handleBlur('quantity')}
+                onChangeText={handleChange('quantity')}
+                error={
+                  touched.quantity && errors.quantity
+                    ? errors.quantity
+                    : undefined
+                }
+              />
+              <TextArea
+                placeholder="Ачааны нэмэлт мэдээлэл"
+                value={values.additionalInfo}
+                onBlur={handleBlur('additionalInfo')}
+                onChangeText={handleChange('additionalInfo')}
+                error={
+                  touched.additionalInfo && errors.additionalInfo
+                    ? errors.additionalInfo
+                    : undefined
+                }
+              />
+            </BoxContainer>
+            <BoxContainer gap="m">
+              <Text variant="body2" fontFamily="Roboto_500Medium">
+                Илгээгчийн мэдээлэл
+              </Text>
+              <Input
+                placeholder="Овог нэр"
+                value={values.senderName}
+                onBlur={handleBlur('senderName')}
+                onChangeText={handleChange('senderName')}
+                error={
+                  touched.senderName && errors.senderName
+                    ? errors.senderName
+                    : undefined
+                }
+              />
+              <Input
+                placeholder="Утасны дугаар"
+                keyboardType="number-pad"
+                value={values.senderMobile}
+                onBlur={handleBlur('senderMobile')}
+                onChangeText={handleChange('senderMobile')}
+                error={
+                  touched.senderMobile && errors.senderMobile
+                    ? errors.senderMobile
+                    : undefined
+                }
+              />
+            </BoxContainer>
+            <BoxContainer gap="m">
+              <Text variant="body2" fontFamily="Roboto_500Medium">
+                Хүлээн авагчийн мэдээлэл
+              </Text>
+              <Input
+                placeholder="Овог нэр"
+                value={values.receiverName}
+                onBlur={handleBlur('receiverName')}
+                onChangeText={handleChange('receiverName')}
+                error={
+                  touched.receiverName && errors.receiverName
+                    ? errors.receiverName
+                    : undefined
+                }
+              />
+              <Input
+                placeholder="Утасны дугаар"
+                keyboardType="number-pad"
+                value={values.receiverMobile}
+                onBlur={handleBlur('receiverMobile')}
+                onChangeText={handleChange('receiverMobile')}
+                error={
+                  touched.receiverMobile && errors.receiverMobile
+                    ? errors.receiverMobile
+                    : undefined
+                }
+              />
+            </BoxContainer>
+          </Box>
+        </Content>
+      </CustomKeyboardAvoidingView>
+      <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
+        <Button
+          title="Захиалга үүсгэх"
+          onPress={handleSubmit}
+          loading={isSubmitting}
+        />
+      </Box>
+    </>
+  );
+};
+
+export default DeliveryStep3;

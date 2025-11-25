@@ -1,4 +1,5 @@
 import { Image } from 'expo-image';
+import { Dispatch, SetStateAction } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -7,24 +8,34 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Box, Text, useTheme } from '@/components/Theme';
-import { carTypes2 } from '@/constants';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import orderSlice from '@/redux/slices/order';
 
 const TOGGLE_BUTTON_WIDTH = 220;
 const TOGGLE_BUTTON_HEIGHT = 20;
 
 const CAR_IMAGE_SIZE = 55;
 
-const CarTypes = () => {
+interface Props {
+  selectedCarType?: string;
+  title: string;
+  carTypes: { name: string; image: number }[];
+  setSelectedCarType: Dispatch<SetStateAction<string>>;
+}
+
+const CarTypes = ({
+  selectedCarType,
+  title,
+  carTypes,
+  setSelectedCarType,
+}: Props) => {
   const theme = useTheme();
-  const translateX = useSharedValue(CAR_IMAGE_SIZE + theme.spacing.s * 2);
-  const dispatch = useAppDispatch();
-  const { carType } = useAppSelector(state => state.order);
+  const translateX = useSharedValue(0);
 
   const onToggle = () => {
     translateX.value = withSpring(
-      translateX.value === 0 ? CAR_IMAGE_SIZE + theme.spacing.s * 2 : 0
+      translateX.value === 0
+        ? // -CAR_IMAGE_SIZE - pl - pr - peek_size
+          -CAR_IMAGE_SIZE - theme.spacing.s - theme.spacing.m + theme.spacing.xs
+        : 0
     );
   };
 
@@ -38,48 +49,24 @@ const CarTypes = () => {
     <Animated.View style={animatedStyle}>
       <Box
         py="m"
-        px="s"
+        pl="s"
+        pr="m"
         backgroundColor="lightBlue"
         borderWidth={1}
         borderColor="baseBlue"
-        borderTopLeftRadius="l"
-        borderBottomLeftRadius="l"
+        borderTopRightRadius="l"
+        borderBottomRightRadius="l"
         flexDirection="row"
         alignItems="center"
       >
-        <Box
-          alignItems="center"
-          justifyContent="center"
-          height={TOGGLE_BUTTON_WIDTH}
-        >
-          <Box
-            backgroundColor="baseBlue"
-            borderRadius="m"
-            position="absolute"
-            bottom={0}
-            right={TOGGLE_BUTTON_HEIGHT / 2 + theme.spacing.s / 2}
-            left={0}
-            height={TOGGLE_BUTTON_HEIGHT}
-            width={TOGGLE_BUTTON_WIDTH}
-            style={css.toggleButtonContainer}
-          >
-            <TouchableOpacity style={css.toggleButton} onPress={onToggle}>
-              <Text color="white" variant="label">
-                Техник түрээсийн төрөл сонгох
-              </Text>
-            </TouchableOpacity>
-          </Box>
-        </Box>
         <Box gap="xs">
-          {carTypes2.map((car, index) => {
+          {carTypes.map((car, index) => {
             return (
               <TouchableOpacity
                 key={index}
-                onPress={() =>
-                  dispatch(orderSlice.actions.changeCarType(car.name))
-                }
+                onPress={() => setSelectedCarType(car.name)}
               >
-                <Box key={index} alignItems="center">
+                <Box alignItems="center">
                   <Box
                     p="xs"
                     borderRadius="full"
@@ -87,7 +74,9 @@ const CarTypes = () => {
                     borderColor="baseBlue"
                     width={CAR_IMAGE_SIZE}
                     height={CAR_IMAGE_SIZE}
-                    backgroundColor={carType === car.name ? 'green' : 'white'}
+                    backgroundColor={
+                      selectedCarType === car.name ? 'lightBlue2' : 'white'
+                    }
                   >
                     <Image
                       source={car.image}
@@ -113,6 +102,29 @@ const CarTypes = () => {
             );
           })}
         </Box>
+        <Box
+          alignItems="center"
+          justifyContent="center"
+          height={TOGGLE_BUTTON_WIDTH}
+        >
+          <Box
+            backgroundColor="baseBlue"
+            borderRadius="m"
+            position="absolute"
+            top={0}
+            //left={-TOGGLE_BUTTON_HEIGHT / 2 + pr}
+            left={-TOGGLE_BUTTON_HEIGHT / 2 + theme.spacing.m}
+            height={TOGGLE_BUTTON_HEIGHT}
+            width={TOGGLE_BUTTON_WIDTH}
+            style={css.toggleButtonContainer}
+          >
+            <TouchableOpacity style={css.toggleButton} onPress={onToggle}>
+              <Text color="white" variant="label">
+                {title}
+              </Text>
+            </TouchableOpacity>
+          </Box>
+        </Box>
       </Box>
     </Animated.View>
   );
@@ -127,7 +139,7 @@ const css = StyleSheet.create({
     marginTop: -10,
   },
   toggleButtonContainer: {
-    transform: [{ rotate: '-90deg' }],
+    transform: [{ rotate: '90deg' }, { translateX: -TOGGLE_BUTTON_HEIGHT }],
     transformOrigin: 'left bottom',
   },
   toggleButton: {

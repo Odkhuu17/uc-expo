@@ -1,4 +1,4 @@
-import { AddCircle } from 'iconsax-react-nativejs';
+import { Edit2 } from 'iconsax-react-nativejs';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 
 import { Box, Text, useTheme } from '@/components/Theme';
@@ -10,6 +10,7 @@ interface Props {
   location?: string;
   loading?: boolean;
   onPress: () => void;
+  onPressEdit?: () => void;
 }
 
 const SingleLocation = ({
@@ -18,8 +19,17 @@ const SingleLocation = ({
   selected,
   onPress,
   loading,
+  onPressEdit,
 }: Props) => {
   const theme = useTheme();
+
+  const onPressEdit2 = () => {
+    if (onPressEdit) {
+      onPressEdit();
+    } else {
+      onPress();
+    }
+  };
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -34,11 +44,15 @@ const SingleLocation = ({
             <ActivityIndicator />
           </Box>
         ) : (
-          <AddCircle
-            size={theme.icon.l}
-            color={selected ? theme.colors['baseBlue'] : theme.colors['black']}
-            variant={selected ? 'Bold' : 'Outline'}
-          />
+          <TouchableOpacity onPress={onPressEdit2}>
+            <Edit2
+              size={theme.icon.l}
+              color={
+                selected ? theme.colors['baseBlue'] : theme.colors['black']
+              }
+              variant={selected ? 'Bold' : 'Outline'}
+            />
+          </TouchableOpacity>
         )}
         <Box flex={1} gap="xs">
           <Text

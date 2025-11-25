@@ -4,12 +4,15 @@ import { Box, useTheme } from '../Theme';
 import SingleLocation from './SingleLocation';
 
 interface Props {
+  isRent?: boolean;
   selected?: 'origin' | 'destination';
   origin?: string;
   destination?: string;
   onPressOrigin: () => void;
   onPressDestination: () => void;
   loading?: boolean;
+  onPressEditOrigin?: () => void;
+  onPressEditDestination?: () => void;
 }
 
 const OrderLocation = ({
@@ -19,6 +22,9 @@ const OrderLocation = ({
   onPressOrigin,
   onPressDestination,
   loading,
+  isRent,
+  onPressEditOrigin,
+  onPressEditDestination,
 }: Props) => {
   const theme = useTheme();
 
@@ -34,30 +40,40 @@ const OrderLocation = ({
       <Box flexDirection="row" alignItems="center" gap="s">
         <Box flex={1}>
           <SingleLocation
+            onPressEdit={onPressEditOrigin}
             loading={loading}
             onPress={onPressOrigin}
             location={origin}
             selected={selected === 'origin'}
-            title="Очиж авах хаяг"
+            title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'}
           />
-          <Box width="100%" height={1} backgroundColor="border" my="s" />
-          <SingleLocation
-            loading={loading}
-            onPress={onPressDestination}
-            location={destination}
-            selected={selected === 'destination'}
-            title="Хүргэх хаяг"
-          />
+          {!isRent && (
+            <>
+              <Box width="100%" height={1} backgroundColor="border" my="s" />
+              <SingleLocation
+                onPressEdit={onPressEditDestination}
+                loading={loading}
+                onPress={onPressDestination}
+                location={destination}
+                selected={selected === 'destination'}
+                title="Хүргэх хаяг"
+              />
+            </>
+          )}
         </Box>
         <Box alignItems="center" gap="xs" py="m">
-          <Box
-            height={15}
-            width={15}
-            borderRadius="full"
-            borderWidth={2}
-            borderColor="baseBlue"
-          />
-          <Box width={1} flex={1} backgroundColor="border" />
+          {!isRent && (
+            <>
+              <Box
+                height={15}
+                width={15}
+                borderRadius="full"
+                borderWidth={2}
+                borderColor="baseBlue"
+              />
+              <Box width={1} flex={1} backgroundColor="border" />
+            </>
+          )}
           <Location size={theme.icon.m} />
         </Box>
       </Box>

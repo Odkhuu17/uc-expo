@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Button, FitImage } from '@/components';
+import { Button, Content, FitImage } from '@/components';
 import { Box, Text, makeStyles, useTheme } from '@/components/Theme';
 
 interface Props {
@@ -32,31 +32,40 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
   };
 
   return (
-    <Box flex={1} alignItems="center" justifyContent="center">
-      <Box gap="xl3" alignItems="center">
-        <LinearGradient
-          colors={theme.gradients.primary}
-          style={styles.titleContainer}
-        >
-          <Text textAlign="center" color="white" fontFamily="Roboto_500Medium">
-            Ачааны төрөл сонгох
-          </Text>
-        </LinearGradient>
-        <Box gap="xl">
-          <Box alignItems="center">
-            <FitImage
-              source={require('assets/images/trucks.png')}
-              width={300}
-            />
-            <Button title="Ачааны машин" onPress={onPress1} />
-          </Box>
-          <Box alignItems="center">
-            <FitImage source={require('assets/images/rents.png')} width={300} />
-            <Button title="Техник түрээс" onPress={onPress2} />
+    <Content edges={['bottom']} scrollable>
+      <Box flex={1} alignItems="center" justifyContent="center">
+        <Box gap="xl3" alignItems="center">
+          <LinearGradient
+            colors={theme.gradients.primary}
+            style={styles.titleContainer}
+          >
+            <Text
+              textAlign="center"
+              color="white"
+              fontFamily="Roboto_500Medium"
+            >
+              Ачааны төрөл сонгох
+            </Text>
+          </LinearGradient>
+          <Box gap="xl">
+            <Box alignItems="center">
+              <FitImage
+                source={require('assets/images/trucks.png')}
+                width={300}
+              />
+              <Button title="Ачааны машин" onPress={onPress1} />
+            </Box>
+            <Box alignItems="center">
+              <FitImage
+                source={require('assets/images/rents.png')}
+                width={300}
+              />
+              <Button title="Техник түрээс" onPress={onPress2} />
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </Content>
   );
 };
 
