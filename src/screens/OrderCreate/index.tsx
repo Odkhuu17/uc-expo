@@ -2,10 +2,7 @@ import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import Animated, {
-  FadeIn,
-  FadeOut
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
 
 import { Container, MessageModal, NormalHeader } from '@/components';
@@ -138,6 +135,22 @@ const OrderCreateScreen = () => {
     },
   });
 
+  const resetState = () => {
+    setStep(1);
+    setIsRent(false);
+    setSelectedCarType('');
+    setSelectedOption('origin');
+    setOrigin(null);
+    setDestination(null);
+    setCreatedOrigin(null);
+    setCreatedDestination(null);
+    setAudio('');
+    setImages([]);
+    setVideo('');
+    formik.resetForm();
+    formik2.resetForm();
+  };
+
   const formik2 = useFormik({
     initialValues: {
       carWeight: '',
@@ -178,7 +191,6 @@ const OrderCreateScreen = () => {
           published: true,
         },
       });
-
       setSuccessModal(true);
     },
   });
@@ -280,6 +292,7 @@ const OrderCreateScreen = () => {
           router.dismissAll();
           router.navigate('/profile/orders');
           setSuccessModal(false);
+          resetState();
         }}
         visible={successModal}
       />
