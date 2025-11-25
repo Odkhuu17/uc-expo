@@ -1,8 +1,10 @@
+import dayjs from 'dayjs';
+import { useRouter } from 'expo-router';
+import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import Animated, {
-  SlideInLeft,
-  SlideInRight,
-  SlideOutLeft,
+  FadeIn,
+  FadeOut
 } from 'react-native-reanimated';
 import * as yup from 'yup';
 
@@ -12,9 +14,6 @@ import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.gen
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
 import { SearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
-import dayjs from 'dayjs';
-import { useRouter } from 'expo-router';
-import { useFormik } from 'formik';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
@@ -151,7 +150,7 @@ const OrderCreateScreen = () => {
       additionalInfo: '',
       additionalAddress: '',
     },
-    validationSchema: deliverySchema,
+    validationSchema: rentSchema,
     onSubmit: async () => {
       const imageFiles = images.length > 0 ? imagesToFiles(images) : [];
       const videoFile = video ? videoToFile(video) : null;
@@ -193,23 +192,13 @@ const OrderCreateScreen = () => {
   const renderContent = () => {
     if (step === 1) {
       return (
-        <AnimatedBox
-          entering={SlideInLeft}
-          exiting={SlideOutLeft}
-          key={1}
-          flex={1}
-        >
+        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={1} flex={1}>
           <Step1 setIsRent={setIsRent} setStep={setStep} />
         </AnimatedBox>
       );
     } else if (step === 2) {
       return (
-        <AnimatedBox
-          entering={SlideInRight}
-          exiting={SlideOutLeft}
-          key={2}
-          flex={1}
-        >
+        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
           <Step2
             createdOrigin={createdOrigin}
             createdDestination={createdDestination}
@@ -230,12 +219,7 @@ const OrderCreateScreen = () => {
       );
     } else {
       return (
-        <AnimatedBox
-          entering={SlideInRight}
-          exiting={SlideOutLeft}
-          key={3}
-          flex={1}
-        >
+        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
           {!isRent ? (
             <DeliveryStep3
               selectedCarType={selectedCarType}
