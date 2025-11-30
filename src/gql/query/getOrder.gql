@@ -1,8 +1,9 @@
-query getOrder($number: String) {
+query GetOrder($number: String) {
   order(number: $number) {
     id
     number
     title
+    description
     status
     published
     my
@@ -12,6 +13,7 @@ query getOrder($number: String) {
     packageWeight
     packageDimensions
     price
+    vatIncluded
     carType
     carWeight
     senderName
@@ -21,6 +23,7 @@ query getOrder($number: String) {
     travelAt
     travelDistance
     travelDuration
+    data
     audio
     video
     images
@@ -30,6 +33,14 @@ query getOrder($number: String) {
       fileName
       recordId
       recordType
+    }
+    user {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
     }
     origin {
       id
@@ -83,42 +94,6 @@ query getOrder($number: String) {
           id
           name
         }
-      }
-    }
-    user {
-      id
-      email
-      firstName
-      lastName
-      mobile
-      role
-      isAdmin
-    }
-    deliveryRequests(first: 50) {
-      edges {
-        node {
-          id
-          price
-          travelAt
-          status
-          user {
-            id
-            firstName
-            lastName
-            mobile
-            email
-            role
-          }
-          createdAt
-          updatedAt
-        }
-      }
-      totalCount
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
       }
     }
     createdAt

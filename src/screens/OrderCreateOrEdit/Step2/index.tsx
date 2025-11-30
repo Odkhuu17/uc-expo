@@ -22,8 +22,8 @@ import MapPin from './MapPin';
 
 interface Props {
   isRent?: boolean;
-  selectedCarType?: string;
-  setSelectedCarType: Dispatch<SetStateAction<string>>;
+  selectedCarTypes: string[];
+  setSelectedCarTypes: Dispatch<SetStateAction<string[]>>;
   setStep: Dispatch<SetStateAction<number>>;
   origin: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
   setOrigin: Dispatch<
@@ -64,8 +64,8 @@ const useStyles = makeStyles(theme => ({
 
 const Step2 = ({
   isRent,
-  selectedCarType,
-  setSelectedCarType,
+  selectedCarTypes,
+  setSelectedCarTypes,
   setStep,
   selectedLocation,
   setSelectedLocation,
@@ -207,8 +207,8 @@ const Step2 = ({
       >
         <Box position="absolute" top={theme.spacing.xl2} left={0}>
           <CarTypes
-            setSelectedCarType={setSelectedCarType}
-            selectedCarType={selectedCarType}
+            setSelectedCarTypes={setSelectedCarTypes}
+            selectedCarTypes={selectedCarTypes}
             carTypes={isRent ? carTypes2 : carTypes}
             title={
               isRent

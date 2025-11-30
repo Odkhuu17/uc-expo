@@ -60,7 +60,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 <SingleLinkButton
                   icon={BoxIcon}
                   title="Захиалга үүсгэх"
-                  href="/shipper"
+                  href="/orders/create"
                 />
               )}
               <SingleLinkButton

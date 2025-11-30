@@ -9,15 +9,16 @@ export type GetOrderQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetOrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, subscribed: boolean, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, audio?: string, video?: string, images?: Array<string>, createdAt: any, updatedAt: any, imageObjects?: Array<{ __typename?: 'ImageObject', id: string, url: string, fileName: string, recordId: number, recordType: string }>, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string, mobile?: string, role?: string, isAdmin: boolean }, deliveryRequests: { __typename?: 'DeliveryRequestConnection', totalCount: number, edges: Array<{ __typename?: 'DeliveryRequestEdge', node?: { __typename?: 'DeliveryRequest', id: string, price: number, travelAt: any, status: string, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, email?: string, role?: string } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
+export type GetOrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, number?: string, title?: string, description?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, subscribed: boolean, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, vatIncluded?: boolean, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, data: any, audio?: string, video?: string, images?: Array<string>, createdAt: any, updatedAt: any, imageObjects?: Array<{ __typename?: 'ImageObject', id: string, url: string, fileName: string, recordId: number, recordType: string }>, user?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } } } };
 
 
 export const GetOrderDocument = gql`
-    query getOrder($number: String) {
+    query GetOrder($number: String) {
   order(number: $number) {
     id
     number
     title
+    description
     status
     published
     my
@@ -27,6 +28,7 @@ export const GetOrderDocument = gql`
     packageWeight
     packageDimensions
     price
+    vatIncluded
     carType
     carWeight
     senderName
@@ -36,6 +38,7 @@ export const GetOrderDocument = gql`
     travelAt
     travelDistance
     travelDuration
+    data
     audio
     video
     images
@@ -45,6 +48,14 @@ export const GetOrderDocument = gql`
       fileName
       recordId
       recordType
+    }
+    user {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
     }
     origin {
       id
@@ -98,42 +109,6 @@ export const GetOrderDocument = gql`
           id
           name
         }
-      }
-    }
-    user {
-      id
-      email
-      firstName
-      lastName
-      mobile
-      role
-      isAdmin
-    }
-    deliveryRequests(first: 50) {
-      edges {
-        node {
-          id
-          price
-          travelAt
-          status
-          user {
-            id
-            firstName
-            lastName
-            mobile
-            email
-            role
-          }
-          createdAt
-          updatedAt
-        }
-      }
-      totalCount
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
       }
     }
     createdAt

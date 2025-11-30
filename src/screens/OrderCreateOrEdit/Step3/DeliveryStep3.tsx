@@ -37,8 +37,6 @@ import OrderVideo from './OrderVideo';
 import OrderVideoButton from './OrderVideoButton';
 
 interface Props {
-  selectedCarType?: string;
-  setSelectedCarType: Dispatch<SetStateAction<string>>;
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
   createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
   createdDestination?: NonNullable<
@@ -55,8 +53,6 @@ interface Props {
 }
 
 const DeliveryStep3 = ({
-  selectedCarType,
-  setSelectedCarType,
   setSelectedLocation,
   createdOrigin,
   createdDestination,
@@ -147,8 +143,8 @@ const DeliveryStep3 = ({
                   label: p.name,
                   value: p.name,
                 }))}
-                selectedOption={selectedCarType}
-                setSelectedOption={setSelectedCarType}
+                selectedOption={values.carType}
+                setSelectedOption={handleChange('carType')}
               />
               <OrderInput
                 icon={ArchiveBox}

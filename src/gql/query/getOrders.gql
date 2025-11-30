@@ -14,10 +14,7 @@ query getOrders(
         published
         my
         requested
-        subscribed
         packageType
-        packageWeight
-        packageDimensions
         price
         carType
         carWeight
@@ -26,16 +23,7 @@ query getOrders(
         receiverName
         receiverMobile
         travelAt
-        travelDistance
-        travelDuration
         images
-        imageObjects {
-          id
-          url
-          fileName
-          recordId
-          recordType
-        }
         origin {
           id
           address {
@@ -89,15 +77,6 @@ query getOrders(
               name
             }
           }
-        }
-        user {
-          id
-          email
-          firstName
-          lastName
-          mobile
-          role
-          isAdmin
         }
         createdAt
         updatedAt

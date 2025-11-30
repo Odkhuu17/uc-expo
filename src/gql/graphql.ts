@@ -121,6 +121,44 @@ export type ApplicationEdge = {
   node?: Maybe<Application>;
 };
 
+export type Banner = BaseModelInterface & {
+  __typename?: 'Banner';
+  category?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['ISO8601DateTime']['output'];
+  data?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  imageObject?: Maybe<ImageObject>;
+  permalink?: Maybe<Scalars['String']['output']>;
+  position: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
+};
+
+export type BannerConnection = {
+  __typename?: 'BannerConnection';
+  edges: Array<BannerEdge>;
+  nodes: Array<Banner>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type BannerEdge = {
+  __typename?: 'BannerEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Banner>;
+};
+
+export type BannerFilter = {
+  category?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateFilter>;
+  id?: InputMaybe<IdFilter>;
+  permalink?: InputMaybe<StringFilter>;
+  position?: InputMaybe<IntFilter>;
+  status?: InputMaybe<EnumStringFilter>;
+  updatedAt?: InputMaybe<DateFilter>;
+};
+
 export type BaseModelInterface = {
   createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -278,6 +316,15 @@ export type DistrictFilter = {
   updatedAt?: InputMaybe<DateFilter>;
 };
 
+export type EnumStringFilter = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<Scalars['String']['input']>>;
+  notEq?: InputMaybe<Scalars['String']['input']>;
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>;
+  notNull?: InputMaybe<Scalars['Boolean']['input']>;
+  null?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type IdFilter = {
   blank?: InputMaybe<Scalars['Boolean']['input']>;
   eq?: InputMaybe<Scalars['ID']['input']>;
@@ -334,6 +381,7 @@ export type Mark = BaseModelInterface & {
   code: Scalars['String']['output'];
   createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
+  logo: Scalars['String']['output'];
   name: Scalars['String']['output'];
   updatedAt: Scalars['ISO8601DateTime']['output'];
 };
@@ -365,6 +413,7 @@ export type Model = BaseModelInterface & {
   code: Scalars['String']['output'];
   createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
+  logo?: Maybe<Scalars['String']['output']>;
   mark: Mark;
   markId: Scalars['ID']['output'];
   name: Scalars['String']['output'];
@@ -402,6 +451,7 @@ export type Mutation = {
   checkPayment?: Maybe<Scalars['JSON']['output']>;
   closeOrder?: Maybe<Order>;
   createAddress?: Maybe<Address>;
+  createBanner?: Maybe<Banner>;
   createDeliveryRequest?: Maybe<DeliveryRequest>;
   createImage?: Maybe<Image>;
   createIndexElastic?: Maybe<Scalars['JSON']['output']>;
@@ -414,10 +464,12 @@ export type Mutation = {
   createSubscription?: Maybe<Subscription>;
   createSubscriptionPlan?: Maybe<SubscriptionPlan>;
   createSystemMenu?: Maybe<SystemMenu>;
+  createTaxon?: Maybe<Taxon>;
   createTruck?: Maybe<Truck>;
   createUser?: Maybe<User>;
   createUserAddress?: Maybe<UserAddress>;
   destroyAddress?: Maybe<Address>;
+  destroyBanner?: Maybe<Banner>;
   destroyImage?: Maybe<Image>;
   destroyMark?: Maybe<Mark>;
   destroyModel?: Maybe<Model>;
@@ -427,6 +479,7 @@ export type Mutation = {
   destroySubscription?: Maybe<Subscription>;
   destroySubscriptionPlan?: Maybe<SubscriptionPlan>;
   destroySystemMenu?: Maybe<SystemMenu>;
+  destroyTaxon?: Maybe<Taxon>;
   destroyTruck?: Maybe<Truck>;
   destroyUser?: Maybe<User>;
   destroyUserAddress?: Maybe<UserAddress>;
@@ -436,6 +489,7 @@ export type Mutation = {
   sendEmailTest?: Maybe<Scalars['JSON']['output']>;
   sendOtp?: Maybe<User>;
   updateAddress?: Maybe<Address>;
+  updateBanner?: Maybe<Banner>;
   updateDeliveryRequest?: Maybe<DeliveryRequest>;
   updateMark?: Maybe<Mark>;
   updateModel?: Maybe<Model>;
@@ -445,6 +499,7 @@ export type Mutation = {
   updateSubscription?: Maybe<Subscription>;
   updateSubscriptionPlan?: Maybe<SubscriptionPlan>;
   updateSystemMenu?: Maybe<SystemMenu>;
+  updateTaxon?: Maybe<Taxon>;
   updateTruck?: Maybe<Truck>;
   updateUser?: Maybe<User>;
   verifyRequest?: Maybe<Verification>;
@@ -478,6 +533,11 @@ export type MutationCloseOrderArgs = {
 
 export type MutationCreateAddressArgs = {
   input: CreateAddressInput;
+};
+
+
+export type MutationCreateBannerArgs = {
+  input: CreateBannerInput;
 };
 
 
@@ -541,6 +601,11 @@ export type MutationCreateSystemMenuArgs = {
 };
 
 
+export type MutationCreateTaxonArgs = {
+  input: CreateTaxonInput;
+};
+
+
 export type MutationCreateTruckArgs = {
   input: CreateTruckInput;
 };
@@ -558,6 +623,11 @@ export type MutationCreateUserAddressArgs = {
 
 export type MutationDestroyAddressArgs = {
   input: DestroyAddressInput;
+};
+
+
+export type MutationDestroyBannerArgs = {
+  input: DestroyBannerInput;
 };
 
 
@@ -606,6 +676,11 @@ export type MutationDestroySystemMenuArgs = {
 };
 
 
+export type MutationDestroyTaxonArgs = {
+  input: DestroyTaxonInput;
+};
+
+
 export type MutationDestroyTruckArgs = {
   input: DestroyTruckInput;
 };
@@ -651,6 +726,11 @@ export type MutationUpdateAddressArgs = {
 };
 
 
+export type MutationUpdateBannerArgs = {
+  input: UpdateBannerInput;
+};
+
+
 export type MutationUpdateDeliveryRequestArgs = {
   input: UpdateDeliveryRequestInput;
 };
@@ -693,6 +773,11 @@ export type MutationUpdateSubscriptionPlanArgs = {
 
 export type MutationUpdateSystemMenuArgs = {
   input: UpdateSystemMenuInput;
+};
+
+
+export type MutationUpdateTaxonArgs = {
+  input: UpdateTaxonInput;
 };
 
 
@@ -934,6 +1019,8 @@ export type Query = {
   addresses: AddressConnection;
   application?: Maybe<Application>;
   applications: ApplicationConnection;
+  banner?: Maybe<Banner>;
+  banners: BannerConnection;
   country: Country;
   deliveryRequest?: Maybe<DeliveryRequest>;
   deliveryRequests: DeliveryRequestConnection;
@@ -963,8 +1050,8 @@ export type Query = {
   subscriptionPlan?: Maybe<SubscriptionPlan>;
   subscriptionPlans: SubscriptionPlanConnection;
   subscriptions: SubscriptionConnection;
-  systemMenu?: Maybe<SystemMenu>;
-  systemMenus: SystemMenuConnection;
+  taxon?: Maybe<Taxon>;
+  taxons: TaxonConnection;
   truck?: Maybe<Truck>;
   truckTrack?: Maybe<TruckTrack>;
   truckTracks: TruckTrackConnection;
@@ -1001,6 +1088,22 @@ export type QueryApplicationArgs = {
 export type QueryApplicationsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
+};
+
+
+export type QueryBannerArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryBannersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<BannerFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1231,16 +1334,16 @@ export type QuerySubscriptionsArgs = {
 };
 
 
-export type QuerySystemMenuArgs = {
+export type QueryTaxonArgs = {
   code?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
-export type QuerySystemMenusArgs = {
+export type QueryTaxonsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<SystemMenuFilter>;
+  filter?: InputMaybe<TaxonFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1566,21 +1669,38 @@ export type SystemMenu = BaseModelInterface & {
   updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
-export type SystemMenuConnection = {
-  __typename?: 'SystemMenuConnection';
-  edges: Array<SystemMenuEdge>;
-  nodes: Array<SystemMenu>;
+export type Taxon = BaseModelInterface & {
+  __typename?: 'Taxon';
+  children?: Maybe<Array<Taxon>>;
+  code: Scalars['String']['output'];
+  createdAt: Scalars['ISO8601DateTime']['output'];
+  hasChildren?: Maybe<Scalars['Boolean']['output']>;
+  icon?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  link: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  parent?: Maybe<Taxon>;
+  parentId?: Maybe<Scalars['ID']['output']>;
+  preferences?: Maybe<Scalars['JSON']['output']>;
+  slug: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
+};
+
+export type TaxonConnection = {
+  __typename?: 'TaxonConnection';
+  edges: Array<TaxonEdge>;
+  nodes: Array<Taxon>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
 
-export type SystemMenuEdge = {
-  __typename?: 'SystemMenuEdge';
+export type TaxonEdge = {
+  __typename?: 'TaxonEdge';
   cursor: Scalars['String']['output'];
-  node?: Maybe<SystemMenu>;
+  node?: Maybe<Taxon>;
 };
 
-export type SystemMenuFilter = {
+export type TaxonFilter = {
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
   parentId?: InputMaybe<IdFilter>;
@@ -1601,6 +1721,8 @@ export type Truck = BaseModelInterface & {
   netWeight?: Maybe<Scalars['Int']['output']>;
   plateNumber?: Maybe<Scalars['String']['output']>;
   serial?: Maybe<Scalars['String']['output']>;
+  taxon?: Maybe<Taxon>;
+  taxonId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
   userId: Scalars['ID']['output'];
@@ -1633,6 +1755,8 @@ export type TruckFilter = {
   netWeight?: InputMaybe<IntFilter>;
   plateNumber?: InputMaybe<StringFilter>;
   serial?: InputMaybe<StringFilter>;
+  taxon?: InputMaybe<TaxonFilter>;
+  taxonId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateFilter>;
   user?: InputMaybe<UserFilter>;
   verifiedAt?: InputMaybe<DateFilter>;
@@ -1852,6 +1976,7 @@ export type Verification = BaseModelInterface & {
   field4?: Maybe<Scalars['String']['output']>;
   field5?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  imageObjects?: Maybe<Array<ImageObject>>;
   images?: Maybe<Array<Scalars['String']['output']>>;
   respondedBy?: Maybe<User>;
   status: Scalars['String']['output'];
@@ -1932,6 +2057,15 @@ export type CreateAddressInput = {
   zipcode?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateBannerInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  image?: InputMaybe<Scalars['Upload']['input']>;
+  permalink?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   orderId: Scalars['ID']['input'];
@@ -1955,12 +2089,14 @@ export type CreateIndexElasticInput = {
 export type CreateMarkInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
+  logo?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
 };
 
 export type CreateModelInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
+  logo?: InputMaybe<Scalars['Upload']['input']>;
   markId: Scalars['ID']['input'];
   name: Scalars['String']['input'];
 };
@@ -2052,6 +2188,20 @@ export type CreateSystemMenuInput = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateTaxonInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  code: Scalars['String']['input'];
+  icon?: InputMaybe<Scalars['String']['input']>;
+  link: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  parentCode?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['ID']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  preferences?: InputMaybe<Scalars['JSON']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateTruckInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   importedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
@@ -2061,6 +2211,7 @@ export type CreateTruckInput = {
   netWeight?: InputMaybe<Scalars['Int']['input']>;
   plateNumber?: InputMaybe<Scalars['String']['input']>;
   serial?: InputMaybe<Scalars['String']['input']>;
+  taxonId?: InputMaybe<Scalars['ID']['input']>;
   userId: Scalars['ID']['input'];
   weight?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -2094,6 +2245,11 @@ export type CreateUserInput = {
 };
 
 export type DestroyAddressInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+export type DestroyBannerInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
 };
@@ -2141,6 +2297,11 @@ export type DestroySubscriptionPlanInput = {
 };
 
 export type DestroySystemMenuInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+export type DestroyTaxonInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
 };
@@ -2220,6 +2381,17 @@ export type UpdateAddressInput = {
   zipcode?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateBannerInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['ID']['input'];
+  image?: InputMaybe<Scalars['Upload']['input']>;
+  permalink?: InputMaybe<Scalars['String']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -2230,6 +2402,7 @@ export type UpdateMarkInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  logo?: InputMaybe<Scalars['Upload']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2237,6 +2410,7 @@ export type UpdateModelInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   code?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  logo?: InputMaybe<Scalars['Upload']['input']>;
   markId?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2321,6 +2495,20 @@ export type UpdateSystemMenuInput = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateTaxonInput = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  link?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['ID']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  preferences?: InputMaybe<Scalars['JSON']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateTruckInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -2331,6 +2519,7 @@ export type UpdateTruckInput = {
   netWeight?: InputMaybe<Scalars['Int']['input']>;
   plateNumber?: InputMaybe<Scalars['String']['input']>;
   serial?: InputMaybe<Scalars['String']['input']>;
+  taxonId?: InputMaybe<Scalars['ID']['input']>;
   userId: Scalars['ID']['input'];
   weight?: InputMaybe<Scalars['Int']['input']>;
 };

@@ -38,6 +38,8 @@ const DriverOrdersScreen = () => {
     }
   };
 
+  console.log(data);
+
   const onLoadMore = () => {
     if (hasNextPage && !loading) {
       fetchMore({

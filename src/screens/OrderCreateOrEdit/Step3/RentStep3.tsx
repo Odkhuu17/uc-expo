@@ -30,8 +30,6 @@ import OrderVideo from './OrderVideo';
 import OrderVideoButton from './OrderVideoButton';
 
 interface Props {
-  selectedCarType?: string;
-  setSelectedCarType: Dispatch<SetStateAction<string>>;
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
   createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
   createdDestination?: NonNullable<
@@ -48,8 +46,6 @@ interface Props {
 }
 
 const RentStep3 = ({
-  selectedCarType,
-  setSelectedCarType,
   setSelectedLocation,
   createdOrigin,
   createdDestination,
@@ -130,15 +126,15 @@ const RentStep3 = ({
                   label: p.name,
                   value: p.name,
                 }))}
-                selectedOption={selectedCarType}
-                setSelectedOption={setSelectedCarType}
+                selectedOption={values.carType}
+                setSelectedOption={handleChange('carType')}
               />
               <Select
                 icon={ArchiveBox}
                 placeholder="Даац/Хэмжээ"
                 options={
                   carTypes2
-                    .find(c => c.name === selectedCarType)
+                    .find(c => c.name === values.carType)
                     ?.options?.map(p => ({
                       label: p,
                       value: p,

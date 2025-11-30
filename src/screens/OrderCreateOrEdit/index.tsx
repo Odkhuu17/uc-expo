@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -7,8 +7,10 @@ import * as yup from 'yup';
 
 import { Container, MessageModal, NormalHeader } from '@/components';
 import { Box } from '@/components/Theme';
+import { carTypes, carTypes2 } from '@/constants';
 import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
+import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { SearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
 import Step1 from './Step1';
@@ -30,6 +32,7 @@ const deliverySchema = yup.object().shape({
     then: schema => schema.required('Энэ талбар хоосон байна!'),
     otherwise: schema => schema,
   }),
+  carType: yup.string().required('Энэ талбар хоосон байна!'),
   quantity: yup.string(),
   additionalInfo: yup.string(),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
@@ -39,6 +42,7 @@ const deliverySchema = yup.object().shape({
 });
 
 const rentSchema = yup.object().shape({
+  carType: yup.string().required('Энэ талбар хоосон байна!'),
   carWeight: yup.string().required('Энэ талбар хоосон байна!'),
   startDate: yup.string().required('Энэ талбар хоосон байна!'),
   rentDay: yup.string().required('Энэ талбар хоосон байна!'),
@@ -55,11 +59,12 @@ const rentSchema = yup.object().shape({
 });
 
 const OrderCreateScreen = () => {
+  const { number } = useLocalSearchParams();
   const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(number ? 3 : 1);
   const [successModal, setSuccessModal] = useState(false);
   const [isRent, setIsRent] = useState(false);
-  const [selectedCarType, setSelectedCarType] = useState<string>('');
+  const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
   const [selectedLocation, setSelectedOption] = useState<
     'origin' | 'destination'
   >('origin');
@@ -97,6 +102,7 @@ const OrderCreateScreen = () => {
       receiverMobile: '',
       senderName: '',
       senderMobile: '',
+      carType: '',
     },
     validationSchema: deliverySchema,
     onSubmit: async () => {
@@ -111,7 +117,7 @@ const OrderCreateScreen = () => {
           originId: createdOrigin?.id,
           destinationId: createdDestination?.id,
           packageType: values.packageType,
-          carType: selectedCarType,
+          carType: values.carType,
           packageWeight: Number(values.packageWeight),
           travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
           vatIncluded: values.vatIncluded,
@@ -135,22 +141,6 @@ const OrderCreateScreen = () => {
     },
   });
 
-  const resetState = () => {
-    setStep(1);
-    setIsRent(false);
-    setSelectedCarType('');
-    setSelectedOption('origin');
-    setOrigin(null);
-    setDestination(null);
-    setCreatedOrigin(null);
-    setCreatedDestination(null);
-    setAudio('');
-    setImages([]);
-    setVideo('');
-    formik.resetForm();
-    formik2.resetForm();
-  };
-
   const formik2 = useFormik({
     initialValues: {
       carWeight: '',
@@ -162,6 +152,7 @@ const OrderCreateScreen = () => {
       price: '',
       additionalInfo: '',
       additionalAddress: '',
+      carType: '',
     },
     validationSchema: rentSchema,
     onSubmit: async () => {
@@ -174,7 +165,7 @@ const OrderCreateScreen = () => {
       await createOrder({
         variables: {
           originId: createdOrigin?.id,
-          carType: selectedCarType,
+          carType: values.carType,
           carWeight: values.carWeight,
           travelAt: dayjs(`${values.startDate}`),
           vatIncluded: values.vatIncluded,
@@ -195,11 +186,68 @@ const OrderCreateScreen = () => {
     },
   });
 
+  const { data, loading: getOrderLoading } = useGetOrderQuery({
+    variables: { number: String(number) },
+    skip: !number,
+  });
+
+  const resetState = () => {
+    setStep(1);
+    setIsRent(false);
+    setSelectedCarTypes([]);
+    setSelectedOption('origin');
+    setOrigin(null);
+    setDestination(null);
+    setCreatedOrigin(null);
+    setCreatedDestination(null);
+    setAudio('');
+    setImages([]);
+    setVideo('');
+    formik.resetForm();
+    formik2.resetForm();
+  };
+
   useEffect(() => {
     if (isRent) {
       setSelectedOption('origin');
+      setSelectedCarTypes(carTypes2.map(car => car.name));
+    } else {
+      setSelectedCarTypes(carTypes.map(car => car.name));
     }
   }, [isRent]);
+
+  console.log(data?.order);
+
+  useEffect(() => {
+    if (data) {
+      const isRentOrder = carTypes2.find(
+        car => car.name === data?.order?.carType
+      );
+      setIsRent(!!isRentOrder);
+      setCreatedOrigin(data?.order?.origin?.address);
+      setCreatedDestination(data?.order?.destination?.address);
+      setAudio(data?.order?.audio || '');
+      setImages(data?.order?.images || []);
+      setVideo(data?.order?.video || '');
+
+      formik.setValues({
+        packageType: data?.order?.packageType || '',
+        packageWeight: data?.order?.packageWeight || '',
+        travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
+        travelHour: dayjs(data?.order?.travelAt).format('HH:mm') || '',
+        vatIncluded: data?.order?.vatIncluded || false,
+        priceNegotiable: data?.order?.price ? false : true,
+        price: String(data?.order?.price || ''),
+        quantity: data?.order?.data?.quantity || '',
+        additionalInfo: data?.order?.data?.additionalInfo || '',
+        receiverName: data?.order?.receiverName || '',
+        receiverMobile: data?.order?.receiverMobile || '',
+        senderName: data?.order?.senderName || '',
+        senderMobile: data?.order?.senderMobile || '',
+        carType: data?.order?.carType || '',
+      });
+    }
+  }, [data]);
 
   const renderContent = () => {
     if (step === 1) {
@@ -224,8 +272,8 @@ const OrderCreateScreen = () => {
             setDestination={setDestination}
             setStep={setStep}
             isRent={isRent}
-            selectedCarType={selectedCarType}
-            setSelectedCarType={setSelectedCarType}
+            selectedCarTypes={selectedCarTypes}
+            setSelectedCarTypes={setSelectedCarTypes}
           />
         </AnimatedBox>
       );
@@ -234,8 +282,6 @@ const OrderCreateScreen = () => {
         <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
           {!isRent ? (
             <DeliveryStep3
-              selectedCarType={selectedCarType}
-              setSelectedCarType={setSelectedCarType}
               setSelectedLocation={setSelectedOption}
               createdOrigin={createdOrigin}
               createdDestination={createdDestination}
@@ -250,8 +296,6 @@ const OrderCreateScreen = () => {
             />
           ) : (
             <RentStep3
-              selectedCarType={selectedCarType}
-              setSelectedCarType={setSelectedCarType}
               setSelectedLocation={setSelectedOption}
               createdOrigin={createdOrigin}
               createdDestination={createdDestination}
@@ -280,6 +324,7 @@ const OrderCreateScreen = () => {
     <>
       <Container>
         <NormalHeader
+          hasBack={!!number}
           title="Захиалга үүсгэх"
           onPressBack={step === 1 ? undefined : onPressBack}
         />

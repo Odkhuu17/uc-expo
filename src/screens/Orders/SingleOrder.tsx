@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Box as BoxIcon, LocationDiscover } from 'iconsax-react-nativejs';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -29,8 +29,13 @@ const SingleOrder = ({ item }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const router = useRouter();
 
   const hasImages = item?.images && item?.images.length > 0;
+
+  const onPressEdit = () => {
+    router.navigate(`/orders/${item?.number}/edit`);
+  };
 
   return (
     <>
@@ -156,7 +161,7 @@ const SingleOrder = ({ item }: Props) => {
                 {item?.status ? 'Идэвхтэй' : 'Идэвхгүй'}
               </Text>
               {item?.my ? (
-                <Button title="Засах" size="s" />
+                <Button title="Засах" size="s" onPress={onPressEdit} />
               ) : (
                 <Box height={theme.button.s} />
               )}

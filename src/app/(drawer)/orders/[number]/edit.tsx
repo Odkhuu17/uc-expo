@@ -2,8 +2,8 @@ import React from 'react';
 
 import OrderCreateOrEditScreen from '@/screens/OrderCreateOrEdit';
 
-const OrderCreate = () => {
+const OrderEdit = () => {
   return <OrderCreateOrEditScreen />;
 };
 
-export default OrderCreate;
+export default OrderEdit;

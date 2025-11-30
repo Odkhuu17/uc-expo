@@ -6,6 +6,7 @@ const OrderLayout = () => {
       <Stack.Screen name="create" />
       <Stack.Screen name="index" />
       <Stack.Screen name="[number]" />
+      <Stack.Screen name="[number]/edit" />
     </Stack>
   );
 };

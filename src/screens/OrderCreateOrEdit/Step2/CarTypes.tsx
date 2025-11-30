@@ -15,17 +15,17 @@ const TOGGLE_BUTTON_HEIGHT = 20;
 const CAR_IMAGE_SIZE = 55;
 
 interface Props {
-  selectedCarType?: string;
+  selectedCarTypes: string[];
   title: string;
   carTypes: { name: string; image: number }[];
-  setSelectedCarType: Dispatch<SetStateAction<string>>;
+  setSelectedCarTypes: Dispatch<SetStateAction<string[]>>;
 }
 
 const CarTypes = ({
-  selectedCarType,
+  selectedCarTypes,
   title,
   carTypes,
-  setSelectedCarType,
+  setSelectedCarTypes,
 }: Props) => {
   const theme = useTheme();
   const translateX = useSharedValue(0);
@@ -44,6 +44,14 @@ const CarTypes = ({
       transform: [{ translateX: translateX.value }],
     };
   });
+
+  const onToggleCarType = (carType: string) => {
+    if (selectedCarTypes.includes(carType)) {
+      setSelectedCarTypes(selectedCarTypes.filter(type => type !== carType));
+    } else {
+      setSelectedCarTypes([...selectedCarTypes, carType]);
+    }
+  };
 
   return (
     <Animated.View style={animatedStyle}>
@@ -64,9 +72,12 @@ const CarTypes = ({
             return (
               <TouchableOpacity
                 key={index}
-                onPress={() => setSelectedCarType(car.name)}
+                onPress={() => onToggleCarType(car.name)}
               >
-                <Box alignItems="center">
+                <Box
+                  alignItems="center"
+                  opacity={selectedCarTypes.includes(car.name) ? 1 : 0.5}
+                >
                   <Box
                     p="xs"
                     borderRadius="full"
@@ -74,9 +85,7 @@ const CarTypes = ({
                     borderColor="baseBlue"
                     width={CAR_IMAGE_SIZE}
                     height={CAR_IMAGE_SIZE}
-                    backgroundColor={
-                      selectedCarType === car.name ? 'lightBlue2' : 'white'
-                    }
+                    backgroundColor="white"
                   >
                     <Image
                       source={car.image}
