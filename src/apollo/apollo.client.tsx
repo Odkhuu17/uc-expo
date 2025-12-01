@@ -52,7 +52,7 @@ export const useCreateApolloClient = () => {
           })
         );
       } else {
-        console.log('48563985u6350965');
+        console.log('48563985u6350965', error);
 
         return router.navigate({
           pathname: '/modal',
@@ -63,7 +63,7 @@ export const useCreateApolloClient = () => {
 
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
-        console.log('iuehfwef');
+        console.log('iuehfwef', error);
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {

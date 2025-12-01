@@ -13,10 +13,10 @@ import {
   NormalHeader,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
-import { carTypes2 } from '@/constants';
 import { useDestroyOrderMutation } from '@/gql/mutations/destroyOrderMutation.generated';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
-import { getImageUrl } from '@/utils/helpers';
+import { useAppSelector } from '@/redux/hooks';
+import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import OrderDetailAudio from './OrderDetailAudio';
 import OrderDetailDelivery from './OrderDetailDelivery';
 import OrderDetailRent from './OrderDetailRent';
@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const OrderDetail = () => {
+  const { mode } = useAppSelector(state => state.general);
   const { number } = useLocalSearchParams();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
@@ -46,12 +47,10 @@ const OrderDetail = () => {
     },
   });
 
-  console.log(data, 'order detail');
-
   const [orderDestroy, { loading: orderDestroyLoading }] =
     useDestroyOrderMutation();
 
-  const isRentOrder = carTypes2.find(car => car.name === data?.order?.carType);
+  const isRent = isRentOrder(data?.order?.carType);
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
 
   const onPressDelete = () => {
@@ -125,12 +124,12 @@ const OrderDetail = () => {
                   audio={`${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.audio}`}
                 />
               )}
-              {isRentOrder ? (
+              {isRent ? (
                 <OrderDetailRent order={data?.order} />
               ) : (
                 <OrderDetailDelivery order={data?.order} />
               )}
-              {data?.order?.my && (
+              {data?.order?.my && mode === 'shipper' && (
                 <Box flexDirection="row" gap="s">
                   <Box flex={1}>
                     <Button

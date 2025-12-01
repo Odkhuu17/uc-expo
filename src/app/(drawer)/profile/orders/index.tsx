@@ -1,4 +1,4 @@
-import MyOrdersScreen from '@/screens/Shipper/MyOrders';
+import MyOrdersScreen from '@/screens/MyOrders';
 
 const MyOrders = () => {
   return <MyOrdersScreen />;

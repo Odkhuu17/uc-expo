@@ -110,6 +110,34 @@ query GetOrder($number: String) {
       createdAt
       updatedAt
     }
+    deliveryRequests {
+      edges {
+        node {
+          id
+          active
+          status
+          price
+          travelAt
+          user {
+            id
+            firstName
+            lastName
+            nickName
+            mobile
+            email
+          }
+          createdAt
+          updatedAt
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      totalCount
+    }
     createdAt
     updatedAt
   }

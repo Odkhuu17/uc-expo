@@ -14,6 +14,7 @@ import { useUpdateOrderMutation } from '@/gql/mutations/updateOrderMutation.gene
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { SearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
+import { isRentOrder } from '@/utils/helpers';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
@@ -275,10 +276,9 @@ const OrderCreateScreen = () => {
 
   useEffect(() => {
     if (data) {
-      const isRentOrder = carTypes2.find(
-        car => car.name === data?.order?.carType
-      );
-      setIsRent(!!isRentOrder);
+      const isRentO = isRentOrder(data?.order?.carType);
+
+      setIsRent(isRentO);
       setCreatedOrigin(data?.order?.origin || null);
       setCreatedDestination(data?.order?.destination || null);
       setAudio(
@@ -299,7 +299,7 @@ const OrderCreateScreen = () => {
           : ''
       );
 
-      if (isRentOrder) {
+      if (isRentO) {
         formik2.setValues({
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header = ({ title, hasBack, onPressBack }: Props) => {
+const NormalHeader = ({ title, hasBack, onPressBack }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
@@ -71,4 +71,4 @@ const Header = ({ title, hasBack, onPressBack }: Props) => {
   );
 };
 
-export default Header;
+export default NormalHeader;

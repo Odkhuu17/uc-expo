@@ -31,7 +31,7 @@ export const getImageUrl = (url: string) => {
   return `${process.env.EXPO_PUBLIC_IMAGE_URL}${url}`;
 };
 
-export const isRentOrder = (carType: string) => {
+export const isRentOrder = (carType?: string) => {
   const found = carTypes2.find(car => car.name === carType);
 
   return found ? true : false;

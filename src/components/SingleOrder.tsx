@@ -6,10 +6,11 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 
-import { BoxContainer, Button } from '@/components';
 import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
 import { GetOrdersQuery } from '@/gql/query/getOrders.generated';
-import { getImageUrl } from '@/utils/helpers';
+import { getImageUrl, isRentOrder } from '@/utils/helpers';
+import BoxContainer from './BoxContainer';
+import Button from './Button';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
@@ -37,6 +38,12 @@ const SingleOrder = ({ item }: Props) => {
     router.navigate(`/orders/${item?.number}/edit`);
   };
 
+  const onPressImage = () => {
+    setIsImageViewVisible(true);
+  };
+
+  const isRent = isRentOrder(item?.carType);
+
   return (
     <>
       <Link href={`/orders/${item?.number}`} asChild>
@@ -50,7 +57,7 @@ const SingleOrder = ({ item }: Props) => {
                 justifyContent="center"
               >
                 {hasImages ? (
-                  <TouchableOpacity onPress={() => setIsImageViewVisible(true)}>
+                  <TouchableOpacity onPress={onPressImage}>
                     <Image
                       source={{
                         uri: getImageUrl(item.images![0]),
@@ -63,10 +70,12 @@ const SingleOrder = ({ item }: Props) => {
                   <BoxIcon size={theme.icon.xl2} color={theme.colors.grey2} />
                 )}
               </Box>
-              <Box flex={1} gap="xs">
-                <Text color="lightBlue2" fontFamily="Roboto_500Medium">
-                  {item?.packageType}
-                </Text>
+              <Box flex={1} gap="m">
+                {!isRent && (
+                  <Text color="lightBlue2" fontFamily="Roboto_500Medium">
+                    {item?.packageType}
+                  </Text>
+                )}
                 <Box>
                   <Box flexDirection="row" alignItems="center" gap="xs">
                     <Box alignItems="center">
@@ -79,61 +88,69 @@ const SingleOrder = ({ item }: Props) => {
                       <Text variant="body2">{item?.origin?.address1}</Text>
                     </Box>
                   </Box>
-                  <Box
-                    alignItems="center"
-                    width={theme.icon.s}
-                    justifyContent="center"
-                  >
-                    <Box height={15}>
+                  {!isRent && (
+                    <>
                       <Box
-                        width={1}
-                        overflow="hidden"
-                        top={-5}
-                        bottom={-5}
-                        position="absolute"
+                        alignItems="center"
+                        width={theme.icon.s}
+                        justifyContent="center"
                       >
-                        <Box
-                          borderWidth={1}
-                          width={1}
-                          height="100%"
-                          borderStyle="dashed"
-                          borderColor="baseBlue"
-                        />
+                        <Box height={15}>
+                          <Box
+                            width={1}
+                            overflow="hidden"
+                            top={-5}
+                            bottom={-5}
+                            position="absolute"
+                          >
+                            <Box
+                              borderWidth={1}
+                              width={1}
+                              height="100%"
+                              borderStyle="dashed"
+                              borderColor="baseBlue"
+                            />
+                          </Box>
+                        </Box>
                       </Box>
+                      <Box flexDirection="row" alignItems="center" gap="xs">
+                        <Box>
+                          <LocationDiscover
+                            color={theme.colors.lightBlue2}
+                            size={theme.icon.s}
+                          />
+                        </Box>
+                        <Box>
+                          <Text variant="body2">
+                            {item?.destination?.address1}
+                          </Text>
+                        </Box>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+                <Box gap="xs">
+                  <Box flexDirection="row" alignItems="center" gap="xs">
+                    <Box flex={1}>
+                      <Text color="baseBlue" variant="body2">
+                        {isRent ? 'Ажил эхлэх өдөр:' : 'Ачих:'}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text variant="body2" color="grey2">
+                        {isRent
+                          ? dayjs(item?.travelAt).format('YYYY/MM/DD')
+                          : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
+                      </Text>
                     </Box>
                   </Box>
                   <Box flexDirection="row" alignItems="center" gap="xs">
-                    <Box>
-                      <LocationDiscover
-                        color={theme.colors.lightBlue2}
-                        size={theme.icon.s}
-                      />
-                    </Box>
-                    <Box>
-                      <Text variant="body2">{item?.destination?.address1}</Text>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box gap="xs">
-                  <Box flexDirection="row" alignItems="center">
-                    <Box flex={1}>
-                      <Text color="baseBlue" variant="body2">
-                        Ачих:
-                      </Text>
-                    </Box>
-                    <Box flex={1}>
-                      <Text variant="body2" color="grey2">
-                        {dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
-                      </Text>
-                    </Box>
-                  </Box>
-                  <Box flexDirection="row" alignItems="center">
                     <Box flex={1}>
                       <Text color="baseBlue" variant="body2">
                         Захиалсан:
                       </Text>
                     </Box>
-                    <Box flex={1}>
+                    <Box>
                       <Text variant="body2" color="grey2">
                         {dayjs(item?.createdAt).format('YYYY/MM/DD')}
                       </Text>
@@ -143,7 +160,9 @@ const SingleOrder = ({ item }: Props) => {
               </Box>
             </Box>
             <Box
-              backgroundColor={item?.status ? 'darkBlue' : 'grey4'}
+              backgroundColor={
+                item?.status === 'pending' ? 'darkBlue' : 'grey4'
+              }
               p="xs"
               px="m"
               flexDirection="row"
@@ -151,12 +170,12 @@ const SingleOrder = ({ item }: Props) => {
               alignItems="center"
             >
               <Text
-                color={item?.status ? 'lightBlue' : 'white'}
+                color={item?.status === 'pending' ? 'lightBlue' : 'white'}
                 variant="label"
               >
-                {item?.status ? 'Идэвхтэй' : 'Идэвхгүй'}
+                {item?.status === 'pending' ? 'Идэвхтэй' : 'Идэвхгүй'}
               </Text>
-              {item?.my ? (
+              {item?.my && item?.status === 'pending' ? (
                 <Button title="Засах" size="s" onPress={onPressEdit} />
               ) : (
                 <Box height={theme.button.s} />

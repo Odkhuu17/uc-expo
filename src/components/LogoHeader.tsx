@@ -12,7 +12,7 @@ interface Props {
   onBackPress?: () => void;
 }
 
-const Header = ({ variant, hasBack, onBackPress }: Props) => {
+const LogoHeader = ({ variant, hasBack, onBackPress }: Props) => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -54,4 +54,4 @@ const Header = ({ variant, hasBack, onBackPress }: Props) => {
   );
 };
 
-export default Header;
+export default LogoHeader;
