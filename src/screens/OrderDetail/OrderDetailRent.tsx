@@ -18,43 +18,41 @@ const OrderDetailRent = ({ order }: Props) => {
             Ажиллах байршил
           </Text>
         </Box>
-        {order?.origin?.address?.state?.name && (
+        {order?.origin?.state?.name && (
           <Box flexDirection="row" gap="s">
             <Text variant="body2" fontFamily="Roboto_500Medium">
               Хот/Аймаг:
             </Text>
-            <Text variant="body2">{order?.origin?.address?.state?.name}</Text>
+            <Text variant="body2">{order?.origin?.state?.name}</Text>
           </Box>
         )}
-        {order?.origin?.address?.district?.name && (
+        {order?.origin?.district?.name && (
           <Box flexDirection="row" gap="s">
             <Text variant="body2" fontFamily="Roboto_500Medium">
               Дүүрэг/Сум:
             </Text>
-            <Text variant="body2">
-              {order?.origin?.address?.district?.name}
-            </Text>
+            <Text variant="body2">{order?.origin?.district?.name}</Text>
           </Box>
         )}
-        {order?.origin?.address?.quarter?.name && (
+        {order?.origin?.quarter?.name && (
           <Box flexDirection="row" gap="s">
             <Text variant="body2" fontFamily="Roboto_500Medium">
               Хороо/Баг:
             </Text>
-            <Text variant="body2">{order?.origin?.address?.quarter?.name}</Text>
+            <Text variant="body2">{order?.origin?.quarter?.name}</Text>
           </Box>
         )}
         <Box flexDirection="row" gap="s">
           <Text variant="body2" fontFamily="Roboto_500Medium">
             Хаягийн нэр:
           </Text>
-          <Text variant="body2">{order?.origin?.address?.address1}</Text>
+          <Text variant="body2">{order?.origin?.address1}</Text>
         </Box>
         <Box flexDirection="row" gap="s">
           <Text variant="body2" fontFamily="Roboto_500Medium">
             Хаягийн дэлгэрэнгүй:
           </Text>
-          <Text variant="body2">{order?.origin?.address?.address2}</Text>
+          <Text variant="body2">{order?.origin?.address2}</Text>
         </Box>
       </BoxContainer>
       <BoxContainer gap="s">

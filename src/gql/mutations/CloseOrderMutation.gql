@@ -1,5 +1,5 @@
-query GetOrder($number: String) {
-  order(number: $number) {
+mutation CloseOrder($number: String!, $mobile: String!, $clientMutationId: String) {
+  closeOrder(input: { number: $number, mobile: $mobile, clientMutationId: $clientMutationId }) {
     id
     number
     title
@@ -47,16 +47,8 @@ query GetOrder($number: String) {
       name
       address1
       address2
-      mobile
-      email
-      firstName
-      lastName
-      alternativeMobile
-      alternativeEmail
-      zipcode
       latitude
       longitude
-      preferences
       country {
         id
         name
@@ -73,24 +65,14 @@ query GetOrder($number: String) {
         id
         name
       }
-      createdAt
-      updatedAt
     }
     destination {
       id
       name
       address1
       address2
-      mobile
-      email
-      firstName
-      lastName
-      alternativeMobile
-      alternativeEmail
-      zipcode
       latitude
       longitude
-      preferences
       country {
         id
         name
@@ -107,8 +89,6 @@ query GetOrder($number: String) {
         id
         name
       }
-      createdAt
-      updatedAt
     }
     createdAt
     updatedAt

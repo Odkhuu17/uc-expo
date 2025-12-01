@@ -9,7 +9,7 @@ export type CreateOrderMutationVariables = Types.Exact<{
   packageType?: Types.InputMaybe<Types.Scalars['String']['input']>;
   packageWeight?: Types.InputMaybe<Types.Scalars['Float']['input']>;
   packageDimensions?: Types.InputMaybe<Types.Scalars['Float']['input']>;
-  price?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  price?: Types.InputMaybe<Types.Scalars['Float']['input']>;
   senderName?: Types.InputMaybe<Types.Scalars['String']['input']>;
   senderMobile?: Types.InputMaybe<Types.Scalars['String']['input']>;
   receiverName?: Types.InputMaybe<Types.Scalars['String']['input']>;
@@ -30,11 +30,11 @@ export type CreateOrderMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, status?: string, published?: boolean, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, carType?: string, carWeight?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, images?: Array<string>, audio?: string, video?: string, vatIncluded?: boolean, createdAt: any, updatedAt: any, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string } } };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, status?: string, published?: boolean, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, carType?: string, carWeight?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, images?: Array<string>, audio?: string, video?: string, vatIncluded?: boolean, createdAt: any, updatedAt: any, origin?: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } }, destination?: { __typename?: 'Address', id: string, address1?: string, address2?: string, latitude?: string, longitude?: string, name?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } }, user?: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string } } };
 
 
 export const CreateOrderDocument = gql`
-    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: String, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
+    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: Float, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
   createOrder(
     input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded, data: $data}
   ) {
@@ -62,56 +62,50 @@ export const CreateOrderDocument = gql`
     vatIncluded
     origin {
       id
-      address {
+      address1
+      address2
+      latitude
+      longitude
+      name
+      country {
         id
-        address1
-        address2
-        latitude
-        longitude
         name
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     destination {
       id
-      address {
+      address1
+      address2
+      latitude
+      longitude
+      name
+      country {
         id
-        address1
-        address2
-        latitude
-        longitude
         name
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     user {

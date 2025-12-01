@@ -7,12 +7,12 @@ import {
   Empty,
   Loader,
   NormalHeader,
+  SingleOrder,
 } from '@/components';
 import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
-import SingleOrder from './SingleOrder';
 
 const DriverOrdersScreen = () => {
   const [isRefetching, setIsRefetching] = useState(false);

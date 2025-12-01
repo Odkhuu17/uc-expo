@@ -125,7 +125,7 @@ const OrderCreateScreen = () => {
             // packageWeight: Number(values.packageWeight),
             travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
             // vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : values.price,
+            price: values.priceNegotiable ? undefined : Number(values.price),
             // data: {
             //   quantity: values.quantity,
             //   additionalInfo: values.additionalInfo,
@@ -150,7 +150,7 @@ const OrderCreateScreen = () => {
             packageWeight: Number(values.packageWeight),
             travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
             vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : values.price,
+            price: values.priceNegotiable ? undefined : Number(values.price),
             data: {
               quantity: values.quantity,
               additionalInfo: values.additionalInfo,
@@ -194,23 +194,25 @@ const OrderCreateScreen = () => {
       if (number) {
         await updateOrder({
           variables: {
-            id: data?.order?.id!,
-            originId: createdOrigin?.id,
-            carType: values.carType,
-            carWeight: values.carWeight,
-            travelAt: dayjs(`${values.startDate}`),
-            // vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : values.price,
-            // data: {
-            //   rentDay: values.rentDay,
-            //   motHour: values.motHour,
-            //   additionalInfo: values.additionalInfo,
-            //   additionalAddress: values.additionalAddress,
-            // },
-            // images: imageFiles.length > 0 ? imageFiles : undefined,
-            // video: videoFile,
-            // audio: audioFile,
-            published: true,
+            input: {
+              id: data?.order?.id!,
+              originId: createdOrigin?.id,
+              carType: values.carType,
+              carWeight: values.carWeight,
+              travelAt: dayjs(`${values.startDate}`),
+              vatIncluded: values.vatIncluded,
+              price: values.priceNegotiable ? undefined : Number(values.price),
+              data: {
+                rentDay: values.rentDay,
+                motHour: values.motHour,
+                additionalInfo: values.additionalInfo,
+                additionalAddress: values.additionalAddress,
+              },
+              images: imageFiles.length > 0 ? imageFiles : undefined,
+              video: videoFile,
+              audio: audioFile,
+              published: true,
+            },
           },
         });
       } else {
@@ -221,7 +223,7 @@ const OrderCreateScreen = () => {
             carWeight: values.carWeight,
             travelAt: dayjs(`${values.startDate}`),
             vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : values.price,
+            price: values.priceNegotiable ? undefined : Number(values.price),
             data: {
               rentDay: values.rentDay,
               motHour: values.motHour,
@@ -238,6 +240,8 @@ const OrderCreateScreen = () => {
       setSuccessModal(true);
     },
   });
+
+  console.log(formik2.values, 'ihwdwdwqd');
 
   const { data, loading: getOrderLoading } = useGetOrderQuery({
     variables: { number: String(number) },
@@ -275,8 +279,8 @@ const OrderCreateScreen = () => {
         car => car.name === data?.order?.carType
       );
       setIsRent(!!isRentOrder);
-      setCreatedOrigin(data?.order?.origin?.address || null);
-      setCreatedDestination(data?.order?.destination?.address || null);
+      setCreatedOrigin(data?.order?.origin || null);
+      setCreatedDestination(data?.order?.destination || null);
       setAudio(
         data?.order?.audio
           ? `${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.audio}`
@@ -300,13 +304,13 @@ const OrderCreateScreen = () => {
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',
           startDate: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
-          rentDay: data?.order?.data?.rentDay || '',
-          motHour: data?.order?.data?.motHour || '',
+          rentDay: data?.order?.data?.rent_day || '',
+          motHour: data?.order?.data?.mot_hour || '',
           vatIncluded: data?.order?.vatIncluded || false,
           priceNegotiable: data?.order?.price ? false : true,
           price: String(data?.order?.price || ''),
-          additionalInfo: data?.order?.data?.additionalInfo || '',
-          additionalAddress: data?.order?.data?.additionalAddress || '',
+          additionalInfo: data?.order?.data?.additional_info || '',
+          additionalAddress: data?.order?.data?.additional_address || '',
         });
       } else {
         formik.setValues({

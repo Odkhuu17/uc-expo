@@ -1,47 +1,5 @@
-mutation UpdateOrder(
-  $id: ID!
-  $carType: String
-  $carWeight: String
-  $destinationId: ID
-  $originId: ID
-  $packageDimensions: String
-  $packageType: String
-  $packageWeight: String
-  $price: String
-  $published: Boolean
-  $receiverMobile: String
-  $receiverName: String
-  $senderMobile: String
-  $senderName: String
-  $status: String
-  $title: String
-  $travelAt: ISO8601DateTime
-  $travelDistance: String
-  $travelDuration: String
-) {
-  updateOrder(
-    input: {
-      id: $id
-      carType: $carType
-      carWeight: $carWeight
-      destinationId: $destinationId
-      originId: $originId
-      packageDimensions: $packageDimensions
-      packageType: $packageType
-      packageWeight: $packageWeight
-      price: $price
-      published: $published
-      receiverMobile: $receiverMobile
-      receiverName: $receiverName
-      senderMobile: $senderMobile
-      senderName: $senderName
-      status: $status
-      title: $title
-      travelAt: $travelAt
-      travelDistance: $travelDistance
-      travelDuration: $travelDuration
-    }
-  ) {
+mutation UpdateOrder($input: updateOrderInput!) {
+  updateOrder(input: $input) {
     id
     number
     title
@@ -86,56 +44,50 @@ mutation UpdateOrder(
     }
     origin {
       id
-      address {
+      name
+      address1
+      address2
+      latitude
+      longitude
+      country {
         id
         name
-        address1
-        address2
-        latitude
-        longitude
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     destination {
       id
-      address {
+      name
+      address1
+      address2
+      latitude
+      longitude
+      country {
         id
         name
-        address1
-        address2
-        latitude
-        longitude
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     createdAt

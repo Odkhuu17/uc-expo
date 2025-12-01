@@ -120,6 +120,7 @@ const RentStep3 = ({
             {images.length > 0 && (
               <OrderImages images={images} setImages={setImages} />
             )}
+            {console.log(formik.values)}
             <BoxContainer gap="m">
               <Select
                 icon={TruckFast}

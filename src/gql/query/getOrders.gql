@@ -26,56 +26,50 @@ query getOrders(
         images
         origin {
           id
-          address {
+          name
+          address1
+          address2
+          latitude
+          longitude
+          country {
             id
             name
-            address1
-            address2
-            latitude
-            longitude
-            country {
-              id
-              name
-            }
-            state {
-              id
-              name
-            }
-            district {
-              id
-              name
-            }
-            quarter {
-              id
-              name
-            }
+          }
+          state {
+            id
+            name
+          }
+          district {
+            id
+            name
+          }
+          quarter {
+            id
+            name
           }
         }
         destination {
           id
-          address {
+          name
+          address1
+          address2
+          latitude
+          longitude
+          country {
             id
             name
-            address1
-            address2
-            latitude
-            longitude
-            country {
-              id
-              name
-            }
-            state {
-              id
-              name
-            }
-            district {
-              id
-              name
-            }
-            quarter {
-              id
-              name
-            }
+          }
+          state {
+            id
+            name
+          }
+          district {
+            id
+            name
+          }
+          quarter {
+            id
+            name
           }
         }
         createdAt

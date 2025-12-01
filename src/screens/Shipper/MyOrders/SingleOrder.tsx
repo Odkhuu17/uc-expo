@@ -75,8 +75,8 @@ const SingleOrder = ({ item }: Props) => {
                   />
                 </Box>
                 <Box>
-                  <Text variant="body2">{item?.origin?.address?.address1}</Text>
-                  <Text variant="body2">{item?.origin?.address?.address2}</Text>
+                  <Text variant="body2">{item?.origin?.address1}</Text>
+                  <Text variant="body2">{item?.origin?.address2}</Text>
                 </Box>
               </Box>
               <Box
@@ -110,12 +110,8 @@ const SingleOrder = ({ item }: Props) => {
                   />
                 </Box>
                 <Box>
-                  <Text variant="body2">
-                    {item?.destination?.address?.address1}
-                  </Text>
-                  <Text variant="body2">
-                    {item?.destination?.address?.address2}
-                  </Text>
+                  <Text variant="body2">{item?.destination?.address1}</Text>
+                  <Text variant="body2">{item?.destination?.address2}</Text>
                 </Box>
               </Box>
             </Box>

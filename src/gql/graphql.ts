@@ -86,6 +86,7 @@ export type AddressInput = {
   alternativeMobile?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<LatLngInput>;
   mobile?: InputMaybe<Scalars['String']['input']>;
@@ -445,6 +446,7 @@ export type ModelFilter = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptDeliveryRequest?: Maybe<DeliveryRequest>;
   approveVerification?: Maybe<Verification>;
   authCheckLogin: Scalars['JSON']['output'];
   authRegister?: Maybe<User>;
@@ -485,6 +487,7 @@ export type Mutation = {
   destroyUserAddress?: Maybe<UserAddress>;
   feedLocation?: Maybe<TruckTrack>;
   linkDevice: Device;
+  rejectDeliveryRequest?: Maybe<DeliveryRequest>;
   resetPassword?: Maybe<User>;
   sendEmailTest?: Maybe<Scalars['JSON']['output']>;
   sendOtp?: Maybe<User>;
@@ -503,6 +506,11 @@ export type Mutation = {
   updateTruck?: Maybe<Truck>;
   updateUser?: Maybe<User>;
   verifyRequest?: Maybe<Verification>;
+};
+
+
+export type MutationAcceptDeliveryRequestArgs = {
+  input: AcceptDeliveryRequestInput;
 };
 
 
@@ -706,6 +714,11 @@ export type MutationLinkDeviceArgs = {
 };
 
 
+export type MutationRejectDeliveryRequestArgs = {
+  input: RejectDeliveryRequestInput;
+};
+
+
 export type MutationResetPasswordArgs = {
   input: ResetPasswordInput;
 };
@@ -808,13 +821,13 @@ export type Order = BaseModelInterface & {
   data: Scalars['JSON']['output'];
   deliveryRequests: DeliveryRequestConnection;
   description?: Maybe<Scalars['String']['output']>;
-  destination?: Maybe<UserAddress>;
+  destination?: Maybe<Address>;
   id: Scalars['ID']['output'];
   imageObjects?: Maybe<Array<ImageObject>>;
   images?: Maybe<Array<Scalars['String']['output']>>;
   my?: Maybe<Scalars['Boolean']['output']>;
   number?: Maybe<Scalars['String']['output']>;
-  origin?: Maybe<UserAddress>;
+  origin?: Maybe<Address>;
   packageDimensions?: Maybe<Scalars['String']['output']>;
   packageType?: Maybe<Scalars['String']['output']>;
   packageWeight?: Maybe<Scalars['String']['output']>;
@@ -2001,6 +2014,11 @@ export type VerificationEdge = {
   node?: Maybe<Verification>;
 };
 
+export type AcceptDeliveryRequestInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
 export type ApproveVerificationInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   comment: Scalars['String']['input'];
@@ -2070,7 +2088,8 @@ export type CreateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   orderId: Scalars['ID']['input'];
   price: Scalars['Float']['input'];
-  travelAt: Scalars['ISO8601DateTime']['input'];
+  skipSubscription?: InputMaybe<Scalars['Boolean']['input']>;
+  travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -2116,7 +2135,7 @@ export type CreateOrderInput = {
   packageDimensions?: InputMaybe<Scalars['Float']['input']>;
   packageType?: InputMaybe<Scalars['String']['input']>;
   packageWeight?: InputMaybe<Scalars['Float']['input']>;
-  price?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
   published?: InputMaybe<Scalars['Boolean']['input']>;
   receiverMobile?: InputMaybe<Scalars['String']['input']>;
   receiverName?: InputMaybe<Scalars['String']['input']>;
@@ -2339,6 +2358,11 @@ export type LinkDeviceInput = {
   token: Scalars['String']['input'];
 };
 
+export type RejectDeliveryRequestInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
 export type ResetPasswordInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   login: Scalars['ID']['input'];
@@ -2395,7 +2419,8 @@ export type UpdateBannerInput = {
 export type UpdateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  status: Scalars['String']['input'];
+  price?: InputMaybe<Scalars['Float']['input']>;
+  travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
 };
 
 export type UpdateMarkInput = {
@@ -2416,18 +2441,22 @@ export type UpdateModelInput = {
 };
 
 export type UpdateOrderInput = {
+  audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
   id: Scalars['ID']['input'];
+  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
+  origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
   packageDimensions?: InputMaybe<Scalars['String']['input']>;
-  packageImages?: InputMaybe<Array<Scalars['Upload']['input']>>;
-  packageImagesBase64?: InputMaybe<Array<Scalars['String']['input']>>;
   packageType?: InputMaybe<Scalars['String']['input']>;
   packageWeight?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
   published?: InputMaybe<Scalars['Boolean']['input']>;
   receiverMobile?: InputMaybe<Scalars['String']['input']>;
   receiverName?: InputMaybe<Scalars['String']['input']>;
@@ -2438,6 +2467,8 @@ export type UpdateOrderInput = {
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   travelDistance?: InputMaybe<Scalars['String']['input']>;
   travelDuration?: InputMaybe<Scalars['String']['input']>;
+  vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
+  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type UpdatePaymentMethodInput = {

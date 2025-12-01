@@ -1,8 +1,4 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  ServerError
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ServerError } from '@apollo/client';
 import {
   CombinedGraphQLErrors,
   CombinedProtocolErrors,
@@ -12,7 +8,7 @@ import { ErrorLink } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { ApolloProvider } from '@apollo/client/react';
 import { Observable } from '@apollo/client/utilities';
-import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
+import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { ReactNode, useMemo } from 'react';
@@ -38,6 +34,8 @@ export const useCreateApolloClient = () => {
 
     const errorLink = new ErrorLink(({ error, operation }) => {
       if (CombinedGraphQLErrors.is(error)) {
+        console.log('thehetet');
+
         error.errors.forEach(({ message, locations, path }) => {
           return router.navigate({
             pathname: '/modal',
@@ -45,6 +43,8 @@ export const useCreateApolloClient = () => {
           });
         });
       } else if (CombinedProtocolErrors.is(error)) {
+        console.log('uregferugeiewm');
+
         error.errors.forEach(({ message, extensions }) =>
           router.navigate({
             pathname: '/modal',
@@ -52,6 +52,8 @@ export const useCreateApolloClient = () => {
           })
         );
       } else {
+        console.log('48563985u6350965');
+
         return router.navigate({
           pathname: '/modal',
           params: { type: 'error', message: error.message },
@@ -61,6 +63,7 @@ export const useCreateApolloClient = () => {
 
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
+        console.log('iuehfwef');
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {
@@ -82,6 +85,7 @@ export const useCreateApolloClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(refreshError => {
+              console.log('123123123');
               // If refresh fails, clear tokens and redirect to login
               SecureStore.deleteItemAsync('accessToken');
               SecureStore.deleteItemAsync('refreshToken');
@@ -97,7 +101,9 @@ export const useCreateApolloClient = () => {
 
     const uploadLink = new UploadHttpLink({
       uri: process.env.EXPO_PUBLIC_API_URL,
-      isExtractableFile: (value: any): value is { uri: string; name: string; type: string } => {
+      isExtractableFile: (
+        value: any
+      ): value is { uri: string; name: string; type: string } => {
         return (
           value != null &&
           typeof value === 'object' &&
@@ -106,7 +112,11 @@ export const useCreateApolloClient = () => {
           typeof value.type === 'string'
         );
       },
-      formDataAppendFile: (formData: FormData, fieldName: string, file: any) => {
+      formDataAppendFile: (
+        formData: FormData,
+        fieldName: string,
+        file: any
+      ) => {
         formData.append(fieldName, {
           uri: file.uri,
           name: file.name,

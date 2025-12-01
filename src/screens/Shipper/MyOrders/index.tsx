@@ -6,12 +6,12 @@ import {
   Empty,
   Loader,
   NormalHeader,
+  SingleOrder,
 } from '@/components';
 import {
   GetMyOrdersQuery,
   useGetMyOrdersQuery,
 } from '@/gql/query/getMyOrdersQuery.generated';
-import SingleOrder from './SingleOrder';
 
 const MyOrdersScreen = () => {
   const [isRefetching, setIsRefetching] = useState(false);

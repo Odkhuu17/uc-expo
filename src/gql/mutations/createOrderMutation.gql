@@ -3,7 +3,7 @@ mutation createOrder(
   $packageType: String
   $packageWeight: Float
   $packageDimensions: Float
-  $price: String
+  $price: Float
   $senderName: String
   $senderMobile: String
   $receiverName: String
@@ -72,56 +72,50 @@ mutation createOrder(
     vatIncluded
     origin {
       id
-      address {
+      address1
+      address2
+      latitude
+      longitude
+      name
+      country {
         id
-        address1
-        address2
-        latitude
-        longitude
         name
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     destination {
       id
-      address {
+      address1
+      address2
+      latitude
+      longitude
+      name
+      country {
         id
-        address1
-        address2
-        latitude
-        longitude
         name
-        country {
-          id
-          name
-        }
-        state {
-          id
-          name
-        }
-        district {
-          id
-          name
-        }
-        quarter {
-          id
-          name
-        }
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
       }
     }
     user {

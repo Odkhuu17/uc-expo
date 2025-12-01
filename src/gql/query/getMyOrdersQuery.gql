@@ -1,7 +1,11 @@
-query GetMyOrders($ordersFirst: Int, $after: String) {
+query GetMyOrders(
+  $ordersFirst: Int
+  $after: String
+  $sort: SortFilter = { field: "created_at", direction: desc }
+) {
   me {
     id
-    orders(first: $ordersFirst, after: $after) {
+    orders(first: $ordersFirst, after: $after, sort: $sort) {
       edges {
         node {
           id
@@ -11,10 +15,7 @@ query GetMyOrders($ordersFirst: Int, $after: String) {
           published
           my
           requested
-          subscribed
           packageType
-          packageWeight
-          packageDimensions
           price
           carType
           carWeight
@@ -23,65 +24,59 @@ query GetMyOrders($ordersFirst: Int, $after: String) {
           receiverName
           receiverMobile
           travelAt
-          travelDistance
-          travelDuration
-          createdAt
-          updatedAt
+          images
           origin {
             id
-            address {
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
               id
               name
-              address1
-              address2
-              latitude
-              longitude
-              country {
-                id
-                name
-              }
-              state {
-                id
-                name
-              }
-              district {
-                id
-                name
-              }
-              quarter {
-                id
-                name
-              }
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
             }
           }
           destination {
             id
-            address {
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
               id
               name
-              address1
-              address2
-              latitude
-              longitude
-              country {
-                id
-                name
-              }
-              state {
-                id
-                name
-              }
-              district {
-                id
-                name
-              }
-              quarter {
-                id
-                name
-              }
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
             }
           }
+          createdAt
+          updatedAt
         }
+        cursor
       }
       totalCount
       pageInfo {

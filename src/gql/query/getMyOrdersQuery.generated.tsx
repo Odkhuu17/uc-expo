@@ -7,17 +7,18 @@ const defaultOptions = {} as const;
 export type GetMyOrdersQueryVariables = Types.Exact<{
   ordersFirst?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   after?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  sort?: Types.InputMaybe<Types.SortFilter>;
 }>;
 
 
-export type GetMyOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, orders: { __typename?: 'OrderConnection', totalCount: number, edges: Array<{ __typename?: 'OrderEdge', node?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, subscribed: boolean, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, createdAt: any, updatedAt: any, origin?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } }, destination?: { __typename?: 'UserAddress', id: string, address: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
+export type GetMyOrdersQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, orders: { __typename?: 'OrderConnection', totalCount: number, edges: Array<{ __typename?: 'OrderEdge', cursor: string, node?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, packageType?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, images?: Array<string>, createdAt: any, updatedAt: any, origin?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } }, destination?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
 
 
 export const GetMyOrdersDocument = gql`
-    query GetMyOrders($ordersFirst: Int, $after: String) {
+    query GetMyOrders($ordersFirst: Int, $after: String, $sort: SortFilter = {field: "created_at", direction: desc}) {
   me {
     id
-    orders(first: $ordersFirst, after: $after) {
+    orders(first: $ordersFirst, after: $after, sort: $sort) {
       edges {
         node {
           id
@@ -27,10 +28,7 @@ export const GetMyOrdersDocument = gql`
           published
           my
           requested
-          subscribed
           packageType
-          packageWeight
-          packageDimensions
           price
           carType
           carWeight
@@ -39,65 +37,59 @@ export const GetMyOrdersDocument = gql`
           receiverName
           receiverMobile
           travelAt
-          travelDistance
-          travelDuration
-          createdAt
-          updatedAt
+          images
           origin {
             id
-            address {
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
               id
               name
-              address1
-              address2
-              latitude
-              longitude
-              country {
-                id
-                name
-              }
-              state {
-                id
-                name
-              }
-              district {
-                id
-                name
-              }
-              quarter {
-                id
-                name
-              }
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
             }
           }
           destination {
             id
-            address {
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
               id
               name
-              address1
-              address2
-              latitude
-              longitude
-              country {
-                id
-                name
-              }
-              state {
-                id
-                name
-              }
-              district {
-                id
-                name
-              }
-              quarter {
-                id
-                name
-              }
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
             }
           }
+          createdAt
+          updatedAt
         }
+        cursor
       }
       totalCount
       pageInfo {
@@ -125,6 +117,7 @@ export const GetMyOrdersDocument = gql`
  *   variables: {
  *      ordersFirst: // value for 'ordersFirst'
  *      after: // value for 'after'
+ *      sort: // value for 'sort'
  *   },
  * });
  */

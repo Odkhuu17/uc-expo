@@ -23,4 +23,4 @@ export { default as OrderInput } from './OrderInput';
 export { default as OrderLocation } from './OrderLocation';
 export { default as Select } from './Select';
 export { default as TextArea } from './TextArea';
-
+export { default as SingleOrder } from './SingleOrder';

@@ -14,6 +14,7 @@ export type CreateTruckMutationVariables = Types.Exact<{
   netWeight?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   importedDate?: Types.InputMaybe<Types.Scalars['ISO8601DateTime']['input']>;
   manufacturedDate?: Types.InputMaybe<Types.Scalars['ISO8601DateTime']['input']>;
+  taxonId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
 }>;
 
 
@@ -21,9 +22,9 @@ export type CreateTruckMutation = { __typename?: 'Mutation', createTruck?: { __t
 
 
 export const CreateTruckDocument = gql`
-    mutation createTruck($markId: ID!, $modelId: ID!, $userId: ID!, $plateNumber: String, $serial: String, $weight: Int, $netWeight: Int, $importedDate: ISO8601DateTime, $manufacturedDate: ISO8601DateTime) {
+    mutation createTruck($markId: ID!, $modelId: ID!, $userId: ID!, $plateNumber: String, $serial: String, $weight: Int, $netWeight: Int, $importedDate: ISO8601DateTime, $manufacturedDate: ISO8601DateTime, $taxonId: ID) {
   createTruck(
-    input: {markId: $markId, modelId: $modelId, userId: $userId, plateNumber: $plateNumber, serial: $serial, weight: $weight, netWeight: $netWeight, importedDate: $importedDate, manufacturedDate: $manufacturedDate}
+    input: {markId: $markId, modelId: $modelId, userId: $userId, plateNumber: $plateNumber, serial: $serial, weight: $weight, netWeight: $netWeight, importedDate: $importedDate, manufacturedDate: $manufacturedDate, taxonId: $taxonId}
   ) {
     id
     plateNumber
@@ -88,6 +89,7 @@ export type CreateTruckMutationFn = ApolloReactCommon.MutationFunction<CreateTru
  *      netWeight: // value for 'netWeight'
  *      importedDate: // value for 'importedDate'
  *      manufacturedDate: // value for 'manufacturedDate'
+ *      taxonId: // value for 'taxonId'
  *   },
  * });
  */

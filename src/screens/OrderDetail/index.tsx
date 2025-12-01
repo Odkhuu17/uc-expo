@@ -21,6 +21,8 @@ import OrderDetailAudio from './OrderDetailAudio';
 import OrderDetailDelivery from './OrderDetailDelivery';
 import OrderDetailRent from './OrderDetailRent';
 import OrderDetailVideo from './OrderDetailVideo';
+import OrderRequestButton from './OrderRequestButton';
+import OrderRequests from './OrderRequests';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -43,6 +45,8 @@ const OrderDetail = () => {
       number: number as string,
     },
   });
+
+  console.log(data, 'order detail');
 
   const [orderDestroy, { loading: orderDestroyLoading }] =
     useDestroyOrderMutation();
@@ -132,7 +136,6 @@ const OrderDetail = () => {
                     <Button
                       backgroundColor="green"
                       title="Засах"
-                      loading={orderDestroyLoading}
                       onPress={onPressEdit}
                     />
                   </Box>
@@ -146,6 +149,8 @@ const OrderDetail = () => {
                   </Box>
                 </Box>
               )}
+              <OrderRequestButton data={data?.order} />
+              <OrderRequests order={data?.order} />
             </Box>
           )}
         </Content>
