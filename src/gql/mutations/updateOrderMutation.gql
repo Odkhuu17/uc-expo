@@ -1,5 +1,47 @@
-query GetOrder($number: String) {
-  order(number: $number) {
+mutation UpdateOrder(
+  $id: ID!
+  $carType: String
+  $carWeight: String
+  $destinationId: ID
+  $originId: ID
+  $packageDimensions: String
+  $packageType: String
+  $packageWeight: String
+  $price: String
+  $published: Boolean
+  $receiverMobile: String
+  $receiverName: String
+  $senderMobile: String
+  $senderName: String
+  $status: String
+  $title: String
+  $travelAt: ISO8601DateTime
+  $travelDistance: String
+  $travelDuration: String
+) {
+  updateOrder(
+    input: {
+      id: $id
+      carType: $carType
+      carWeight: $carWeight
+      destinationId: $destinationId
+      originId: $originId
+      packageDimensions: $packageDimensions
+      packageType: $packageType
+      packageWeight: $packageWeight
+      price: $price
+      published: $published
+      receiverMobile: $receiverMobile
+      receiverName: $receiverName
+      senderMobile: $senderMobile
+      senderName: $senderName
+      status: $status
+      title: $title
+      travelAt: $travelAt
+      travelDistance: $travelDistance
+      travelDuration: $travelDuration
+    }
+  ) {
     id
     number
     title
@@ -49,16 +91,8 @@ query GetOrder($number: String) {
         name
         address1
         address2
-        mobile
-        email
-        firstName
-        lastName
-        alternativeMobile
-        alternativeEmail
-        zipcode
         latitude
         longitude
-        preferences
         country {
           id
           name
@@ -75,8 +109,6 @@ query GetOrder($number: String) {
           id
           name
         }
-        createdAt
-        updatedAt
       }
     }
     destination {
@@ -86,16 +118,8 @@ query GetOrder($number: String) {
         name
         address1
         address2
-        mobile
-        email
-        firstName
-        lastName
-        alternativeMobile
-        alternativeEmail
-        zipcode
         latitude
         longitude
-        preferences
         country {
           id
           name
@@ -112,8 +136,6 @@ query GetOrder($number: String) {
           id
           name
         }
-        createdAt
-        updatedAt
       }
     }
     createdAt

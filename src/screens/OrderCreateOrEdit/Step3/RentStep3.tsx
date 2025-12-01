@@ -22,6 +22,7 @@ import { Box } from '@/components/Theme';
 import { carTypes2 } from '@/constants';
 import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import { moneyMask } from '@/utils/helpers';
+import { useLocalSearchParams } from 'expo-router';
 import OrderAudio from './OrderAudio';
 import OrderAudioPlayer from './OrderAudioPlayer';
 import OrderImageButton from './OrderImageButton';
@@ -60,6 +61,7 @@ const RentStep3 = ({
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const { number } = useLocalSearchParams();
 
   const {
     handleSubmit,
@@ -244,7 +246,7 @@ const RentStep3 = ({
       </CustomKeyboardAvoidingView>
       <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
         <Button
-          title="Захиалга үүсгэх"
+          title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}
           onPress={handleSubmit}
           loading={isSubmitting}
         />

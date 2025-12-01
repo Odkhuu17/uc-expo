@@ -5,7 +5,13 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
-import { Box as BoxIcon, Call, Note1, UserAdd } from 'iconsax-react-nativejs';
+import {
+  Box as BoxIcon,
+  Call,
+  Note1,
+  User,
+  UserAdd,
+} from 'iconsax-react-nativejs';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -51,11 +57,11 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <UserInfo />
           <Box justifyContent="space-around" flex={1}>
             <Box gap="l">
-              {/* <SingleLinkButton
+              <SingleLinkButton
                 icon={User}
                 title="Миний мэдээлэл"
                 href="/profile"
-              /> */}
+              />
               {mode === 'shipper' && (
                 <SingleLinkButton
                   icon={BoxIcon}
@@ -72,7 +78,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 <SingleLinkButton
                   icon={UserAdd}
                   title="Гишүүнчлэл"
-                  href="/driver/membership"
+                  href="/membership"
                 />
               )}
             </Box>

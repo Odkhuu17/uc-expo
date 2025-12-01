@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Image } from 'expo-image';
 import React, { useState } from 'react';
 
 import {
@@ -12,7 +12,6 @@ import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
-import { Image } from 'expo-image';
 import SingleOrder from './SingleOrder';
 
 const DriverOrdersScreen = () => {
@@ -37,8 +36,6 @@ const DriverOrdersScreen = () => {
       setIsRefetching(false);
     }
   };
-
-  console.log(data);
 
   const onLoadMore = () => {
     if (hasNextPage && !loading) {
@@ -79,13 +76,9 @@ const DriverOrdersScreen = () => {
     return null;
   };
 
-  const onPressBack = () => {
-    router.navigate('/shipper');
-  };
-
   return (
     <Container>
-      <NormalHeader title="Захиалгууд" onPressBack={onPressBack} />
+      <NormalHeader title="Захиалгууд" hasBack />
       <CustomFlatList
         ListHeaderComponent={
           <Image

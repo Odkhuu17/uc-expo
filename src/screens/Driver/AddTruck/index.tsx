@@ -15,6 +15,7 @@ import {
   Select,
 } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
+import { carTypes, carTypes2 } from '@/constants';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
 import { useGetMarksQuery } from '@/gql/query/getMarks.generated';
 import { useGetModelsQuery } from '@/gql/query/getModels.generated';
@@ -92,7 +93,14 @@ const AddTruckScreen = () => {
           <Content edges={[]}>
             <Box gap="m">
               <Select
-                label="Марк"
+                placeholder="Машин төрөл"
+                options={[
+                  ...carTypes.map(i => ({ label: i.name, value: i.name })),
+                  ...carTypes2.map(i => ({ label: i.name, value: i.name })),
+                ]}
+              />
+              <Select
+                placeholder="Марк"
                 value={
                   marksData?.marks.nodes.find(mark => mark.id === values.markId)
                     ?.name || ''
@@ -102,21 +110,6 @@ const AddTruckScreen = () => {
                   marksData?.marks.nodes.map(mark => ({
                     value: mark.id,
                     label: mark.name,
-                  })) || []
-                }
-              />
-              <Select
-                label="Модель"
-                setSelectedOption={onChangeModel}
-                value={
-                  modelsData?.models?.nodes.find(
-                    model => model.id === values.modelId
-                  )?.name || ''
-                }
-                options={
-                  modelsData?.models?.nodes.map(model => ({
-                    value: model.id,
-                    label: model.name,
                   })) || []
                 }
               />

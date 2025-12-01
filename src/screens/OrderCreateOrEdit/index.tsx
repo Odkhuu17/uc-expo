@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
 
-import { Container, MessageModal, NormalHeader } from '@/components';
+import { Container, Loader, MessageModal, NormalHeader } from '@/components';
 import { Box } from '@/components/Theme';
 import { carTypes, carTypes2 } from '@/constants';
 import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import { useCreateOrderMutation } from '@/gql/mutations/createOrderMutation.generated';
+import { useUpdateOrderMutation } from '@/gql/mutations/updateOrderMutation.generated';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { SearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
@@ -86,6 +87,7 @@ const OrderCreateScreen = () => {
   const [video, setVideo] = useState('');
 
   const [createOrder] = useCreateOrderMutation();
+  const [updateOrder] = useUpdateOrderMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -112,30 +114,58 @@ const OrderCreateScreen = () => {
 
       const values = formik.values;
 
-      await createOrder({
-        variables: {
-          originId: createdOrigin?.id,
-          destinationId: createdDestination?.id,
-          packageType: values.packageType,
-          carType: values.carType,
-          packageWeight: Number(values.packageWeight),
-          travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
-          vatIncluded: values.vatIncluded,
-          price: values.priceNegotiable ? undefined : values.price,
-          data: {
-            quantity: values.quantity,
-            additionalInfo: values.additionalInfo,
+      if (number) {
+        await updateOrder({
+          variables: {
+            id: data?.order?.id!,
+            originId: createdOrigin?.id,
+            destinationId: createdDestination?.id,
+            packageType: values.packageType,
+            carType: values.carType,
+            // packageWeight: Number(values.packageWeight),
+            travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
+            // vatIncluded: values.vatIncluded,
+            price: values.priceNegotiable ? undefined : values.price,
+            // data: {
+            //   quantity: values.quantity,
+            //   additionalInfo: values.additionalInfo,
+            // },
+            receiverName: values.receiverName,
+            receiverMobile: values.receiverMobile,
+            senderName: values.senderName,
+            senderMobile: values.senderMobile,
+            // images: imageFiles.length > 0 ? imageFiles : undefined,
+            // video: videoFile,
+            // audio: audioFile,
+            published: true,
           },
-          receiverName: values.receiverName,
-          receiverMobile: values.receiverMobile,
-          senderName: values.senderName,
-          senderMobile: values.senderMobile,
-          images: imageFiles.length > 0 ? imageFiles : undefined,
-          video: videoFile,
-          audio: audioFile,
-          published: true,
-        },
-      });
+        });
+      } else {
+        await createOrder({
+          variables: {
+            originId: createdOrigin?.id,
+            destinationId: createdDestination?.id,
+            packageType: values.packageType,
+            carType: values.carType,
+            packageWeight: Number(values.packageWeight),
+            travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
+            vatIncluded: values.vatIncluded,
+            price: values.priceNegotiable ? undefined : values.price,
+            data: {
+              quantity: values.quantity,
+              additionalInfo: values.additionalInfo,
+            },
+            receiverName: values.receiverName,
+            receiverMobile: values.receiverMobile,
+            senderName: values.senderName,
+            senderMobile: values.senderMobile,
+            images: imageFiles.length > 0 ? imageFiles : undefined,
+            video: videoFile,
+            audio: audioFile,
+            published: true,
+          },
+        });
+      }
 
       setSuccessModal(true);
     },
@@ -161,27 +191,50 @@ const OrderCreateScreen = () => {
       const audioFile = audio ? audioToFile(audio) : null;
 
       const values = formik2.values;
-
-      await createOrder({
-        variables: {
-          originId: createdOrigin?.id,
-          carType: values.carType,
-          carWeight: values.carWeight,
-          travelAt: dayjs(`${values.startDate}`),
-          vatIncluded: values.vatIncluded,
-          price: values.priceNegotiable ? undefined : values.price,
-          data: {
-            rentDay: values.rentDay,
-            motHour: values.motHour,
-            additionalInfo: values.additionalInfo,
-            additionalAddress: values.additionalAddress,
+      if (number) {
+        await updateOrder({
+          variables: {
+            id: data?.order?.id!,
+            originId: createdOrigin?.id,
+            carType: values.carType,
+            carWeight: values.carWeight,
+            travelAt: dayjs(`${values.startDate}`),
+            // vatIncluded: values.vatIncluded,
+            price: values.priceNegotiable ? undefined : values.price,
+            // data: {
+            //   rentDay: values.rentDay,
+            //   motHour: values.motHour,
+            //   additionalInfo: values.additionalInfo,
+            //   additionalAddress: values.additionalAddress,
+            // },
+            // images: imageFiles.length > 0 ? imageFiles : undefined,
+            // video: videoFile,
+            // audio: audioFile,
+            published: true,
           },
-          images: imageFiles.length > 0 ? imageFiles : undefined,
-          video: videoFile,
-          audio: audioFile,
-          published: true,
-        },
-      });
+        });
+      } else {
+        await createOrder({
+          variables: {
+            originId: createdOrigin?.id,
+            carType: values.carType,
+            carWeight: values.carWeight,
+            travelAt: dayjs(`${values.startDate}`),
+            vatIncluded: values.vatIncluded,
+            price: values.priceNegotiable ? undefined : values.price,
+            data: {
+              rentDay: values.rentDay,
+              motHour: values.motHour,
+              additionalInfo: values.additionalInfo,
+              additionalAddress: values.additionalAddress,
+            },
+            images: imageFiles.length > 0 ? imageFiles : undefined,
+            video: videoFile,
+            audio: audioFile,
+            published: true,
+          },
+        });
+      }
       setSuccessModal(true);
     },
   });
@@ -216,36 +269,63 @@ const OrderCreateScreen = () => {
     }
   }, [isRent]);
 
-  console.log(data?.order);
-
   useEffect(() => {
     if (data) {
       const isRentOrder = carTypes2.find(
         car => car.name === data?.order?.carType
       );
       setIsRent(!!isRentOrder);
-      setCreatedOrigin(data?.order?.origin?.address);
-      setCreatedDestination(data?.order?.destination?.address);
-      setAudio(data?.order?.audio || '');
-      setImages(data?.order?.images || []);
-      setVideo(data?.order?.video || '');
+      setCreatedOrigin(data?.order?.origin?.address || null);
+      setCreatedDestination(data?.order?.destination?.address || null);
+      setAudio(
+        data?.order?.audio
+          ? `${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.audio}`
+          : ''
+      );
+      setImages(
+        data?.order?.images && data.order.images.length > 0
+          ? data.order.images.map(
+              i => `${process.env.EXPO_PUBLIC_IMAGE_URL}${i}`
+            )
+          : []
+      );
+      setVideo(
+        data?.order?.video
+          ? `${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.video}`
+          : ''
+      );
 
-      formik.setValues({
-        packageType: data?.order?.packageType || '',
-        packageWeight: data?.order?.packageWeight || '',
-        travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
-        travelHour: dayjs(data?.order?.travelAt).format('HH:mm') || '',
-        vatIncluded: data?.order?.vatIncluded || false,
-        priceNegotiable: data?.order?.price ? false : true,
-        price: String(data?.order?.price || ''),
-        quantity: data?.order?.data?.quantity || '',
-        additionalInfo: data?.order?.data?.additionalInfo || '',
-        receiverName: data?.order?.receiverName || '',
-        receiverMobile: data?.order?.receiverMobile || '',
-        senderName: data?.order?.senderName || '',
-        senderMobile: data?.order?.senderMobile || '',
-        carType: data?.order?.carType || '',
-      });
+      if (isRentOrder) {
+        formik2.setValues({
+          carType: data?.order?.carType || '',
+          carWeight: data?.order?.carWeight || '',
+          startDate: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
+          rentDay: data?.order?.data?.rentDay || '',
+          motHour: data?.order?.data?.motHour || '',
+          vatIncluded: data?.order?.vatIncluded || false,
+          priceNegotiable: data?.order?.price ? false : true,
+          price: String(data?.order?.price || ''),
+          additionalInfo: data?.order?.data?.additionalInfo || '',
+          additionalAddress: data?.order?.data?.additionalAddress || '',
+        });
+      } else {
+        formik.setValues({
+          packageType: data?.order?.packageType || '',
+          packageWeight: data?.order?.packageWeight || '',
+          travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
+          travelHour: dayjs(data?.order?.travelAt).format('HH:mm') || '',
+          vatIncluded: data?.order?.vatIncluded || false,
+          priceNegotiable: data?.order?.price ? false : true,
+          price: String(data?.order?.price || ''),
+          quantity: data?.order?.data?.quantity || '',
+          additionalInfo: data?.order?.data?.additionalInfo || '',
+          receiverName: data?.order?.receiverName || '',
+          receiverMobile: data?.order?.receiverMobile || '',
+          senderName: data?.order?.senderName || '',
+          senderMobile: data?.order?.senderMobile || '',
+          carType: data?.order?.carType || '',
+        });
+      }
     }
   }, [data]);
 
@@ -315,6 +395,15 @@ const OrderCreateScreen = () => {
   };
 
   const onPressBack = () => {
+    if (number) {
+      if (step === 2) {
+        return setStep(3);
+      }
+      if (step === 3) {
+        return router.back();
+      }
+    }
+
     if (step > 1) {
       setStep(step - 1);
     }
@@ -325,14 +414,18 @@ const OrderCreateScreen = () => {
       <Container>
         <NormalHeader
           hasBack={!!number}
-          title="Захиалга үүсгэх"
+          title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
           onPressBack={step === 1 ? undefined : onPressBack}
         />
-        {renderContent()}
+        {getOrderLoading ? <Loader /> : renderContent()}
       </Container>
       <MessageModal
         type="success"
-        message="Захиалга амжилттай үүслээ"
+        message={
+          number
+            ? 'Захиалга амжилттай шинэчлэгдлээ'
+            : 'Захиалга амжилттай үүслээ'
+        }
         onClose={() => {
           router.dismissAll();
           router.navigate('/profile/orders');

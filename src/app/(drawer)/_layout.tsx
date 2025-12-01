@@ -17,7 +17,7 @@ export default function DrawerLayout() {
       }}
     >
       <Drawer.Screen name="orders" />
-      <Drawer.Screen name="driver/membership" />
+      <Drawer.Screen name="membership" />
       <Drawer.Screen name="profile" />
     </Drawer>
   );

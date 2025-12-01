@@ -5,7 +5,7 @@ import {
   Container,
   CustomFlatList,
   Empty,
-  NormalHeader
+  NormalHeader,
 } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
 import {
@@ -17,7 +17,7 @@ import { useRouter } from 'expo-router';
 import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {
-  const {user} = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.auth);
   const { data, loading, refetch } = useGetMyTrucksQuery({
     variables: { userId: user?.id || '' },
   });
@@ -32,8 +32,6 @@ const MyTrucks = () => {
   }) => {
     return <SingleTruck item={item} />;
   };
-
-  console.log(data);
 
   return (
     <Container>

@@ -1,20 +1,26 @@
-import dayjs from 'dayjs';
 import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 
 import {
   BoxContainer,
+  Button,
   Container,
   Content,
   Loader,
   NormalHeader,
 } from '@/components';
-import { Box, makeStyles, Text } from '@/components/Theme';
+import { Box, makeStyles } from '@/components/Theme';
+import { carTypes2 } from '@/constants';
+import { useDestroyOrderMutation } from '@/gql/mutations/destroyOrderMutation.generated';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
-import { getImageUrl, moneyFormat } from '@/utils/helpers';
-import { useState } from 'react';
+import { getImageUrl } from '@/utils/helpers';
+import OrderDetailAudio from './OrderDetailAudio';
+import OrderDetailDelivery from './OrderDetailDelivery';
+import OrderDetailRent from './OrderDetailRent';
+import OrderDetailVideo from './OrderDetailVideo';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -30,6 +36,7 @@ const OrderDetail = () => {
   const { number } = useLocalSearchParams();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const router = useRouter();
 
   const { data, loading } = useGetOrderQuery({
     variables: {
@@ -37,7 +44,35 @@ const OrderDetail = () => {
     },
   });
 
+  const [orderDestroy, { loading: orderDestroyLoading }] =
+    useDestroyOrderMutation();
+
+  const isRentOrder = carTypes2.find(car => car.name === data?.order?.carType);
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
+
+  const onPressDelete = () => {
+    Alert.alert(
+      'Захиалга устгах',
+      `Та энэ захиалгыг устгахдаа итгэлтэй байна уу?`,
+      [
+        {
+          text: 'Буцах',
+          style: 'cancel',
+        },
+        {
+          text: 'Устгах',
+          style: 'destructive',
+          onPress: () => {
+            orderDestroy({ variables: { id: data?.order?.id || '' } });
+          },
+        },
+      ]
+    );
+  };
+
+  const onPressEdit = () => {
+    router.navigate(`/orders/${number}/edit`);
+  };
 
   return (
     <>
@@ -76,188 +111,41 @@ const OrderDetail = () => {
                   </ScrollView>
                 </BoxContainer>
               )}
-              <BoxContainer gap="s">
-                <Box borderBottomWidth={1} borderColor="border" pb="s">
-                  <Text color="baseBlue" fontFamily="Roboto_500Medium">
-                    Авах хаяг
-                  </Text>
-                </Box>
+              {data?.order?.video && (
+                <OrderDetailVideo
+                  video={`${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.video}`}
+                />
+              )}
+              {data?.order?.audio && (
+                <OrderDetailAudio
+                  audio={`${process.env.EXPO_PUBLIC_IMAGE_URL}${data?.order?.audio}`}
+                />
+              )}
+              {isRentOrder ? (
+                <OrderDetailRent order={data?.order} />
+              ) : (
+                <OrderDetailDelivery order={data?.order} />
+              )}
+              {data?.order?.my && (
                 <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хот/Аймаг:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.origin?.address?.state?.name}
-                  </Text>
+                  <Box flex={1}>
+                    <Button
+                      backgroundColor="green"
+                      title="Засах"
+                      loading={orderDestroyLoading}
+                      onPress={onPressEdit}
+                    />
+                  </Box>
+                  <Box flex={1}>
+                    <Button
+                      backgroundColor="red"
+                      title="Устгах"
+                      loading={orderDestroyLoading}
+                      onPress={onPressDelete}
+                    />
+                  </Box>
                 </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Дүүрэг/Сум:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.origin?.address?.district?.name}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хороо/Баг:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.origin?.address?.quarter?.name}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хаягийн нэр:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.origin?.address?.address1}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хаягийн дэлгэрэнгүй:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.origin?.address?.address2}
-                  </Text>
-                </Box>
-              </BoxContainer>
-              <BoxContainer gap="s">
-                <Box borderBottomWidth={1} borderColor="border" pb="s">
-                  <Text color="baseBlue" fontFamily="Roboto_500Medium">
-                    Хүргэх хаяг
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хот/Аймаг:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.destination?.address?.state?.name}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Дүүрэг/Сум:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.destination?.address?.district?.name}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хороо/Баг:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.destination?.address?.quarter?.name}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хаягийн нэр:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.destination?.address?.address1}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" gap="s">
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    Хаягийн дэлгэрэнгүй:
-                  </Text>
-                  <Text variant="body2">
-                    {data?.order?.destination?.address?.address2}
-                  </Text>
-                </Box>
-              </BoxContainer>
-              <BoxContainer gap="s">
-                <Box borderBottomWidth={1} borderColor="border" pb="s">
-                  <Text color="baseBlue" fontFamily="Roboto_500Medium">
-                    Ерөнхий мэдээлэл
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Захиалгын дугаар:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.number}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Ачааны төрөл:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.packageType}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Машины төрөл:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.carType}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Машины даац:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.carWeight}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Үнэ:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {moneyFormat(data?.order?.price || 0)}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Ачааны жин:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.packageWeight}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Ачих өдөр:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.travelAt &&
-                      dayjs(data?.order?.travelAt).format('YYYY-MM-DD HH:mm')}
-                  </Text>
-                </Box>
-              </BoxContainer>
-              <BoxContainer gap="s">
-                <Box borderBottomWidth={1} borderColor="border" pb="s">
-                  <Text color="baseBlue" fontFamily="Roboto_500Medium">
-                    Илгээгчийн мэдээлэл
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Овог нэр:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.senderName}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Утас:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.senderMobile}
-                  </Text>
-                </Box>
-              </BoxContainer>
-              <BoxContainer gap="s">
-                <Box borderBottomWidth={1} borderColor="border" pb="s">
-                  <Text color="baseBlue" fontFamily="Roboto_500Medium">
-                    Хүлээн авагчийн мэдээлэл
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Овог нэр:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.receiverName}
-                  </Text>
-                </Box>
-                <Box flexDirection="row" justifyContent="space-between">
-                  <Text variant="body2">Утас:</Text>
-                  <Text variant="body2" fontFamily="Roboto_500Medium">
-                    {data?.order?.receiverMobile}
-                  </Text>
-                </Box>
-              </BoxContainer>
+              )}
             </Box>
           )}
         </Content>

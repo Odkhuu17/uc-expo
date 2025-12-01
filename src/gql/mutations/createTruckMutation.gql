@@ -8,6 +8,7 @@ mutation createTruck(
   $netWeight: Int
   $importedDate: ISO8601DateTime
   $manufacturedDate: ISO8601DateTime
+  $taxonId: ID
 ) {
   createTruck(
     input: {
@@ -20,6 +21,7 @@ mutation createTruck(
       netWeight: $netWeight
       importedDate: $importedDate
       manufacturedDate: $manufacturedDate
+      taxonId: $taxonId
     }
   ) {
     id

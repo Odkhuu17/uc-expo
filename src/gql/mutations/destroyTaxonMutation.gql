@@ -1,0 +1,5 @@
+mutation DestroyTaxon($id: ID!) {
+  destroyTaxon(input: { id: $id }) {
+    id
+  }
+}
