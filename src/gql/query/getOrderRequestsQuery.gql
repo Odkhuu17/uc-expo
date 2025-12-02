@@ -6,13 +6,14 @@ query GetOrderRequests(
   $last: Int
   $offset: Int
   $filter: DeliveryRequestFilter
-  $sort: SortFilter
+  $sort: SortFilter = { field: "created_at", direction: desc }
 ) {
   order(number: $number) {
     id
     number
     title
     status
+    carType
     deliveryRequests(
       first: $first
       after: $after

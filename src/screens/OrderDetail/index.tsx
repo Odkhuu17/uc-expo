@@ -8,9 +8,9 @@ import {
   BoxContainer,
   Button,
   Container,
-  Content,
   Loader,
   NormalHeader,
+  ScrollableContent,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
 import { useDestroyOrderMutation } from '@/gql/mutations/destroyOrderMutation.generated';
@@ -22,7 +22,6 @@ import OrderDetailDelivery from './OrderDetailDelivery';
 import OrderDetailRent from './OrderDetailRent';
 import OrderDetailVideo from './OrderDetailVideo';
 import OrderRequestButton from './OrderRequestButton';
-import OrderRequests from './OrderRequests';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -41,11 +40,14 @@ const OrderDetail = () => {
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const router = useRouter();
 
-  const { data, loading } = useGetOrderQuery({
+  const { data, loading, fetchMore } = useGetOrderQuery({
     variables: {
       number: number as string,
+      first: 10,
     },
   });
+
+  console.log(data, 'sdsd');
 
   const [orderDestroy, { loading: orderDestroyLoading }] =
     useDestroyOrderMutation();
@@ -77,11 +79,15 @@ const OrderDetail = () => {
     router.navigate(`/orders/${number}/edit`);
   };
 
+  const onPressRequests = () => {
+    router.navigate(`/orders/${number}/requests`);
+  };
+
   return (
     <>
       <Container>
         <NormalHeader title={number as string} hasBack />
-        <Content edges={['bottom']} scrollable>
+        <ScrollableContent edges={['bottom']}>
           {loading ? (
             <Loader />
           ) : (
@@ -129,6 +135,12 @@ const OrderDetail = () => {
               ) : (
                 <OrderDetailDelivery order={data?.order} />
               )}
+              {mode === 'shipper' && (
+                <Button
+                  title={`Захиалгын хүсэлтүүд (${data?.order?.deliveryRequests?.totalCount || 0})`}
+                  onPress={onPressRequests}
+                />
+              )}
               {data?.order?.my && mode === 'shipper' && (
                 <Box flexDirection="row" gap="s">
                   <Box flex={1}>
@@ -148,11 +160,10 @@ const OrderDetail = () => {
                   </Box>
                 </Box>
               )}
-              <OrderRequestButton data={data?.order} />
-              <OrderRequests order={data?.order} />
+              {mode === 'driver' && <OrderRequestButton data={data?.order} />}
             </Box>
           )}
-        </Content>
+        </ScrollableContent>
       </Container>
       {hasImages && (
         <ImageView

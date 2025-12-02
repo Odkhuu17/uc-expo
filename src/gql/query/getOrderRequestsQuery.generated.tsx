@@ -16,16 +16,17 @@ export type GetOrderRequestsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetOrderRequestsQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, deliveryRequests: { __typename?: 'DeliveryRequestConnection', totalCount: number, edges: Array<{ __typename?: 'DeliveryRequestEdge', cursor: string, node?: { __typename?: 'DeliveryRequest', id: string, price: number, status: string, travelAt: any, active: boolean, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, order: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string } } }>, nodes: Array<{ __typename?: 'DeliveryRequest', id: string, price: number, status: string, travelAt: any, active: boolean }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
+export type GetOrderRequestsQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, carType?: string, deliveryRequests: { __typename?: 'DeliveryRequestConnection', totalCount: number, edges: Array<{ __typename?: 'DeliveryRequestEdge', cursor: string, node?: { __typename?: 'DeliveryRequest', id: string, price: number, status: string, travelAt: any, active: boolean, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, order: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string } } }>, nodes: Array<{ __typename?: 'DeliveryRequest', id: string, price: number, status: string, travelAt: any, active: boolean }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
 
 
 export const GetOrderRequestsDocument = gql`
-    query GetOrderRequests($number: String, $first: Int, $after: String, $before: String, $last: Int, $offset: Int, $filter: DeliveryRequestFilter, $sort: SortFilter) {
+    query GetOrderRequests($number: String, $first: Int, $after: String, $before: String, $last: Int, $offset: Int, $filter: DeliveryRequestFilter, $sort: SortFilter = {field: "created_at", direction: desc}) {
   order(number: $number) {
     id
     number
     title
     status
+    carType
     deliveryRequests(
       first: $first
       after: $after

@@ -19,6 +19,7 @@ export { default as MessageModal } from './MessageModal';
 export { default as NormalHeader } from './NormalHeader';
 export { default as OrderInput } from './OrderInput';
 export { default as OrderLocation } from './OrderLocation';
+export { default as ScrollableContent } from './ScrollableContent';
 export { default as Select } from './Select';
 export { default as SingleOrder } from './SingleOrder';
 export { default as TextArea } from './TextArea';

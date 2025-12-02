@@ -9,6 +9,7 @@ const OrderLayout = () => {
       <Stack.Protected guard={mode === 'shipper'}>
         <Stack.Screen name="create" />
         <Stack.Screen name="[number]/edit" />
+        <Stack.Screen name="[number]/requests" />
       </Stack.Protected>
       <Stack.Screen name="index" />
       <Stack.Screen name="[number]" />

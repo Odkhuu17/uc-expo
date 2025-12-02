@@ -2,6 +2,7 @@ import { Icon as IconType } from 'iconsax-react-nativejs';
 import React from 'react';
 import { TextInput, TextInputProps, ViewStyle } from 'react-native';
 
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 
 interface BaseProps extends TextInputProps {
@@ -12,6 +13,7 @@ interface BaseProps extends TextInputProps {
   label?: string;
   labelColor?: keyof Theme['colors'];
   isRequired?: boolean;
+  keyboardAvoiding?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,6 +32,7 @@ function Input(props: BaseProps) {
     label,
     labelColor,
     isRequired,
+    keyboardAvoiding,
     ...textInputProps
   } = props;
   const styles = useStyles();
@@ -63,11 +66,19 @@ function Input(props: BaseProps) {
             <IconComp size={theme.icon.m} color={theme.colors.baseBlue} />
           </Box>
         )}
-        <TextInput
-          {...textInputProps}
-          style={styles.input}
-          placeholderTextColor={theme.colors.grey2}
-        />
+        {keyboardAvoiding ? (
+          <BottomSheetTextInput
+            {...textInputProps}
+            style={styles.input}
+            placeholderTextColor={theme.colors.grey2}
+          />
+        ) : (
+          <TextInput
+            {...textInputProps}
+            style={styles.input}
+            placeholderTextColor={theme.colors.grey2}
+          />
+        )}
         {unit && (
           <Box
             alignItems="center"
