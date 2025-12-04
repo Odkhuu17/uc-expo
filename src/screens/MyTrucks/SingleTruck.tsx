@@ -1,10 +1,11 @@
+import { useTheme } from '@shopify/restyle';
+import { Trash, Truck } from 'iconsax-react-nativejs';
+import { Alert } from 'react-native';
+
 import { BoxContainer, IconButton } from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { useDestroyTruckMutation } from '@/gql/mutations/destroyTruckMutation.generated';
 import { GetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
-import { useTheme } from '@shopify/restyle';
-import { Trash, Truck } from 'iconsax-react-nativejs';
-import { Alert } from 'react-native';
 
 interface Props {
   item: GetMyTrucksQuery['trucks']['nodes'][number];
@@ -44,6 +45,7 @@ const SingleTruck = ({ item }: Props) => {
           <Text fontFamily="Roboto_500Medium" color="baseBlue">
             {item?.plateNumber}
           </Text>
+          <Text>{item?.taxon?.name}</Text>
           <Text>{item?.mark?.name}</Text>
           <Text>{item?.model?.name}</Text>
         </Box>

@@ -1,0 +1,45 @@
+mutation VerifyRequest(
+  $targetId: ID!
+  $kind: String!
+  $images: [Upload!]!
+) {
+  verifyRequest(input: { targetId: $targetId, kind: $kind, images: $images }) {
+    id
+    status
+    targetId
+    targetType
+    comment
+    field1
+    field2
+    field3
+    field4
+    field5
+    userId
+    images
+    imageObjects {
+      id
+      url
+      fileName
+      recordId
+      recordType
+    }
+    user {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
+    }
+    respondedBy {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}

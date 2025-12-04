@@ -9,7 +9,7 @@ export type GetMyTrucksQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetMyTrucksQuery = { __typename?: 'Query', trucks: { __typename?: 'TruckConnection', nodes: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any, updatedAt: any } }> } };
+export type GetMyTrucksQuery = { __typename?: 'Query', trucks: { __typename?: 'TruckConnection', nodes: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, markId: string, modelId: string, userId: string, taxonId?: string, verified: boolean, verifiedAt?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, taxon?: { __typename?: 'Taxon', id: string, code: string, name: string, link: string, icon?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any, updatedAt: any } }> } };
 
 
 export const GetMyTrucksDocument = gql`
@@ -23,6 +23,12 @@ export const GetMyTrucksDocument = gql`
       netWeight
       importedDate
       manufacturedDate
+      markId
+      modelId
+      userId
+      taxonId
+      verified
+      verifiedAt
       mark {
         id
         name
@@ -37,6 +43,21 @@ export const GetMyTrucksDocument = gql`
           name
           code
         }
+      }
+      user {
+        id
+        firstName
+        lastName
+        nickName
+        mobile
+        email
+      }
+      taxon {
+        id
+        code
+        name
+        link
+        icon
       }
       currentTrack {
         id

@@ -1,4 +1,4 @@
-import AddTruckScreen from '@/screens/Driver/AddTruck';
+import AddTruckScreen from '@/screens/AddTruck';
 
 const AddTruck = () => {
   return <AddTruckScreen />;

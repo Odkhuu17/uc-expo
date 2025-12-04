@@ -1,4 +1,4 @@
-import MemberShipScreen from '@/screens/Driver/Membership';
+import MemberShipScreen from '@/screens/Membership';
 
 const Membership = () => {
   return <MemberShipScreen />;

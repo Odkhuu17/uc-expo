@@ -50,7 +50,6 @@ export const useCreateApolloClient = () => {
           })
         );
       } else if (ServerError.is(error) && error.statusCode !== 401) {
-        console.log('uregferugeiewm2');
         return router.navigate({
           pathname: '/modal',
           params: { type: 'error', message: error.message },
@@ -60,7 +59,6 @@ export const useCreateApolloClient = () => {
 
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
-        console.log('iuehfwef', error);
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {

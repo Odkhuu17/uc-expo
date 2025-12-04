@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -13,7 +14,6 @@ import {
   useGetMyTrucksQuery,
 } from '@/gql/query/getMyTrucks.generated';
 import { useAppSelector } from '@/redux/hooks';
-import { useRouter } from 'expo-router';
 import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {

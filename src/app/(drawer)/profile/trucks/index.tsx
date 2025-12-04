@@ -1,4 +1,4 @@
-import MyTrucksScreen from '@/screens/Driver/MyTrucks';
+import MyTrucksScreen from '@/screens/MyTrucks';
 
 const Trucks = () => {
   return <MyTrucksScreen />;

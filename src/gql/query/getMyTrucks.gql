@@ -8,6 +8,12 @@ query GetMyTrucks($userId: ID!) {
       netWeight
       importedDate
       manufacturedDate
+      markId
+      modelId
+      userId
+      taxonId
+      verified
+      verifiedAt
       mark {
         id
         name
@@ -22,6 +28,21 @@ query GetMyTrucks($userId: ID!) {
           name
           code
         }
+      }
+      user {
+        id
+        firstName
+        lastName
+        nickName
+        mobile
+        email
+      }
+      taxon {
+        id
+        code
+        name
+        link
+        icon
       }
       currentTrack {
         id

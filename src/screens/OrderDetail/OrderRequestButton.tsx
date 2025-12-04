@@ -54,6 +54,8 @@ const OrderRequestButton = ({ data }: Props) => {
           price: data?.price || 0,
           travelAt: data?.travelAt || dayjs().format('YYYY-MM-DD'),
         },
+      }).finally(() => {
+        ref.current?.dismiss();
       });
     },
   });
