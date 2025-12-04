@@ -1,22 +1,23 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import dayjs from 'dayjs';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFormik } from 'formik';
 import { useMemo, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 
 import {
-    BoxContainer,
-    Button,
-    CustomBottomSheetModal,
-    Input,
-    MessageModal,
+  BoxContainer,
+  Button,
+  CustomBottomSheetModal,
+  Input,
+  MessageModal,
 } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { useCloseOrderMutation } from '@/gql/mutations/CloseOrderMutation.generated';
 import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 import { moneyFormat } from '@/utils/helpers';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useFormik } from 'formik';
+
 
 interface Props {
   item: NonNullable<

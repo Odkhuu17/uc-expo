@@ -40,14 +40,11 @@ const OrderDetail = () => {
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const router = useRouter();
 
-  const { data, loading, fetchMore } = useGetOrderQuery({
+  const { data, loading } = useGetOrderQuery({
     variables: {
       number: number as string,
-      first: 10,
     },
   });
-
-  console.log(data, 'sdsd');
 
   const [orderDestroy, { loading: orderDestroyLoading }] =
     useDestroyOrderMutation();
@@ -135,30 +132,30 @@ const OrderDetail = () => {
               ) : (
                 <OrderDetailDelivery order={data?.order} />
               )}
-              {mode === 'shipper' && (
-                <Button
-                  title={`Захиалгын хүсэлтүүд (${data?.order?.deliveryRequests?.totalCount || 0})`}
-                  onPress={onPressRequests}
-                />
-              )}
               {data?.order?.my && mode === 'shipper' && (
-                <Box flexDirection="row" gap="s">
-                  <Box flex={1}>
-                    <Button
-                      backgroundColor="green"
-                      title="Засах"
-                      onPress={onPressEdit}
-                    />
+                <>
+                  <Button
+                    title={`Захиалгын хүсэлтүүд (${data?.order?.deliveryRequests?.totalCount || 0})`}
+                    onPress={onPressRequests}
+                  />
+                  <Box flexDirection="row" gap="s">
+                    <Box flex={1}>
+                      <Button
+                        backgroundColor="green"
+                        title="Засах"
+                        onPress={onPressEdit}
+                      />
+                    </Box>
+                    <Box flex={1}>
+                      <Button
+                        backgroundColor="red"
+                        title="Устгах"
+                        loading={orderDestroyLoading}
+                        onPress={onPressDelete}
+                      />
+                    </Box>
                   </Box>
-                  <Box flex={1}>
-                    <Button
-                      backgroundColor="red"
-                      title="Устгах"
-                      loading={orderDestroyLoading}
-                      onPress={onPressDelete}
-                    />
-                  </Box>
-                </Box>
+                </>
               )}
               {mode === 'driver' && <OrderRequestButton data={data?.order} />}
             </Box>

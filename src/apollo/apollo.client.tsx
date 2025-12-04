@@ -34,8 +34,6 @@ export const useCreateApolloClient = () => {
 
     const errorLink = new ErrorLink(({ error, operation }) => {
       if (CombinedGraphQLErrors.is(error)) {
-        console.log('thehetet');
-
         error.errors.forEach(({ message, locations, path }) => {
           return router.navigate({
             pathname: '/modal',
@@ -51,9 +49,8 @@ export const useCreateApolloClient = () => {
             params: { type: 'error', message },
           })
         );
-      } else {
-        console.log('48563985u6350965', error);
-
+      } else if (ServerError.is(error) && error.statusCode !== 401) {
+        console.log('uregferugeiewm2');
         return router.navigate({
           pathname: '/modal',
           params: { type: 'error', message: error.message },
