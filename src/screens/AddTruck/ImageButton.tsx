@@ -1,9 +1,10 @@
-import { Box } from '@/components/Theme';
 import { useTheme } from '@shopify/restyle';
 import * as ImagePicker from 'expo-image-picker';
 import { Add } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
 import { Alert, TouchableOpacity } from 'react-native';
+
+import { Box } from '@/components/Theme';
 
 interface Props {
   setImages: Dispatch<SetStateAction<string[]>>;

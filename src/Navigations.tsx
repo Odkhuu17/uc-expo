@@ -1,9 +1,19 @@
 import { Stack } from 'expo-router';
+// import { LogLevel, OneSignal } from 'react-native-onesignal';
 
+import useLinkDevice from './hooks/useLinkDevice';
 import { useAppSelector } from './redux/hooks';
 
 const Navigations = () => {
   const { isAuthenticated } = useAppSelector(state => state.auth);
+
+  // useEffect(() => {
+  //   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+  //   OneSignal.initialize('YOUR_APP_ID');
+  //   OneSignal.Notifications.requestPermission(false);
+  // }, []);
+
+  useLinkDevice();
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
