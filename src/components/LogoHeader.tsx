@@ -35,7 +35,7 @@ const LogoHeader = ({ variant, hasBack, onBackPress }: Props) => {
                 ? require('assets/images/logo-dark.png')
                 : require('assets/images/logo-light.png')
             }
-            width={theme.spacing.logoWidth}
+            width={190}
           />
         )}
         {hasBack && (

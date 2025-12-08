@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, ScrollView, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 
 import {
@@ -13,15 +13,16 @@ import {
   ScrollableContent,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
-import { useDestroyOrderMutation } from '@/gql/mutations/destroyOrderMutation.generated';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
-import OrderDetailAudio from './OrderDetailAudio';
-import OrderDetailDelivery from './OrderDetailDelivery';
-import OrderDetailRent from './OrderDetailRent';
-import OrderDetailVideo from './OrderDetailVideo';
-import OrderRequestButton from './OrderRequestButton';
+import { OrderDetailAudio, OrderDetailVideo } from './components';
+import {
+  OrderDestroyButton,
+  OrderDetailDelivery,
+  OrderDetailRent,
+  OrderRequestButton,
+} from './containers';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -35,42 +36,19 @@ const useStyles = makeStyles(theme => ({
 
 const OrderDetail = () => {
   const { mode } = useAppSelector(state => state.general);
-  const { number } = useLocalSearchParams();
+  const { number } = useLocalSearchParams<{ number: string }>();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const router = useRouter();
 
   const { data, loading } = useGetOrderQuery({
     variables: {
-      number: number as string,
+      number,
     },
   });
 
-  const [orderDestroy, { loading: orderDestroyLoading }] =
-    useDestroyOrderMutation();
-
   const isRent = isRentOrder(data?.order?.carType);
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
-
-  const onPressDelete = () => {
-    Alert.alert(
-      'Захиалга устгах',
-      `Та энэ захиалгыг устгахдаа итгэлтэй байна уу?`,
-      [
-        {
-          text: 'Буцах',
-          style: 'cancel',
-        },
-        {
-          text: 'Устгах',
-          style: 'destructive',
-          onPress: () => {
-            orderDestroy({ variables: { id: data?.order?.id || '' } });
-          },
-        },
-      ]
-    );
-  };
 
   const onPressEdit = () => {
     router.navigate(`/orders/${number}/edit`);
@@ -78,6 +56,14 @@ const OrderDetail = () => {
 
   const onPressRequests = () => {
     router.navigate(`/orders/${number}/requests`);
+  };
+
+  const onShowImageView = () => {
+    setIsImageViewVisible(true);
+  };
+
+  const onHideImageView = () => {
+    setIsImageViewVisible(false);
   };
 
   return (
@@ -97,10 +83,7 @@ const OrderDetail = () => {
                     contentContainerStyle={styles.scrollView}
                   >
                     {data?.order?.images?.map((image, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => setIsImageViewVisible(true)}
-                      >
+                      <TouchableOpacity key={index} onPress={onShowImageView}>
                         <Box
                           borderWidth={1}
                           borderRadius="m"
@@ -147,17 +130,14 @@ const OrderDetail = () => {
                       />
                     </Box>
                     <Box flex={1}>
-                      <Button
-                        backgroundColor="red"
-                        title="Устгах"
-                        loading={orderDestroyLoading}
-                        onPress={onPressDelete}
-                      />
+                      <OrderDestroyButton order={data?.order} />
                     </Box>
                   </Box>
                 </>
               )}
-              {mode === 'driver' && <OrderRequestButton data={data?.order} />}
+              {mode === 'driver' && data?.order?.status !== 'accepted' && (
+                <OrderRequestButton data={data?.order} />
+              )}
             </Box>
           )}
         </ScrollableContent>
@@ -169,7 +149,7 @@ const OrderDetail = () => {
           }
           imageIndex={0}
           visible={isImageViewVisible}
-          onRequestClose={() => setIsImageViewVisible(false)}
+          onRequestClose={onHideImageView}
         />
       )}
     </>

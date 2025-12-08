@@ -8,6 +8,7 @@ import ImageView from 'react-native-image-viewing';
 
 import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
 import { GetOrdersQuery } from '@/gql/query/getOrders.generated';
+import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import BoxContainer from './BoxContainer';
 import Button from './Button';
@@ -31,6 +32,7 @@ const SingleOrder = ({ item }: Props) => {
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const router = useRouter();
+  const { mode } = useAppSelector(state => state.general);
 
   const hasImages = item?.images && item?.images.length > 0;
 
@@ -175,7 +177,7 @@ const SingleOrder = ({ item }: Props) => {
               >
                 {item?.status === 'pending' ? 'Идэвхтэй' : 'Идэвхгүй'}
               </Text>
-              {item?.my && item?.status === 'pending' ? (
+              {mode === 'shipper' && item?.my && item?.status === 'pending' ? (
                 <Button title="Засах" size="s" onPress={onPressEdit} />
               ) : (
                 <Box height={theme.button.s} />

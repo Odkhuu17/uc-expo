@@ -1,19 +1,17 @@
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { CloseCircle, VideoPlay } from 'iconsax-react-nativejs';
-import { Dispatch, SetStateAction, useRef } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { VideoPlay } from 'iconsax-react-nativejs';
+import { useRef } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { BoxContainer, IconButton } from '@/components';
-import { Box, Text, useTheme } from '@/components/Theme';
+import { Box, Text } from '@/components/Theme';
 
 interface Props {
   video: string;
-  setVideo: Dispatch<SetStateAction<string>>;
 }
 
-const OrderVideo = ({ video, setVideo }: Props) => {
+const OrderDetailVideo = ({ video }: Props) => {
   const player = useVideoPlayer(video);
-  const theme = useTheme();
   const videoViewRef = useRef<VideoView>(null);
 
   const handlePlayFullscreen = () => {
@@ -28,22 +26,6 @@ const OrderVideo = ({ video, setVideo }: Props) => {
     player.pause();
   };
 
-  const onRemoveVideo = () => {
-    Alert.alert('Бичлэг устгах', 'Та устгахдаа итгэлтэй байна уу?', [
-      {
-        text: 'Буцах',
-        style: 'cancel',
-      },
-      {
-        text: 'Устгах',
-        style: 'destructive',
-        onPress: () => {
-          setVideo?.('');
-        },
-      },
-    ]);
-  };
-
   return (
     <BoxContainer gap="s">
       <Box flexDirection="row" alignItems="center">
@@ -55,16 +37,13 @@ const OrderVideo = ({ video, setVideo }: Props) => {
         >
           Бичлэг
         </Text>
-        <TouchableOpacity onPress={onRemoveVideo}>
-          <CloseCircle size={theme.icon.m} />
-        </TouchableOpacity>
       </Box>
       <Box flexDirection="row" alignItems="center" gap="s">
         <VideoView
           ref={videoViewRef}
           style={css.video}
           player={player}
-          allowsFullscreen
+          fullscreenOptions={{ enable: true }}
           onFullscreenEnter={onFullscreenEnter}
           onFullscreenExit={onFullscreenExit}
         />
@@ -84,18 +63,6 @@ const OrderVideo = ({ video, setVideo }: Props) => {
             onPress={handlePlayFullscreen}
           />
         </Box>
-
-        {/* <IconButton
-          color="baseBlue"
-          icon={status.playing ? Pause : Play}
-          size="m"
-          backgroundColor="transparent"
-          onPress={onTogglePlay}
-        /> */}
-        {/* <Text variant="body2" color="grey2">
-          {formatDuration(status.currentTime * 1000)} /{' '}
-          {formatDuration(status.duration * 1000)}
-        </Text> */}
       </Box>
     </BoxContainer>
   );
@@ -108,4 +75,4 @@ const css = StyleSheet.create({
   },
 });
 
-export default OrderVideo;
+export default OrderDetailVideo;

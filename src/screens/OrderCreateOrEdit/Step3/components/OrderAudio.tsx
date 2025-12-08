@@ -10,8 +10,8 @@ import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Alert } from 'react-native';
 
 import { formatDuration } from '@/utils/helpers';
-import OrderIconButton from './components/OrderIconButton';
-import useOnRemoveAudio from './hooks/useOnRemoveAudio';
+import useOnRemoveAudio from '../hooks/useOnRemoveAudio';
+import OrderIconButton from './OrderIconButton';
 
 interface Props {
   setAudio: Dispatch<SetStateAction<string>>;

@@ -3,14 +3,13 @@ import { VideoPlay } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
 import { Alert } from 'react-native';
 
-import OrderIconButton from './components/OrderIconButton';
+import OrderIconButton from './OrderIconButton';
 
 interface Props {
-  video: string;
   setVideo: Dispatch<SetStateAction<string>>;
 }
 
-const OrderVideoButton = ({ video, setVideo }: Props) => {
+const OrderVideoButton = ({ setVideo }: Props) => {
   const onPickVideo = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();

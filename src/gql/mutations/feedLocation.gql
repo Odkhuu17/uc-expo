@@ -1,0 +1,17 @@
+mutation FeedLocation(
+  $truckId: ID!
+  $latitude: Float!
+  $longitude: Float!
+  $deviceToken: String
+) {
+  feedLocation(
+    input: {
+      truckId: $truckId
+      latitude: $latitude
+      longitude: $longitude
+      deviceToken: $deviceToken
+    }
+  ) {
+    id
+  }
+}

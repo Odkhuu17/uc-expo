@@ -12,7 +12,7 @@ const OrderLayout = () => {
         <Stack.Screen name="[number]/requests" />
       </Stack.Protected>
       <Stack.Screen name="index" />
-      <Stack.Screen name="[number]" />
+      <Stack.Screen name="[number]/index" />
     </Stack>
   );
 };

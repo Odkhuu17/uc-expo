@@ -33,8 +33,7 @@ const CarTypes = ({
   const onToggle = () => {
     translateX.value = withSpring(
       translateX.value === 0
-        ? // -CAR_IMAGE_SIZE - pl - pr - peek_size
-          -CAR_IMAGE_SIZE - theme.spacing.s - theme.spacing.m + theme.spacing.xs
+        ? -CAR_IMAGE_SIZE - theme.spacing.s - theme.spacing.m + theme.spacing.xs
         : 0
     );
   };
@@ -121,7 +120,6 @@ const CarTypes = ({
             borderRadius="m"
             position="absolute"
             top={0}
-            //left={-TOGGLE_BUTTON_HEIGHT / 2 + pr}
             left={-TOGGLE_BUTTON_HEIGHT / 2 + theme.spacing.m}
             height={TOGGLE_BUTTON_HEIGHT}
             width={TOGGLE_BUTTON_WIDTH}

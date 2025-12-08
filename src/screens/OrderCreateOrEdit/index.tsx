@@ -90,6 +90,11 @@ const OrderCreateScreen = () => {
   const [createOrder] = useCreateOrderMutation();
   const [updateOrder] = useUpdateOrderMutation();
 
+  const { data, loading: getOrderLoading } = useGetOrderQuery({
+    variables: { number: String(number) },
+    skip: !number,
+  });
+
   const formik = useFormik({
     initialValues: {
       packageType: '',
@@ -118,27 +123,29 @@ const OrderCreateScreen = () => {
       if (number) {
         await updateOrder({
           variables: {
-            id: data?.order?.id!,
-            originId: createdOrigin?.id,
-            destinationId: createdDestination?.id,
-            packageType: values.packageType,
-            carType: values.carType,
-            // packageWeight: Number(values.packageWeight),
-            travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
-            // vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : Number(values.price),
-            // data: {
-            //   quantity: values.quantity,
-            //   additionalInfo: values.additionalInfo,
-            // },
-            receiverName: values.receiverName,
-            receiverMobile: values.receiverMobile,
-            senderName: values.senderName,
-            senderMobile: values.senderMobile,
-            // images: imageFiles.length > 0 ? imageFiles : undefined,
-            // video: videoFile,
-            // audio: audioFile,
-            published: true,
+            input: {
+              id: data?.order?.id!,
+              originId: createdOrigin?.id,
+              destinationId: createdDestination?.id,
+              packageType: values.packageType,
+              carType: values.carType,
+              packageWeight: Number(values.packageWeight),
+              travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
+              vatIncluded: values.vatIncluded,
+              price: values.priceNegotiable ? undefined : Number(values.price),
+              data: {
+                quantity: values.quantity,
+                additionalInfo: values.additionalInfo,
+              },
+              receiverName: values.receiverName,
+              receiverMobile: values.receiverMobile,
+              senderName: values.senderName,
+              senderMobile: values.senderMobile,
+              images: imageFiles.length > 0 ? imageFiles : undefined,
+              video: videoFile,
+              audio: audioFile,
+              published: true,
+            },
           },
         });
       } else {
@@ -240,13 +247,6 @@ const OrderCreateScreen = () => {
       }
       setSuccessModal(true);
     },
-  });
-
-  console.log(formik2.values, 'ihwdwdwqd');
-
-  const { data, loading: getOrderLoading } = useGetOrderQuery({
-    variables: { number: String(number) },
-    skip: !number,
   });
 
   const resetState = () => {
@@ -431,7 +431,6 @@ const OrderCreateScreen = () => {
             : 'Захиалга амжилттай үүслээ'
         }
         onClose={() => {
-          router.dismissAll();
           router.navigate('/profile/orders');
           setSuccessModal(false);
           resetState();

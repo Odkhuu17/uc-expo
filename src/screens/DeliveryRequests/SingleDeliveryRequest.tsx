@@ -18,7 +18,6 @@ import { useCloseOrderMutation } from '@/gql/mutations/CloseOrderMutation.genera
 import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 import { moneyFormat } from '@/utils/helpers';
 
-
 interface Props {
   item: NonNullable<
     GetOrderQuery['order']
@@ -86,7 +85,11 @@ const SingleDeliveryRequest = ({ item, isRent }: Props) => {
 
   return (
     <>
-      <BoxContainer gap="s">
+      <BoxContainer
+        gap="s"
+        borderColor="success"
+        borderWidth={item?.status === 'accepted' ? 2 : 0}
+      >
         <Box flexDirection="row" justifyContent="space-between">
           <Text variant="body2">Үнэ:</Text>
           <Text variant="body2" fontFamily="Roboto_500Medium">
@@ -121,7 +124,15 @@ const SingleDeliveryRequest = ({ item, isRent }: Props) => {
             {item?.user?.mobile || '-'}
           </Text>
         </Box>
-        <Button title="Захиалга баталгаажуулах" onPress={onPressConfirm} />
+        <Box flexDirection="row" justifyContent="space-between">
+          <Text variant="body2">Төлөв:</Text>
+          <Text variant="body2" fontFamily="Roboto_500Medium">
+            {item?.status === 'accepted' ? 'Баталгаажсан' : '-'}
+          </Text>
+        </Box>
+        {item?.status !== 'accepted' && (
+          <Button title="Захиалга баталгаажуулах" onPress={onPressConfirm} />
+        )}
       </BoxContainer>
       <CustomBottomSheetModal
         ref={ref}
@@ -139,6 +150,7 @@ const SingleDeliveryRequest = ({ item, isRent }: Props) => {
             <Input
               placeholder="Жолоочийн утасны дугаар"
               keyboardAvoiding
+              keyboardType="number-pad"
               onChangeText={handleChange('mobile')}
               onBlur={handleBlur('mobile')}
               value={values.mobile}

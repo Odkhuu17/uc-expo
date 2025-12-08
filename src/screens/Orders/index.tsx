@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import React, { useState } from 'react';
 
 import {
@@ -13,6 +12,7 @@ import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
+import Banners from './Banners';
 
 const DriverOrdersScreen = () => {
   const [isRefetching, setIsRefetching] = useState(false);
@@ -80,13 +80,7 @@ const DriverOrdersScreen = () => {
     <Container>
       <NormalHeader title="Захиалгууд" hasBack />
       <CustomFlatList
-        ListHeaderComponent={
-          <Image
-            source={require('assets/images/order-banner.jpg')}
-            style={{ width: '100%', height: 200 }}
-            contentFit="cover"
-          />
-        }
+        ListHeaderComponent={<Banners />}
         data={orders}
         loading={loading}
         refreshing={isRefetching}

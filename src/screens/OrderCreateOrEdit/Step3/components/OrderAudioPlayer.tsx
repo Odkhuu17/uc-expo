@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native';
 import { BoxContainer, IconButton } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { formatDuration } from '@/utils/helpers';
-import useOnRemoveAudio from './hooks/useOnRemoveAudio';
+import useOnRemoveAudio from '../hooks/useOnRemoveAudio';
 
 interface Props {
   audio: string;

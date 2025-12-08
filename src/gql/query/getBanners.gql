@@ -1,0 +1,45 @@
+query GetBanners(
+  $first: Int
+  $after: String
+  $before: String
+  $last: Int
+  $offset: Int
+  $filter: BannerFilter
+  $sort: SortFilter
+) {
+  banners(
+    first: $first
+    after: $after
+    before: $before
+    last: $last
+    offset: $offset
+    filter: $filter
+    sort: $sort
+  ) {
+    nodes {
+      id
+      category
+      image
+      imageObject {
+        id
+        url
+        fileName
+        recordId
+        recordType
+      }
+      permalink
+      position
+      status
+      data
+      createdAt
+      updatedAt
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}

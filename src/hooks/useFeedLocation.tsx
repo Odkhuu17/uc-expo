@@ -1,0 +1,74 @@
+import * as Location from 'expo-location';
+import { useEffect, useRef } from 'react';
+
+import { useFeedLocationMutation } from '@/gql/mutations/feedLocation.generated';
+import { useGetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
+import { useAppSelector } from '@/redux/hooks';
+
+const LOCATION_INTERVAL = 30000; // 30 seconds
+
+const useFeedLocation = () => {
+  const { user } = useAppSelector(state => state.auth);
+  const { data } = useGetMyTrucksQuery({
+    variables: { userId: user?.id || '' },
+    skip: !user,
+  });
+  const [feedLocation] = useFeedLocationMutation();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (data && data.trucks?.nodes?.length) {
+      init();
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [data]);
+
+  const sendLocation = async () => {
+    try {
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      const trucks = data?.trucks?.nodes || [];
+
+      for (let i = 0; i < trucks.length; i++) {
+        await feedLocation({
+          variables: {
+            truckId: trucks[i].id,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+        });
+      }
+
+      console.log('Location sent:', {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        trucks: trucks.length,
+      });
+    } catch (error) {
+      console.error('Error sending location:', error);
+    }
+  };
+
+  const init = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Location permission not granted');
+      return;
+    }
+
+    await sendLocation();
+
+    intervalRef.current = setInterval(() => {
+      sendLocation();
+    }, LOCATION_INTERVAL);
+  };
+};
+
+export default useFeedLocation;

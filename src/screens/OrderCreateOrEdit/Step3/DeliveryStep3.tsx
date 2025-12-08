@@ -1,4 +1,5 @@
 import { useTheme } from '@shopify/restyle';
+import { useLocalSearchParams } from 'expo-router';
 import { useFormik } from 'formik';
 import {
   ArchiveBox,
@@ -15,13 +16,13 @@ import {
   BoxContainer,
   Button,
   Checkbox,
-  Content,
   CustomKeyboardAvoidingView,
   CustomMaskInput,
   DateInput,
   Input,
   OrderInput,
   OrderLocation,
+  ScrollableContent,
   Select,
   TextArea,
 } from '@/components';
@@ -29,13 +30,14 @@ import { Box, Text } from '@/components/Theme';
 import { carTypes, packageTypes } from '@/constants';
 import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
 import { moneyMask } from '@/utils/helpers';
-import { useLocalSearchParams } from 'expo-router';
-import OrderAudio from './OrderAudio';
-import OrderAudioPlayer from './OrderAudioPlayer';
-import OrderImageButton from './OrderImageButton';
-import OrderImages from './OrderImages';
-import OrderVideo from './OrderVideo';
-import OrderVideoButton from './OrderVideoButton';
+import {
+  OrderAudio,
+  OrderAudioPlayer,
+  OrderImageButton,
+  OrderImages,
+  OrderVideo,
+  OrderVideoButton,
+} from './components';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -92,9 +94,9 @@ const DeliveryStep3 = ({
   };
 
   return (
-    <>
-      <CustomKeyboardAvoidingView noWrapper>
-        <Content edges={[]} scrollable>
+    <CustomKeyboardAvoidingView noWrapper>
+      <Box flex={1}>
+        <ScrollableContent edges={[]}>
           <Box gap="s">
             <OrderLocation
               origin={createdOrigin?.address1}
@@ -111,10 +113,10 @@ const DeliveryStep3 = ({
                 <OrderAudio setAudio={setAudio} audio={audio} />
               </Box>
               <Box flex={1}>
-                <OrderImageButton images={images} setImages={setImages} />
+                <OrderImageButton setImages={setImages} />
               </Box>
               <Box flex={1}>
-                <OrderVideoButton video={video} setVideo={setVideo} />
+                <OrderVideoButton setVideo={setVideo} />
               </Box>
             </BoxContainer>
             {audio && <OrderAudioPlayer audio={audio} setAudio={setAudio} />}
@@ -303,16 +305,16 @@ const DeliveryStep3 = ({
               />
             </BoxContainer>
           </Box>
-        </Content>
-      </CustomKeyboardAvoidingView>
-      <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
-        <Button
-          title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}
-          onPress={handleSubmit}
-          loading={isSubmitting}
-        />
+        </ScrollableContent>
+        <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
+          <Button
+            title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}
+            onPress={handleSubmit}
+            loading={isSubmitting}
+          />
+        </Box>
       </Box>
-    </>
+    </CustomKeyboardAvoidingView>
   );
 };
 

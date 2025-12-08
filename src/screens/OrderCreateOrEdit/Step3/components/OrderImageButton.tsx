@@ -3,14 +3,13 @@ import { Image } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
 import { Alert } from 'react-native';
 
-import OrderIconButton from './components/OrderIconButton';
+import OrderIconButton from './OrderIconButton';
 
 interface Props {
-  images: string[];
   setImages: Dispatch<SetStateAction<string[]>>;
 }
 
-const OrderImage = ({ images, setImages }: Props) => {
+const OrderImage = ({ setImages }: Props) => {
   const onPickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();

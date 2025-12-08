@@ -1,3 +1,4 @@
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
@@ -15,10 +16,8 @@ import {
   SearchAddressQuery,
   useSearchAddressQuery,
 } from '@/gql/query/searchAddressQuery.generated';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import CarTypes from './CarTypes';
-import LocationModal from './LocationModal';
-import MapPin from './MapPin';
+import { CarTypes, MapPin } from './components';
+import { LocationModal } from './containers';
 
 interface Props {
   isRent?: boolean;

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 // import { LogLevel, OneSignal } from 'react-native-onesignal';
 
+import useFeedLocation from './hooks/useFeedLocation';
 import useLinkDevice from './hooks/useLinkDevice';
 import { useAppSelector } from './redux/hooks';
 
@@ -14,6 +15,7 @@ const Navigations = () => {
   // }, []);
 
   useLinkDevice();
+  useFeedLocation();
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
