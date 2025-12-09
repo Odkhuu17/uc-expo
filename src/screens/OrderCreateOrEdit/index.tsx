@@ -19,6 +19,8 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
+import { InstantSearch } from 'react-instantsearch';
+import searchClient, { createTruckFilteredClient } from '@/utils/searchkit';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -413,31 +415,35 @@ const OrderCreateScreen = () => {
     }
   };
 
+  const sss = createTruckFilteredClient('1');
+
   return (
-    <>
-      <Container>
-        <NormalHeader
-          hasBack={!!number}
-          title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
-          onPressBack={step === 1 ? undefined : onPressBack}
+    <InstantSearch indexName="supp_tracks" searchClient={sss}>
+      <>
+        <Container>
+          <NormalHeader
+            hasBack={!!number}
+            title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
+            onPressBack={step === 1 ? undefined : onPressBack}
+          />
+          {getOrderLoading ? <Loader /> : renderContent()}
+        </Container>
+        <MessageModal
+          type="success"
+          message={
+            number
+              ? 'Захиалга амжилттай шинэчлэгдлээ'
+              : 'Захиалга амжилттай үүслээ'
+          }
+          onClose={() => {
+            router.navigate('/profile/orders');
+            setSuccessModal(false);
+            resetState();
+          }}
+          visible={successModal}
         />
-        {getOrderLoading ? <Loader /> : renderContent()}
-      </Container>
-      <MessageModal
-        type="success"
-        message={
-          number
-            ? 'Захиалга амжилттай шинэчлэгдлээ'
-            : 'Захиалга амжилттай үүслээ'
-        }
-        onClose={() => {
-          router.navigate('/profile/orders');
-          setSuccessModal(false);
-          resetState();
-        }}
-        visible={successModal}
-      />
-    </>
+      </>
+    </InstantSearch>
   );
 };
 
