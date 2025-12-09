@@ -13,22 +13,18 @@ import {
   GetMyTrucksQuery,
   useGetMyTrucksQuery,
 } from '@/gql/query/getMyTrucks.generated';
-import { useAppSelector } from '@/redux/hooks';
 import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {
-  const { user } = useAppSelector(state => state.auth);
   const { data, loading, refetch } = useGetMyTrucksQuery();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
 
-  console.log(data, 'wdwdw');
-
   const renderItem = ({
     item,
   }: {
-    item: GetMyTrucksQuery['trucks']['nodes'][number];
+    item: NonNullable<GetMyTrucksQuery['me']>['trucks'][0];
   }) => {
     return <SingleTruck item={item} />;
   };
@@ -37,7 +33,7 @@ const MyTrucks = () => {
     <Container>
       <NormalHeader title="Миний машин" hasBack />
       <CustomFlatList
-        data={data?.trucks?.nodes}
+        data={data?.me?.trucks}
         refreshing={loading}
         loading={loading}
         onRefresh={refetch}

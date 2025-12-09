@@ -8,7 +8,7 @@ import { useDestroyTruckMutation } from '@/gql/mutations/destroyTruckMutation.ge
 import { GetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
 
 interface Props {
-  item: GetMyTrucksQuery['trucks']['nodes'][number];
+  item: NonNullable<GetMyTrucksQuery['me']>['trucks'][0];
 }
 
 const SingleTruck = ({ item }: Props) => {
@@ -45,7 +45,6 @@ const SingleTruck = ({ item }: Props) => {
           <Text fontFamily="Roboto_500Medium" color="baseBlue">
             {item?.plateNumber}
           </Text>
-          <Text>{item?.taxon?.name}</Text>
           <Text>{item?.mark?.name}</Text>
           <Text>{item?.model?.name}</Text>
         </Box>

@@ -1431,12 +1431,11 @@ export type QueryVerificationArgs = {
 export type QueryVerificationsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<VerificationFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  kind?: InputMaybe<Scalars['String']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortFilter>;
-  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Role = BaseModelInterface & {
@@ -1739,9 +1738,21 @@ export type Truck = BaseModelInterface & {
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
   userId: Scalars['ID']['output'];
+  verifications?: Maybe<VerificationConnection>;
   verified: Scalars['Boolean']['output'];
   verifiedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   weight?: Maybe<Scalars['Int']['output']>;
+};
+
+
+export type TruckVerificationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<VerificationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
 };
 
 export type TruckConnection = {
@@ -1862,6 +1873,7 @@ export type User = BaseModelInterface & {
   trucks: Array<Truck>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   userAddresses: UserAddressConnection;
+  verifications?: Maybe<VerificationConnection>;
   verified: Scalars['Boolean']['output'];
   verifiedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
 };
@@ -1915,6 +1927,17 @@ export type UserUserAddressesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<UserAddressFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
+};
+
+
+export type UserVerificationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<VerificationFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2012,6 +2035,17 @@ export type VerificationEdge = {
   __typename?: 'VerificationEdge';
   cursor: Scalars['String']['output'];
   node?: Maybe<Verification>;
+};
+
+export type VerificationFilter = {
+  createdAt?: InputMaybe<DateFilter>;
+  id?: InputMaybe<IdFilter>;
+  status?: InputMaybe<EnumStringFilter>;
+  targetId?: InputMaybe<IdFilter>;
+  targetType?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateFilter>;
+  user?: InputMaybe<UserFilter>;
+  verifiedAt?: InputMaybe<DateFilter>;
 };
 
 export type AcceptDeliveryRequestInput = {

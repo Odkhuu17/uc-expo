@@ -22,6 +22,7 @@ import { useGetMarksQuery } from '@/gql/query/getMarks.generated';
 import { useGetModelsQuery } from '@/gql/query/getModels.generated';
 import { useGetTaxonsQuery } from '@/gql/query/getTaxonsQuery.generated';
 import { useAppSelector } from '@/redux/hooks';
+import { imagesToFiles } from '@/utils/fileHelpers';
 import ImageButton from './ImageButton';
 import Images from './Images';
 
@@ -90,7 +91,7 @@ const AddTruckScreen = () => {
 
       await verifyRequest({
         variables: {
-          images,
+          images: imagesToFiles(images),
           kind: 'truck',
           targetId: data?.createTruck?.id || '',
         },
