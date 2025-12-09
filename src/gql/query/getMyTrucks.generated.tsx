@@ -4,18 +4,17 @@ import { gql } from '@apollo/client';
 import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
-export type GetMyTrucksQueryVariables = Types.Exact<{
-  userId: Types.Scalars['ID']['input'];
-}>;
+export type GetMyTrucksQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMyTrucksQuery = { __typename?: 'Query', trucks: { __typename?: 'TruckConnection', nodes: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, markId: string, modelId: string, userId: string, taxonId?: string, verified: boolean, verifiedAt?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, taxon?: { __typename?: 'Taxon', id: string, code: string, name: string, link: string, icon?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any, updatedAt: any } }> } };
+export type GetMyTrucksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, trucks: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, createdAt: any } }> } };
 
 
 export const GetMyTrucksDocument = gql`
-    query GetMyTrucks($userId: ID!) {
-  trucks(filter: {user: {id: {eq: $userId}}}) {
-    nodes {
+    query GetMyTrucks {
+  me {
+    id
+    trucks {
       id
       plateNumber
       serial
@@ -23,12 +22,6 @@ export const GetMyTrucksDocument = gql`
       netWeight
       importedDate
       manufacturedDate
-      markId
-      modelId
-      userId
-      taxonId
-      verified
-      verifiedAt
       mark {
         id
         name
@@ -44,28 +37,11 @@ export const GetMyTrucksDocument = gql`
           code
         }
       }
-      user {
-        id
-        firstName
-        lastName
-        nickName
-        mobile
-        email
-      }
-      taxon {
-        id
-        code
-        name
-        link
-        icon
-      }
       currentTrack {
         id
         latitude
         longitude
-        status
         createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -86,11 +62,10 @@ export const GetMyTrucksDocument = gql`
  * @example
  * const { data, loading, error } = useGetMyTrucksQuery({
  *   variables: {
- *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useGetMyTrucksQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetMyTrucksQuery, GetMyTrucksQueryVariables> & ({ variables: GetMyTrucksQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useGetMyTrucksQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMyTrucksQuery, GetMyTrucksQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return ApolloReactHooks.useQuery<GetMyTrucksQuery, GetMyTrucksQueryVariables>(GetMyTrucksDocument, options);
       }

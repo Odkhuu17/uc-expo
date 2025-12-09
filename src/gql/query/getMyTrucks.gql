@@ -1,6 +1,7 @@
-query GetMyTrucks($userId: ID!) {
-  trucks(filter: { user: { id: { eq: $userId } } }) {
-    nodes {
+query GetMyTrucks {
+  me {
+    id
+    trucks {
       id
       plateNumber
       serial
@@ -8,12 +9,6 @@ query GetMyTrucks($userId: ID!) {
       netWeight
       importedDate
       manufacturedDate
-      markId
-      modelId
-      userId
-      taxonId
-      verified
-      verifiedAt
       mark {
         id
         name
@@ -29,28 +24,11 @@ query GetMyTrucks($userId: ID!) {
           code
         }
       }
-      user {
-        id
-        firstName
-        lastName
-        nickName
-        mobile
-        email
-      }
-      taxon {
-        id
-        code
-        name
-        link
-        icon
-      }
       currentTrack {
         id
         latitude
         longitude
-        status
         createdAt
-        updatedAt
       }
       createdAt
       updatedAt

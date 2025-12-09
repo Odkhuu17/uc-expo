@@ -18,12 +18,12 @@ import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {
   const { user } = useAppSelector(state => state.auth);
-  const { data, loading, refetch } = useGetMyTrucksQuery({
-    variables: { userId: user?.id || '' },
-  });
+  const { data, loading, refetch } = useGetMyTrucksQuery();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
+
+  console.log(data, 'wdwdw');
 
   const renderItem = ({
     item,

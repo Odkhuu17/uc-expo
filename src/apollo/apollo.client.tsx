@@ -62,6 +62,7 @@ export const useCreateApolloClient = () => {
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {
+              console.log('refreshed token:', newToken);
               // Update the operation context with the new token
               operation.setContext(({ headers = {} }) => ({
                 headers: {

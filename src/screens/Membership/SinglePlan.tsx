@@ -76,6 +76,7 @@ const SinglePlan = ({ node }: Props) => {
               },
               index: number
             ) => {
+              console.log(bank.link, 'banklink');
               return (
                 <TouchableOpacity
                   key={index}

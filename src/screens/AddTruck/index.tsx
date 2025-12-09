@@ -91,7 +91,7 @@ const AddTruckScreen = () => {
       await verifyRequest({
         variables: {
           images,
-          kind: 'TRUCK_REGISTRATION',
+          kind: 'truck',
           targetId: data?.createTruck?.id || '',
         },
       });

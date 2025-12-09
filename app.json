@@ -9,15 +9,23 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "co6m.munkhsukhj.ucapp",
+      "bundleIdentifier": "com.unlimitedcarrier.ucexpo",
       "supportsTablet": true,
+      "associatedDomains": [
+        "qpaywallet://",
+        "khanbank://",
+        "statebankmongolia://",
+        "xacbank://",
+        "tdbbank://",
+        "socialpay-payment://"
+      ],
       "infoPlist": {
         "UIBackgroundModes": ["remote-notification"]
       },
       "entitlements": {
         "aps-environment": "development",
         "com.apple.security.application-groups": [
-          "group.${ios.bundleIdentifier}.onesignal"
+          "group.com.unlimitedcarrier.ucexpo.onesignal"
         ]
       }
     },
@@ -27,13 +35,19 @@
         "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
-      "package": "co6m.munkhsukhj.ucapp"
+      "package": "com.unlimitedcarrier.ucexpo"
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/app-icon.png"
     },
     "plugins": [
+      [
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
+        }
+      ],
       [
         "expo-router",
         {
@@ -86,12 +100,6 @@
         }
       ],
       "expo-video",
-      [
-        "onesignal-expo-plugin",
-        {
-          "mode": "development"
-        }
-      ],
       [
         "expo-location",
         {
