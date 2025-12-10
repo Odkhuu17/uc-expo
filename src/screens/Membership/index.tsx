@@ -21,7 +21,7 @@ const MemberShipScreen = () => {
 
   return (
     <Container>
-      <Header title="Гишүүнчлэл" />
+      <Header title="Гишүүнчлэл" hasBack />
       <CustomFlatList
         onRefresh={refetch}
         refreshing={loading}

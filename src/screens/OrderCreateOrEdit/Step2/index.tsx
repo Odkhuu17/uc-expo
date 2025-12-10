@@ -204,7 +204,7 @@ const Step2 = ({
     escapeHTML: false,
   });
 
-  console.log(items, 'hahah');
+  console.log(items, '123123123');
 
   return (
     <>

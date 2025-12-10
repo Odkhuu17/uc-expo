@@ -21,6 +21,14 @@ const MyTrucks = () => {
   const theme = useTheme();
   const router = useRouter();
 
+  // Sort trucks by createdAt descending (newest first)
+  const sortedTrucks = data?.me?.trucks
+    ? [...data.me.trucks].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    : [];
+
   const renderItem = ({
     item,
   }: {
@@ -33,7 +41,7 @@ const MyTrucks = () => {
     <Container>
       <NormalHeader title="Миний машин" hasBack />
       <CustomFlatList
-        data={data?.me?.trucks}
+        data={sortedTrucks}
         refreshing={loading}
         loading={loading}
         onRefresh={refetch}

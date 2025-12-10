@@ -8,31 +8,15 @@ const sk = new Searchkit({
   search_settings: {
     search_attributes: [''],
     result_attributes: ['*'],
-    filter_attributes: [
-      { attribute: 'truck.id', field: 'truck.id', type: 'string' },
-    ],
-    geo_attribute: 'location',
+    sorting: {
+      default: {
+        field: 'tracked_at',
+        order: 'asc',
+      },
+    },
   },
 });
 
 const searchClient = Client(sk);
-
-// Helper to create a search client with truck.id filter
-export const createTruckFilteredClient = (truckId: string) => {
-  return {
-    ...searchClient,
-    search(requests: any[]) {
-      const modifiedRequests = requests.map(request => ({
-        ...request,
-        params: {
-          ...request.params,
-          filters: `truck.id:"${truckId}"`,
-          sort: 'createdAt:desc',
-        },
-      }));
-      return searchClient.search(modifiedRequests);
-    },
-  };
-};
 
 export default searchClient;

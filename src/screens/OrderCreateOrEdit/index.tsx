@@ -415,10 +415,8 @@ const OrderCreateScreen = () => {
     }
   };
 
-  const sss = createTruckFilteredClient('1');
-
   return (
-    <InstantSearch indexName="supp_tracks" searchClient={sss}>
+    <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
       <>
         <Container>
           <NormalHeader

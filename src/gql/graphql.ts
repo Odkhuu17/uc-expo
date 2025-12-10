@@ -1509,8 +1509,11 @@ export type SmsEdge = {
 };
 
 export type SmsFilter = {
+  content?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
+  status?: InputMaybe<StringFilter>;
+  to?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateFilter>;
 };
 

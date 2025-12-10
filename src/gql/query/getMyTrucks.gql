@@ -24,11 +24,12 @@ query GetMyTrucks {
           code
         }
       }
-      currentTrack {
+      taxon {
         id
-        latitude
-        longitude
-        createdAt
+        name
+        code
+        icon
+        link
       }
       verified
       verifiedAt

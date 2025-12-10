@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
 
 import { Button, Container, Content, LogoHeader } from '@/components';
 import { Box } from '@/components/Theme';
@@ -25,24 +26,28 @@ const HomeScreen = () => {
       <LogoHeader variant="logo-light" />
       <Content edges={['bottom']}>
         <Box gap="xl" alignItems="center" flex={1} justifyContent="center">
-          <SingleButton img={require('assets/images/driver.png')}>
-            <Button
-              textColor="black"
-              title="Жолооч"
-              backgroundColor="lightBlue2"
-              onPress={onPressDriver}
-              width={180}
-            />
-          </SingleButton>
-          <SingleButton img={require('assets/images/shipper.png')}>
-            <Button
-              textColor="black"
-              title="Ачаа илгээгч"
-              backgroundColor="lightBlue"
-              onPress={onPressShipper}
-              width={180}
-            />
-          </SingleButton>
+          <TouchableOpacity onPress={onPressDriver}>
+            <SingleButton img={require('assets/images/driver.png')}>
+              <Button
+                textColor="black"
+                title="Жолооч"
+                backgroundColor="lightBlue2"
+                onPress={onPressDriver}
+                width={180}
+              />
+            </SingleButton>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onPressShipper}>
+            <SingleButton img={require('assets/images/shipper.png')}>
+              <Button
+                textColor="black"
+                title="Ачаа илгээгч"
+                backgroundColor="lightBlue"
+                onPress={onPressShipper}
+                width={180}
+              />
+            </SingleButton>
+          </TouchableOpacity>
         </Box>
       </Content>
     </Container>

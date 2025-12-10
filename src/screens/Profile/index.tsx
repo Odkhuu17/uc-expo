@@ -14,7 +14,7 @@ const ProfileScreen = () => {
 
   return (
     <Container>
-      <NormalHeader title="Миний мэдээлэл" />
+      <NormalHeader title="Миний мэдээлэл" hasBack />
       <Content edges={[]}>
         <Box gap="m">
           <BoxContainer flexDirection="row" alignItems="center" gap="m">
