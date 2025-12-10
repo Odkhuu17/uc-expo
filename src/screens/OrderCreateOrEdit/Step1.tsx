@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Button, Content, FitImage } from '@/components';
 import { Box, Text, makeStyles, useTheme } from '@/components/Theme';
+import { TouchableOpacity } from 'react-native';
 
 interface Props {
   setIsRent: Dispatch<SetStateAction<boolean>>;
@@ -48,20 +49,24 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
             </Text>
           </LinearGradient>
           <Box gap="xl">
-            <Box alignItems="center">
-              <FitImage
-                source={require('assets/images/trucks.png')}
-                width={300}
-              />
-              <Button title="Ачааны машин" onPress={onPress1} />
-            </Box>
-            <Box alignItems="center">
-              <FitImage
-                source={require('assets/images/rents.png')}
-                width={300}
-              />
-              <Button title="Техник түрээс" onPress={onPress2} />
-            </Box>
+            <TouchableOpacity onPress={onPress1}>
+              <Box alignItems="center">
+                <FitImage
+                  source={require('assets/images/trucks.png')}
+                  width={300}
+                />
+                <Button title="Ачааны машин" onPress={onPress1} />
+              </Box>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onPress2}>
+              <Box alignItems="center">
+                <FitImage
+                  source={require('assets/images/rents.png')}
+                  width={300}
+                />
+                <Button title="Техник түрээс" onPress={onPress2} />
+              </Box>
+            </TouchableOpacity>
           </Box>
         </Box>
       </Box>
