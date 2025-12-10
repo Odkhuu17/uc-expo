@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
+import { InstantSearch } from 'react-instantsearch';
 
 import { Container, Loader, MessageModal, NormalHeader } from '@/components';
 import { Box } from '@/components/Theme';
@@ -19,8 +20,7 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
-import { InstantSearch } from 'react-instantsearch';
-import searchClient, { createTruckFilteredClient } from '@/utils/searchkit';
+import searchClient from '@/utils/searchkit';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

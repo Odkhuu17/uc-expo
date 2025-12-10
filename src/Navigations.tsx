@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-// import { LogLevel, OneSignal } from 'react-native-onesignal';
+// import { OneSignal } from 'react-native-onesignal';
 import { useEffect } from 'react';
 
 import useFeedLocation from './hooks/useFeedLocation';
@@ -10,7 +10,6 @@ const Navigations = () => {
   const { isAuthenticated } = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    // OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal.initialize('468ef767-c53a-4cdb-a593-2993cee373d1');
     // OneSignal.Notifications.requestPermission(false);
   }, []);

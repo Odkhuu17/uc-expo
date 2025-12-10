@@ -55,7 +55,7 @@ const LocationModal = ({ ref, setCreatedLocation }: Props) => {
   };
 
   const onChangeSheet = (index: number) => {
-    if (index === -1) {
+    if (index !== -1) {
       setAddress1('');
     }
   };
