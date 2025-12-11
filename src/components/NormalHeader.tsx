@@ -1,6 +1,6 @@
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation, useRouter } from 'expo-router';
-import { ArrowLeft2, Setting2 } from 'iconsax-react-nativejs';
+import { ArrowLeft2, HamburgerMenu } from 'iconsax-react-nativejs';
 import { TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -64,7 +64,7 @@ const NormalHeader = ({ title, hasBack, onPressBack }: Props) => {
         )}
         <Text variant="header">{title}</Text>
         <TouchableOpacity onPress={onShowDrawer} style={styles.settingsButton}>
-          <Setting2 color={theme.colors.darkGrey} size={theme.icon.m} />
+          <HamburgerMenu color={theme.colors.darkGrey} size={theme.icon.m} />
         </TouchableOpacity>
       </Box>
     </Box>

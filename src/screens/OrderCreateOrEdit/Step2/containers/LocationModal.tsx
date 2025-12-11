@@ -1,19 +1,17 @@
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import {
   Dispatch,
   RefObject,
   SetStateAction,
-  useEffect,
-  useMemo,
   useState,
+  useMemo,
+  useCallback,
+  useEffect,
 } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { ArrowRight2, Location } from 'iconsax-react-nativejs';
+import { debounce } from 'lodash';
 
 import { Button, CustomBottomSheetModal, Input } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
@@ -21,38 +19,39 @@ import {
   CreateAddressMutation,
   useCreateAddressMutation,
 } from '@/gql/mutations/createAddressMutation.generated';
-import { useSearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
+import {
+  SearchAddressQuery,
+  useSearchAddressQuery,
+} from '@/gql/query/searchAddressQuery.generated';
 
 interface Props {
   ref: RefObject<BottomSheetModal | null>;
   setCreatedLocation: Dispatch<
     SetStateAction<NonNullable<CreateAddressMutation['createAddress']> | null>
   >;
+  location?: NonNullable<SearchAddressQuery['searchAddress']>[0];
 }
 
-const LocationModal = ({ ref, setCreatedLocation }: Props) => {
+const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
+
   const {
     data: searchData,
     loading: searchLoading,
     refetch,
   } = useSearchAddressQuery({
     variables: {
-      query: '',
-      location: { latitude: 47.92123, longitude: 106.918556 },
+      query: address1,
+      location: {
+        latitude: location?._source?.location.lat || 47.92123,
+        longitude: location?._source?.location.lon || 106.918556,
+      },
     },
   });
 
   const [createAddress, { loading }] = useCreateAddressMutation();
-
-  const onChangeSearchText = (text: string) => {
-    setAddress1(text);
-    refetch({
-      query: text,
-    });
-  };
 
   const onChangeSheet = (index: number) => {
     if (index !== -1) {
@@ -69,7 +68,7 @@ const LocationModal = ({ ref, setCreatedLocation }: Props) => {
           placeholder="Хаягаа бичих"
           keyboardAvoiding
           autoFocus
-          onChangeText={onChangeSearchText}
+          onChangeText={setAddress1}
           value={address1}
         />
       </Box>

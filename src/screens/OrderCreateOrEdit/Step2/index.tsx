@@ -280,10 +280,12 @@ const Step2 = ({
       <LocationModal
         ref={originModalRef}
         setCreatedLocation={setCreatedOrigin}
+        location={origin}
       />
       <LocationModal
         ref={destinationModalRef}
         setCreatedLocation={setCreatedDestination}
+        location={destination}
       />
     </>
   );
