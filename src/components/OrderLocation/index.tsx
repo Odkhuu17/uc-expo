@@ -11,8 +11,6 @@ interface Props {
   onPressOrigin: () => void;
   onPressDestination: () => void;
   loading?: boolean;
-  onPressEditOrigin?: () => void;
-  onPressEditDestination?: () => void;
 }
 
 const OrderLocation = ({
@@ -23,8 +21,6 @@ const OrderLocation = ({
   onPressDestination,
   loading,
   isRent,
-  onPressEditOrigin,
-  onPressEditDestination,
 }: Props) => {
   const theme = useTheme();
 
@@ -40,7 +36,6 @@ const OrderLocation = ({
       <Box flexDirection="row" alignItems="center" gap="s">
         <Box flex={1}>
           <SingleLocation
-            onPressEdit={onPressEditOrigin}
             loading={loading}
             onPress={onPressOrigin}
             location={origin}
@@ -51,7 +46,6 @@ const OrderLocation = ({
             <>
               <Box width="100%" height={1} backgroundColor="border" my="s" />
               <SingleLocation
-                onPressEdit={onPressEditDestination}
                 loading={loading}
                 onPress={onPressDestination}
                 location={destination}

@@ -12,7 +12,7 @@ export type GetMeQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, email?: string, mobile?: string, gender?: string, nickName?: string, registerNum?: string, role?: string, isAdmin: boolean, subscribed?: boolean, createdAt: any, updatedAt: any, roles?: Array<{ __typename?: 'Role', id: string, name?: string, createdAt: any, updatedAt: any }>, orders: { __typename?: 'OrderConnection', totalCount: number, edges: Array<{ __typename?: 'OrderEdge', node?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, subscribed: boolean, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, createdAt: any, updatedAt: any } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } }, trucks: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any } }>, deliveryRequests: { __typename?: 'DeliveryRequestConnection', totalCount: number, edges: Array<{ __typename?: 'DeliveryRequestEdge', node?: { __typename?: 'DeliveryRequest', id: string, price: number, travelAt: any, status: string, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } }, subscriptions: { __typename?: 'SubscriptionConnection', totalCount: number, edges: Array<{ __typename?: 'SubscriptionEdge', node?: { __typename?: 'Subscription', id: string, active: boolean, autoRenew: boolean, paymentStatus: string, startAt: any, endAt: any, valid: boolean, createdAt: any, updatedAt: any, subscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, name: string, code: string, price: number, duration: string, active: boolean } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
+export type GetMeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, email?: string, mobile?: string, gender?: string, nickName?: string, registerNum?: string, role?: string, isAdmin: boolean, subscribed?: boolean, createdAt: any, updatedAt: any, roles?: Array<{ __typename?: 'Role', id: string, name?: string, createdAt: any, updatedAt: any }>, orders: { __typename?: 'OrderConnection', totalCount: number, edges: Array<{ __typename?: 'OrderEdge', node?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, subscribed: boolean, packageType?: string, packageWeight?: string, packageDimensions?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, travelDistance?: string, travelDuration?: string, createdAt: any, updatedAt: any } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } }, trucks: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any } }>, deliveryRequests: { __typename?: 'DeliveryRequestConnection', totalCount: number, edges: Array<{ __typename?: 'DeliveryRequestEdge', node?: { __typename?: 'DeliveryRequest', id: string, price: number, travelAt: any, status: string, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } }, subscriptions: { __typename?: 'SubscriptionConnection', totalCount: number, edges: Array<{ __typename?: 'SubscriptionEdge', node?: { __typename?: 'Subscription', id: string, active: boolean, autoRenew: boolean, paymentStatus: string, startAt: any, endAt: any, valid: boolean, createdAt: any, updatedAt: any, subscriptionPlan: { __typename?: 'SubscriptionPlan', id: string, name: string, code: string, price: number, duration: string, active: boolean } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
 
 
 export const GetMeDocument = gql`
@@ -79,21 +79,6 @@ export const GetMeDocument = gql`
       netWeight
       importedDate
       manufacturedDate
-      mark {
-        id
-        name
-        code
-      }
-      model {
-        id
-        name
-        code
-        mark {
-          id
-          name
-          code
-        }
-      }
       currentTrack {
         id
         latitude
@@ -193,6 +178,9 @@ export function useGetMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOp
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
         }
+// @ts-ignore
+export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMeQuery, GetMeQueryVariables>;
+export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMeQuery | undefined, GetMeQueryVariables>;
 export function useGetMeSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);

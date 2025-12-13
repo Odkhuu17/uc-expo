@@ -1,17 +1,8 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-} from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableOpacity } from 'react-native';
 import { ArrowRight2, Location } from 'iconsax-react-nativejs';
-import { debounce } from 'lodash';
+import { Dispatch, RefObject, SetStateAction, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, CustomBottomSheetModal, Input } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
@@ -29,7 +20,7 @@ interface Props {
   setCreatedLocation: Dispatch<
     SetStateAction<NonNullable<CreateAddressMutation['createAddress']> | null>
   >;
-  location?: NonNullable<SearchAddressQuery['searchAddress']>[0];
+  location: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
 }
 
 const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
@@ -59,14 +50,11 @@ const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
     }
   };
 
-  console.log('searchData', searchData);
-
   return (
     <CustomBottomSheetModal ref={ref} onChange={onChangeSheet}>
       <Box px="m">
         <Input
           placeholder="Хаягаа бичих"
-          keyboardAvoiding
           autoFocus
           onChangeText={setAddress1}
           value={address1}

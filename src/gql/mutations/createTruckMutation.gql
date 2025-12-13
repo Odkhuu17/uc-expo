@@ -1,6 +1,4 @@
 mutation createTruck(
-  $markId: ID!
-  $modelId: ID!
   $userId: ID!
   $plateNumber: String
   $serial: String
@@ -12,8 +10,6 @@ mutation createTruck(
 ) {
   createTruck(
     input: {
-      markId: $markId
-      modelId: $modelId
       userId: $userId
       plateNumber: $plateNumber
       serial: $serial
@@ -31,21 +27,6 @@ mutation createTruck(
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
     user {
       id
       email

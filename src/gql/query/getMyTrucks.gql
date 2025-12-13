@@ -9,21 +9,6 @@ query GetMyTrucks {
       netWeight
       importedDate
       manufacturedDate
-      mark {
-        id
-        name
-        code
-      }
-      model {
-        id
-        name
-        code
-        mark {
-          id
-          name
-          code
-        }
-      }
       taxon {
         id
         name

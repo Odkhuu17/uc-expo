@@ -72,6 +72,9 @@ export function useGetSubscriptionPlansLazyQuery(baseOptions?: ApolloReactHooks.
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>(GetSubscriptionPlansDocument, options);
         }
+// @ts-ignore
+export function useGetSubscriptionPlansSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>;
+export function useGetSubscriptionPlansSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetSubscriptionPlansQuery | undefined, GetSubscriptionPlansQueryVariables>;
 export function useGetSubscriptionPlansSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetSubscriptionPlansQuery, GetSubscriptionPlansQueryVariables>(GetSubscriptionPlansDocument, options);

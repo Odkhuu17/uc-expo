@@ -505,6 +505,7 @@ export type Mutation = {
   updateTaxon?: Maybe<Taxon>;
   updateTruck?: Maybe<Truck>;
   updateUser?: Maybe<User>;
+  verifyDriver?: Maybe<Verification>;
   verifyRequest?: Maybe<Verification>;
 };
 
@@ -801,6 +802,11 @@ export type MutationUpdateTruckArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationVerifyDriverArgs = {
+  input: VerifyDriverInput;
 };
 
 
@@ -1729,10 +1735,8 @@ export type Truck = BaseModelInterface & {
   id: Scalars['ID']['output'];
   importedDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
   manufacturedDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
-  mark: Mark;
-  markId: Scalars['ID']['output'];
-  model: Model;
-  modelId: Scalars['ID']['output'];
+  mark?: Maybe<Scalars['String']['output']>;
+  model?: Maybe<Scalars['String']['output']>;
   netWeight?: Maybe<Scalars['Int']['output']>;
   plateNumber?: Maybe<Scalars['String']['output']>;
   serial?: Maybe<Scalars['String']['output']>;
@@ -1777,8 +1781,8 @@ export type TruckFilter = {
   id?: InputMaybe<IdFilter>;
   importedDate?: InputMaybe<DateFilter>;
   manufacturedDate?: InputMaybe<DateFilter>;
-  mark?: InputMaybe<MarkFilter>;
-  model?: InputMaybe<ModelFilter>;
+  mark?: InputMaybe<Scalars['String']['input']>;
+  model?: InputMaybe<Scalars['String']['input']>;
   netWeight?: InputMaybe<IntFilter>;
   plateNumber?: InputMaybe<StringFilter>;
   serial?: InputMaybe<StringFilter>;
@@ -2169,9 +2173,9 @@ export type CreateOrderInput = {
   images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
-  packageDimensions?: InputMaybe<Scalars['Float']['input']>;
+  packageDimensions?: InputMaybe<Scalars['String']['input']>;
   packageType?: InputMaybe<Scalars['String']['input']>;
-  packageWeight?: InputMaybe<Scalars['Float']['input']>;
+  packageWeight?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   published?: InputMaybe<Scalars['Boolean']['input']>;
   receiverMobile?: InputMaybe<Scalars['String']['input']>;
@@ -2180,8 +2184,8 @@ export type CreateOrderInput = {
   senderName?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
-  travelDistance?: InputMaybe<Scalars['Float']['input']>;
-  travelDuration?: InputMaybe<Scalars['Float']['input']>;
+  travelDistance?: InputMaybe<Scalars['String']['input']>;
+  travelDuration?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
   vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
   video?: InputMaybe<Scalars['Upload']['input']>;
@@ -2262,8 +2266,8 @@ export type CreateTruckInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   importedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   manufacturedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
-  markId: Scalars['ID']['input'];
-  modelId: Scalars['ID']['input'];
+  mark?: InputMaybe<Scalars['String']['input']>;
+  model?: InputMaybe<Scalars['String']['input']>;
   netWeight?: InputMaybe<Scalars['Int']['input']>;
   plateNumber?: InputMaybe<Scalars['String']['input']>;
   serial?: InputMaybe<Scalars['String']['input']>;
@@ -2582,8 +2586,8 @@ export type UpdateTruckInput = {
   id: Scalars['ID']['input'];
   importedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   manufacturedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
-  markId: Scalars['ID']['input'];
-  modelId: Scalars['ID']['input'];
+  mark?: InputMaybe<Scalars['String']['input']>;
+  model?: InputMaybe<Scalars['String']['input']>;
   netWeight?: InputMaybe<Scalars['Int']['input']>;
   plateNumber?: InputMaybe<Scalars['String']['input']>;
   serial?: InputMaybe<Scalars['String']['input']>;
@@ -2600,6 +2604,15 @@ export type UpdateUserInput = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   nickName?: InputMaybe<Scalars['String']['input']>;
   stateId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type VerifyDriverInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  driverLicense: Scalars['Upload']['input'];
+  passport: Scalars['Upload']['input'];
+  passportBack: Scalars['Upload']['input'];
+  selfie: Scalars['Upload']['input'];
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type VerifyRequestInput = {

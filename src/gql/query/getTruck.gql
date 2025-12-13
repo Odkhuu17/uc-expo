@@ -7,21 +7,6 @@ query GetTruck($id: ID!) {
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
     user {
       id
       email

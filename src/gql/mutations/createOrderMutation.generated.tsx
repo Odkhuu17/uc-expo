@@ -7,8 +7,8 @@ const defaultOptions = {} as const;
 export type CreateOrderMutationVariables = Types.Exact<{
   title?: Types.InputMaybe<Types.Scalars['String']['input']>;
   packageType?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  packageWeight?: Types.InputMaybe<Types.Scalars['Float']['input']>;
-  packageDimensions?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  packageWeight?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  packageDimensions?: Types.InputMaybe<Types.Scalars['String']['input']>;
   price?: Types.InputMaybe<Types.Scalars['Float']['input']>;
   senderName?: Types.InputMaybe<Types.Scalars['String']['input']>;
   senderMobile?: Types.InputMaybe<Types.Scalars['String']['input']>;
@@ -17,8 +17,8 @@ export type CreateOrderMutationVariables = Types.Exact<{
   carType?: Types.InputMaybe<Types.Scalars['String']['input']>;
   carWeight?: Types.InputMaybe<Types.Scalars['String']['input']>;
   travelAt?: Types.InputMaybe<Types.Scalars['ISO8601DateTime']['input']>;
-  travelDistance?: Types.InputMaybe<Types.Scalars['Float']['input']>;
-  travelDuration?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  travelDistance?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  travelDuration?: Types.InputMaybe<Types.Scalars['String']['input']>;
   originId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   destinationId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   published?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
@@ -34,7 +34,7 @@ export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: { __t
 
 
 export const CreateOrderDocument = gql`
-    mutation createOrder($title: String, $packageType: String, $packageWeight: Float, $packageDimensions: Float, $price: Float, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: Float, $travelDuration: Float, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
+    mutation createOrder($title: String, $packageType: String, $packageWeight: String, $packageDimensions: String, $price: Float, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: String, $travelDuration: String, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
   createOrder(
     input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded, data: $data}
   ) {

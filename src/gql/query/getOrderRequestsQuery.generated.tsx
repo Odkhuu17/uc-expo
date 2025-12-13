@@ -112,6 +112,9 @@ export function useGetOrderRequestsLazyQuery(baseOptions?: ApolloReactHooks.Lazy
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>(GetOrderRequestsDocument, options);
         }
+// @ts-ignore
+export function useGetOrderRequestsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>;
+export function useGetOrderRequestsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetOrderRequestsQuery | undefined, GetOrderRequestsQueryVariables>;
 export function useGetOrderRequestsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetOrderRequestsQuery, GetOrderRequestsQueryVariables>(GetOrderRequestsDocument, options);

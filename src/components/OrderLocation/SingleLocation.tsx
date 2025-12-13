@@ -10,7 +10,6 @@ interface Props {
   location?: string;
   loading?: boolean;
   onPress: () => void;
-  onPressEdit?: () => void;
 }
 
 const SingleLocation = ({
@@ -19,17 +18,8 @@ const SingleLocation = ({
   selected,
   onPress,
   loading,
-  onPressEdit,
 }: Props) => {
   const theme = useTheme();
-
-  const onPressEdit2 = () => {
-    if (onPressEdit) {
-      onPressEdit();
-    } else {
-      onPress();
-    }
-  };
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -44,15 +34,11 @@ const SingleLocation = ({
             <ActivityIndicator />
           </Box>
         ) : (
-          <TouchableOpacity onPress={onPressEdit2}>
-            <Edit2
-              size={theme.icon.l}
-              color={
-                selected ? theme.colors['baseBlue'] : theme.colors['black']
-              }
-              variant={selected ? 'Bold' : 'Outline'}
-            />
-          </TouchableOpacity>
+          <Edit2
+            size={theme.icon.l}
+            color={selected ? theme.colors['baseBlue'] : theme.colors['black']}
+            variant={selected ? 'Bold' : 'Outline'}
+          />
         )}
         <Box flex={1} gap="xs">
           <Text

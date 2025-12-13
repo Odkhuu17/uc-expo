@@ -7,29 +7,6 @@ mutation DestroyTruck($id: ID!) {
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
-    currentTrack {
-      id
-      latitude
-      longitude
-      status
-      createdAt
-      updatedAt
-    }
     createdAt
     updatedAt
   }

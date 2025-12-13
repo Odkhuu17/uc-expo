@@ -9,7 +9,7 @@ export type GetTruckQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetTruckQuery = { __typename?: 'Query', truck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, user: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, createdAt: any } } };
+export type GetTruckQuery = { __typename?: 'Query', truck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, createdAt: any } } };
 
 
 export const GetTruckDocument = gql`
@@ -22,21 +22,6 @@ export const GetTruckDocument = gql`
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
     user {
       id
       email
@@ -79,6 +64,9 @@ export function useGetTruckLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetTruckQuery, GetTruckQueryVariables>(GetTruckDocument, options);
         }
+// @ts-ignore
+export function useGetTruckSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetTruckQuery, GetTruckQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetTruckQuery, GetTruckQueryVariables>;
+export function useGetTruckSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTruckQuery, GetTruckQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetTruckQuery | undefined, GetTruckQueryVariables>;
 export function useGetTruckSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTruckQuery, GetTruckQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetTruckQuery, GetTruckQueryVariables>(GetTruckDocument, options);

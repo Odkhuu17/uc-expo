@@ -42,6 +42,9 @@ export function useGetCountryLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetCountryQuery, GetCountryQueryVariables>(GetCountryDocument, options);
         }
+// @ts-ignore
+export function useGetCountrySuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCountryQuery, GetCountryQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetCountryQuery, GetCountryQueryVariables>;
+export function useGetCountrySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCountryQuery, GetCountryQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetCountryQuery | undefined, GetCountryQueryVariables>;
 export function useGetCountrySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCountryQuery, GetCountryQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetCountryQuery, GetCountryQueryVariables>(GetCountryDocument, options);

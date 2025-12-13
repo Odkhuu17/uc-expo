@@ -9,7 +9,7 @@ export type DestroyTruckMutationVariables = Types.Exact<{
 }>;
 
 
-export type DestroyTruckMutation = { __typename?: 'Mutation', destroyTruck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, status?: string, createdAt: any, updatedAt: any } } };
+export type DestroyTruckMutation = { __typename?: 'Mutation', destroyTruck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any } };
 
 
 export const DestroyTruckDocument = gql`
@@ -22,29 +22,6 @@ export const DestroyTruckDocument = gql`
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
-    currentTrack {
-      id
-      latitude
-      longitude
-      status
-      createdAt
-      updatedAt
-    }
     createdAt
     updatedAt
   }

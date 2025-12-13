@@ -5,8 +5,6 @@ import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CreateTruckMutationVariables = Types.Exact<{
-  markId: Types.Scalars['ID']['input'];
-  modelId: Types.Scalars['ID']['input'];
   userId: Types.Scalars['ID']['input'];
   plateNumber?: Types.InputMaybe<Types.Scalars['String']['input']>;
   serial?: Types.InputMaybe<Types.Scalars['String']['input']>;
@@ -18,13 +16,13 @@ export type CreateTruckMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateTruckMutation = { __typename?: 'Mutation', createTruck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, mark: { __typename?: 'Mark', id: string, name: string, code: string }, model: { __typename?: 'Model', id: string, name: string, code: string, mark: { __typename?: 'Mark', id: string, name: string, code: string } }, user: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, createdAt: any } } };
+export type CreateTruckMutation = { __typename?: 'Mutation', createTruck?: { __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, manufacturedDate?: any, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, email?: string, firstName?: string, lastName?: string }, currentTrack?: { __typename?: 'TruckTrack', id: string, latitude?: number, longitude?: number, createdAt: any } } };
 
 
 export const CreateTruckDocument = gql`
-    mutation createTruck($markId: ID!, $modelId: ID!, $userId: ID!, $plateNumber: String, $serial: String, $weight: Int, $netWeight: Int, $importedDate: ISO8601DateTime, $manufacturedDate: ISO8601DateTime, $taxonId: ID) {
+    mutation createTruck($userId: ID!, $plateNumber: String, $serial: String, $weight: Int, $netWeight: Int, $importedDate: ISO8601DateTime, $manufacturedDate: ISO8601DateTime, $taxonId: ID) {
   createTruck(
-    input: {markId: $markId, modelId: $modelId, userId: $userId, plateNumber: $plateNumber, serial: $serial, weight: $weight, netWeight: $netWeight, importedDate: $importedDate, manufacturedDate: $manufacturedDate, taxonId: $taxonId}
+    input: {userId: $userId, plateNumber: $plateNumber, serial: $serial, weight: $weight, netWeight: $netWeight, importedDate: $importedDate, manufacturedDate: $manufacturedDate, taxonId: $taxonId}
   ) {
     id
     plateNumber
@@ -33,21 +31,6 @@ export const CreateTruckDocument = gql`
     netWeight
     importedDate
     manufacturedDate
-    mark {
-      id
-      name
-      code
-    }
-    model {
-      id
-      name
-      code
-      mark {
-        id
-        name
-        code
-      }
-    }
     user {
       id
       email
@@ -80,8 +63,6 @@ export type CreateTruckMutationFn = ApolloReactCommon.MutationFunction<CreateTru
  * @example
  * const [createTruckMutation, { data, loading, error }] = useCreateTruckMutation({
  *   variables: {
- *      markId: // value for 'markId'
- *      modelId: // value for 'modelId'
  *      userId: // value for 'userId'
  *      plateNumber: // value for 'plateNumber'
  *      serial: // value for 'serial'

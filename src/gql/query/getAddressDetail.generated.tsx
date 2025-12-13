@@ -81,6 +81,9 @@ export function useGetAddressDetailLazyQuery(baseOptions?: ApolloReactHooks.Lazy
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetAddressDetailQuery, GetAddressDetailQueryVariables>(GetAddressDetailDocument, options);
         }
+// @ts-ignore
+export function useGetAddressDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAddressDetailQuery, GetAddressDetailQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetAddressDetailQuery, GetAddressDetailQueryVariables>;
+export function useGetAddressDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAddressDetailQuery, GetAddressDetailQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetAddressDetailQuery | undefined, GetAddressDetailQueryVariables>;
 export function useGetAddressDetailSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAddressDetailQuery, GetAddressDetailQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetAddressDetailQuery, GetAddressDetailQueryVariables>(GetAddressDetailDocument, options);

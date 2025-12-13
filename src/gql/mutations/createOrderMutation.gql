@@ -1,8 +1,8 @@
 mutation createOrder(
   $title: String
   $packageType: String
-  $packageWeight: Float
-  $packageDimensions: Float
+  $packageWeight: String
+  $packageDimensions: String
   $price: Float
   $senderName: String
   $senderMobile: String
@@ -11,8 +11,8 @@ mutation createOrder(
   $carType: String
   $carWeight: String
   $travelAt: ISO8601DateTime
-  $travelDistance: Float
-  $travelDuration: Float
+  $travelDistance: String
+  $travelDuration: String
   $originId: ID
   $destinationId: ID
   $published: Boolean

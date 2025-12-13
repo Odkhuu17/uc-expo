@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
+import { InstantSearch } from 'react-instantsearch';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
-import { InstantSearch } from 'react-instantsearch';
 
 import { Container, Loader, MessageModal, NormalHeader } from '@/components';
 import { Box } from '@/components/Theme';
@@ -16,11 +16,11 @@ import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { SearchAddressQuery } from '@/gql/query/searchAddressQuery.generated';
 import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
 import { isRentOrder } from '@/utils/helpers';
+import searchClient from '@/utils/searchkit';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
-import searchClient from '@/utils/searchkit';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -131,7 +131,7 @@ const OrderCreateScreen = () => {
               destinationId: createdDestination?.id,
               packageType: values.packageType,
               carType: values.carType,
-              packageWeight: Number(values.packageWeight),
+              packageWeight: values.packageWeight,
               travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
               vatIncluded: values.vatIncluded,
               price: values.priceNegotiable ? undefined : Number(values.price),
@@ -157,7 +157,7 @@ const OrderCreateScreen = () => {
             destinationId: createdDestination?.id,
             packageType: values.packageType,
             carType: values.carType,
-            packageWeight: Number(values.packageWeight),
+            packageWeight: values.packageWeight,
             travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
             vatIncluded: values.vatIncluded,
             price: values.priceNegotiable ? undefined : Number(values.price),

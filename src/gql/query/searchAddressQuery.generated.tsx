@@ -71,6 +71,9 @@ export function useSearchAddressLazyQuery(baseOptions?: ApolloReactHooks.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<SearchAddressQuery, SearchAddressQueryVariables>(SearchAddressDocument, options);
         }
+// @ts-ignore
+export function useSearchAddressSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<SearchAddressQuery, SearchAddressQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<SearchAddressQuery, SearchAddressQueryVariables>;
+export function useSearchAddressSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchAddressQuery, SearchAddressQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<SearchAddressQuery | undefined, SearchAddressQueryVariables>;
 export function useSearchAddressSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<SearchAddressQuery, SearchAddressQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<SearchAddressQuery, SearchAddressQueryVariables>(SearchAddressDocument, options);

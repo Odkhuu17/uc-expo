@@ -45,6 +45,9 @@ export function useGetMarksLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetMarksQuery, GetMarksQueryVariables>(GetMarksDocument, options);
         }
+// @ts-ignore
+export function useGetMarksSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMarksQuery, GetMarksQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMarksQuery, GetMarksQueryVariables>;
+export function useGetMarksSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMarksQuery, GetMarksQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetMarksQuery | undefined, GetMarksQueryVariables>;
 export function useGetMarksSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetMarksQuery, GetMarksQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetMarksQuery, GetMarksQueryVariables>(GetMarksDocument, options);

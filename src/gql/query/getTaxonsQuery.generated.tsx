@@ -96,6 +96,9 @@ export function useGetTaxonsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetTaxonsQuery, GetTaxonsQueryVariables>(GetTaxonsDocument, options);
         }
+// @ts-ignore
+export function useGetTaxonsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetTaxonsQuery, GetTaxonsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetTaxonsQuery, GetTaxonsQueryVariables>;
+export function useGetTaxonsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTaxonsQuery, GetTaxonsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetTaxonsQuery | undefined, GetTaxonsQueryVariables>;
 export function useGetTaxonsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTaxonsQuery, GetTaxonsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetTaxonsQuery, GetTaxonsQueryVariables>(GetTaxonsDocument, options);

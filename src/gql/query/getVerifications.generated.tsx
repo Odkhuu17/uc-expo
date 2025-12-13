@@ -112,6 +112,9 @@ export function useGetVerificationsLazyQuery(baseOptions?: ApolloReactHooks.Lazy
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetVerificationsQuery, GetVerificationsQueryVariables>(GetVerificationsDocument, options);
         }
+// @ts-ignore
+export function useGetVerificationsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetVerificationsQuery, GetVerificationsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetVerificationsQuery, GetVerificationsQueryVariables>;
+export function useGetVerificationsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVerificationsQuery, GetVerificationsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetVerificationsQuery | undefined, GetVerificationsQueryVariables>;
 export function useGetVerificationsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVerificationsQuery, GetVerificationsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetVerificationsQuery, GetVerificationsQueryVariables>(GetVerificationsDocument, options);

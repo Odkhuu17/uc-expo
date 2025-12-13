@@ -54,6 +54,9 @@ export function useGetModelsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetModelsQuery, GetModelsQueryVariables>(GetModelsDocument, options);
         }
+// @ts-ignore
+export function useGetModelsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetModelsQuery, GetModelsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetModelsQuery, GetModelsQueryVariables>;
+export function useGetModelsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetModelsQuery, GetModelsQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetModelsQuery | undefined, GetModelsQueryVariables>;
 export function useGetModelsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetModelsQuery, GetModelsQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetModelsQuery, GetModelsQueryVariables>(GetModelsDocument, options);

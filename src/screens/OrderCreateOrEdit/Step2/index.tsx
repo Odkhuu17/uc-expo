@@ -2,15 +2,9 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useInfiniteHits } from 'react-instantsearch';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  InstantSearch,
-  SearchBox,
-  Hits,
-  RefinementList,
-  useInfiniteHits,
-} from 'react-instantsearch';
 
 import { Button, OrderLocation } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
@@ -25,7 +19,6 @@ import {
 } from '@/gql/query/searchAddressQuery.generated';
 import { CarTypes, MapPin } from './components';
 import { LocationModal } from './containers';
-import searchClient from '@/utils/searchkit';
 
 interface Props {
   isRent?: boolean;
@@ -186,25 +179,17 @@ const Step2 = ({
 
   const onPressOrigin = () => {
     setSelectedLocation('origin');
+    originModalRef.current?.present();
   };
 
   const onPressDestination = () => {
     setSelectedLocation('destination');
-  };
-
-  const onPressEditOrigin = () => {
-    originModalRef.current?.present();
-  };
-
-  const onPressEditDestination = () => {
     destinationModalRef.current?.present();
   };
 
   const { items, isLastPage, showMore } = useInfiniteHits({
     escapeHTML: false,
   });
-
-  console.log(items, '123123123');
 
   return (
     <>
@@ -270,8 +255,6 @@ const Step2 = ({
               selected={selectedLocation}
               onPressOrigin={onPressOrigin}
               onPressDestination={onPressDestination}
-              onPressEditOrigin={onPressEditOrigin}
-              onPressEditDestination={onPressEditDestination}
               loading={searchLoading}
             />
           </Box>

@@ -88,6 +88,9 @@ export function useGetBannersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useLazyQuery<GetBannersQuery, GetBannersQueryVariables>(GetBannersDocument, options);
         }
+// @ts-ignore
+export function useGetBannersSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetBannersQuery, GetBannersQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetBannersQuery, GetBannersQueryVariables>;
+export function useGetBannersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBannersQuery, GetBannersQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetBannersQuery | undefined, GetBannersQueryVariables>;
 export function useGetBannersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBannersQuery, GetBannersQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return ApolloReactHooks.useSuspenseQuery<GetBannersQuery, GetBannersQueryVariables>(GetBannersDocument, options);
