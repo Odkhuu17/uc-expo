@@ -10,8 +10,10 @@ export { default as CustomMaskInput } from './CustomMaskInput';
 export { default as DateInput } from './DateInput';
 export { default as Empty } from './Empty';
 export { default as FitImage } from './FitImage';
+export { default as GroupedSelect } from './GroupedSelect';
 export { default as IconButton } from './IconButton';
 export { default as Input } from './Input';
+export { default as Label } from './Label';
 export { default as Loader } from './Loader';
 export { default as LogoHeader } from './LogoHeader';
 export { default as Marquee } from './Marquee';
@@ -23,4 +25,5 @@ export { default as ScrollableContent } from './ScrollableContent';
 export { default as Select } from './Select';
 export { default as SingleOrder } from './SingleOrder';
 export { default as TextArea } from './TextArea';
+export { default as Warning } from './Warning';
 

@@ -10,7 +10,15 @@ class ReactNativeFile {
   name: string;
   type: string;
 
-  constructor({ uri, name, type }: { uri: string; name: string; type: string }) {
+  constructor({
+    uri,
+    name,
+    type,
+  }: {
+    uri: string;
+    name: string;
+    type: string;
+  }) {
     this.uri = uri;
     this.name = name;
     this.type = type;
@@ -24,11 +32,7 @@ class ReactNativeFile {
  * @param mimeType - MIME type of the file
  * @returns ReactNativeFile object ready for upload
  */
-export const uriToFile = (
-  uri: string,
-  filename: string,
-  mimeType: string
-) => {
+export const uriToFile = (uri: string, filename: string, mimeType: string) => {
   return new ReactNativeFile({
     uri,
     name: filename,
@@ -45,6 +49,11 @@ export const imagesToFiles = (uris: string[]) => {
   return uris.map((uri, index) =>
     uriToFile(uri, `image_${Date.now()}_${index}.jpg`, 'image/jpeg')
   );
+};
+
+export const imageToFile = (uri: string) => {
+  if (!uri) return null;
+  return uriToFile(uri, `image_${Date.now()}.jpg`, 'image/jpeg');
 };
 
 /**

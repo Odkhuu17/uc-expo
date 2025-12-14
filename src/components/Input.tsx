@@ -1,8 +1,8 @@
-import { Icon as IconType } from 'iconsax-react-nativejs';
-import React from 'react';
-import { TextInput, TextInputProps, ViewStyle } from 'react-native';
-
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { Icon as IconType } from 'iconsax-react-nativejs';
+import React, { ComponentRef, useRef } from 'react';
+import { Pressable, TextInput, TextInputProps, ViewStyle } from 'react-native';
+
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 
 interface BaseProps extends TextInputProps {
@@ -37,11 +37,20 @@ function Input(props: BaseProps) {
   } = props;
   const styles = useStyles();
   const theme = useTheme();
+  const inputRef = useRef<TextInput | null>(null);
+  const inputRef2 = useRef<ComponentRef<typeof BottomSheetTextInput> | null>(
+    null
+  );
 
   const IconComp = props.icon;
 
+  const onPress = () => {
+    inputRef.current?.focus();
+    inputRef2.current?.focus();
+  };
+
   return (
-    <Box>
+    <Pressable onPress={onPress}>
       {label && (
         <Box flexDirection="row" gap="xs">
           <Text variant="label" color={labelColor || 'black'} mb="xs">
@@ -69,12 +78,14 @@ function Input(props: BaseProps) {
         {keyboardAvoiding ? (
           <BottomSheetTextInput
             {...textInputProps}
+            ref={inputRef2}
             style={styles.input}
             placeholderTextColor={theme.colors.grey2}
           />
         ) : (
           <TextInput
             {...textInputProps}
+            ref={inputRef}
             style={styles.input}
             placeholderTextColor={theme.colors.grey2}
           />
@@ -98,7 +109,7 @@ function Input(props: BaseProps) {
           {error}
         </Text>
       )}
-    </Box>
+    </Pressable>
   );
 }
 

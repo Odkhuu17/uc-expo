@@ -1,6 +1,8 @@
 import type { IGraphQLConfig } from 'graphql-config';
 
-const headers = { Authorization: `Bearer ${process.env.EXPO_PUBLIC_INTROSPECTION_TOKEN}` };
+const headers = {
+  Authorization: `Bearer ${process.env.EXPO_PUBLIC_INTROSPECTION_TOKEN}`,
+};
 
 const config: IGraphQLConfig = {
   schema: 'schema.graphql',

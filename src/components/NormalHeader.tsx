@@ -10,6 +10,7 @@ interface Props {
   title: string;
   hasBack?: boolean;
   onPressBack?: () => void;
+  noMenu?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const NormalHeader = ({ title, hasBack, onPressBack }: Props) => {
+const NormalHeader = ({ title, hasBack, onPressBack, noMenu }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
@@ -63,9 +64,14 @@ const NormalHeader = ({ title, hasBack, onPressBack }: Props) => {
           </TouchableOpacity>
         )}
         <Text variant="header">{title}</Text>
-        <TouchableOpacity onPress={onShowDrawer} style={styles.settingsButton}>
-          <HamburgerMenu color={theme.colors.darkGrey} size={theme.icon.m} />
-        </TouchableOpacity>
+        {!noMenu && (
+          <TouchableOpacity
+            onPress={onShowDrawer}
+            style={styles.settingsButton}
+          >
+            <HamburgerMenu color={theme.colors.darkGrey} size={theme.icon.m} />
+          </TouchableOpacity>
+        )}
       </Box>
     </Box>
   );

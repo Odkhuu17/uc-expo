@@ -1,6 +1,6 @@
 import { Icon as IconType } from 'iconsax-react-nativejs';
-import React from 'react';
-import { ViewStyle } from 'react-native';
+import React, { useRef } from 'react';
+import { Pressable, TextInput, ViewStyle } from 'react-native';
 import MaskInput, { MaskInputProps } from 'react-native-mask-input';
 
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
@@ -33,9 +33,10 @@ function DateInput({
 }: Props) {
   const styles = useStyles();
   const theme = useTheme();
+  const inputRef = useRef<TextInput | null>(null);
 
   return (
-    <Box>
+    <Pressable onPress={() => inputRef.current?.focus()}>
       <Box
         height={theme.button.m}
         width={width}
@@ -59,6 +60,7 @@ function DateInput({
         </Box>
         <MaskInput
           {...textInputProps}
+          ref={inputRef}
           style={styles.input}
           placeholderTextColor={theme.colors.grey2}
         />
@@ -68,7 +70,7 @@ function DateInput({
           {error}
         </Text>
       )}
-    </Box>
+    </Pressable>
   );
 }
 

@@ -1,7 +1,14 @@
 import { useRouter } from 'expo-router';
 import { Box as BoxIcon, Truck, UserOctagon } from 'iconsax-react-nativejs';
 
-import { BoxContainer, Container, Content, NormalHeader } from '@/components';
+import {
+  BoxContainer,
+  Button,
+  Container,
+  Content,
+  NormalHeader,
+  Warning,
+} from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
 import SingleMenu from './SingleMenu';
@@ -10,7 +17,8 @@ const ProfileScreen = () => {
   const theme = useTheme();
   const router = useRouter();
   const { user } = useAppSelector(state => state.auth);
-  const { mode } = useAppSelector(state => state.general);
+
+  const hasVerifiedTruck = user?.trucks?.some(truck => truck.verified);
 
   return (
     <Container>
@@ -29,14 +37,22 @@ const ProfileScreen = () => {
             </Box>
           </BoxContainer>
           <BoxContainer>
-            {mode === 'shipper' && (
+            {user?.role === 'member' && (
               <SingleMenu
                 title="Миний захиалгууд"
                 icon={BoxIcon}
                 onPress={() => router.navigate('/profile/orders')}
               />
             )}
-            {mode === 'driver' && (
+            {user?.role !== 'driver' && !hasVerifiedTruck ? (
+              <Box gap="s">
+                <Warning description="Танд бүртгэлтэй машин байхгүй байна! Та машин нэмсний дараагаар манай системийг ашиглах боломжтой." />
+                <Button
+                  title="Машин нэмэх"
+                  onPress={() => router.navigate('/profile/trucks/add')}
+                />
+              </Box>
+            ) : (
               <SingleMenu
                 title="Миний машин"
                 icon={Truck}

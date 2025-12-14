@@ -1,33 +1,30 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import {
-    LayoutChangeEvent,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    StyleSheet,
-    TouchableOpacity,
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import Animated, {
-    useAnimatedScrollHandler,
-    useSharedValue,
+  useAnimatedScrollHandler,
+  useSharedValue,
 } from 'react-native-reanimated';
 
 import { Box } from '@/components/Theme';
+import { useGetBannersQuery } from '@/gql/query/getBanners.generated';
+import { getImageUrl } from '@/utils/helpers';
 
 const BANNER_HEIGHT = 180;
 
-const banners = [require('assets/images/order-banner.jpg')];
-
 const Banners = () => {
-  //   const { data, loading } = useGetBannersQuery({
-  //     variables: {
-  //       offset: 0,
-  //       first: 25,
-  //       filter: {},
-  //     },
-  //   });
-
-  const loading = false;
+  const { data, loading } = useGetBannersQuery({
+    variables: {
+      offset: 0,
+      first: 10,
+    },
+  });
 
   const scrollX = useSharedValue(0);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,7 +36,7 @@ const Banners = () => {
     },
   });
 
-  if (loading || banners.length === 0) {
+  if (loading || data?.banners?.nodes?.length === 0) {
     return null;
   }
 
@@ -65,8 +62,8 @@ const Banners = () => {
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
       >
-        {banners.map(banner => (
-          <TouchableOpacity key={banner} activeOpacity={0.9}>
+        {data?.banners?.nodes?.map(banner => (
+          <TouchableOpacity key={banner.id} activeOpacity={0.9}>
             <Box
               width={width}
               height={BANNER_HEIGHT}
@@ -74,13 +71,17 @@ const Banners = () => {
               overflow="hidden"
               backgroundColor="grey4"
             >
-              <Image source={banner} style={css.img} contentFit="cover" />
+              <Image
+                source={{ uri: getImageUrl(banner.image || '') }}
+                style={css.img}
+                contentFit="cover"
+              />
             </Box>
           </TouchableOpacity>
         ))}
       </Animated.ScrollView>
 
-      {banners.length > 1 && (
+      {data?.banners?.totalCount && data?.banners?.totalCount > 1 && (
         <Box
           flexDirection="row"
           justifyContent="center"
@@ -88,7 +89,7 @@ const Banners = () => {
           gap="xs"
           mt="s"
         >
-          {banners.map((_, index: number) => (
+          {data?.banners?.nodes?.map((_, index: number) => (
             <Box
               key={index}
               width={activeIndex === index ? 20 : 8}

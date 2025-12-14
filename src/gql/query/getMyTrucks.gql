@@ -8,6 +8,8 @@ query GetMyTrucks {
       weight
       netWeight
       importedDate
+      mark
+      model
       manufacturedDate
       taxon {
         id
@@ -24,39 +26,20 @@ query GetMyTrucks {
           node {
             id
             status
-            targetId
-            targetType
             comment
             field1
             field2
             field3
             field4
             field5
-            userId
-            images
-            imageObjects {
-              id
-              url
-              fileName
-              recordId
-              recordType
-            }
-            user {
-              id
-              firstName
-              lastName
-              nickName
-              mobile
-              email
-            }
-            respondedBy {
-              id
-              firstName
-              lastName
-              nickName
-              mobile
-              email
-            }
+            # images
+            # imageObjects {
+            #   id
+            #   url
+            #   fileName
+            #   recordId
+            #   recordType
+            # }
             createdAt
             updatedAt
           }

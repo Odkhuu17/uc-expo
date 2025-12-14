@@ -7,7 +7,7 @@ const defaultOptions = {} as const;
 export type GetUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, email?: string, mobile?: string, gender?: string, nickName?: string, registerNum?: string, role?: string, isAdmin: boolean, subscribed?: boolean, createdAt: any, updatedAt: any, roles?: Array<{ __typename?: 'Role', id: string, name?: string, createdAt: any, updatedAt: any }> } };
+export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, email?: string, mobile?: string, gender?: string, nickName?: string, registerNum?: string, role?: string, subscribed?: boolean, verified: boolean, verifiedAt?: any, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifiedAt?: any }> } };
 
 
 export const GetUserDocument = gql`
@@ -22,16 +22,14 @@ export const GetUserDocument = gql`
     nickName
     registerNum
     role
-    roles {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-    isAdmin
     subscribed
-    createdAt
-    updatedAt
+    verified
+    verifiedAt
+    trucks {
+      id
+      verified
+      verifiedAt
+    }
   }
 }
     `;

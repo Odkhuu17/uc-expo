@@ -1,8 +1,13 @@
 import { Drawer } from 'expo-router/drawer';
 
 import CustomDrawerContent from '@/components/CustomDrawerContent';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function DrawerLayout() {
+  const { user } = useAppSelector(state => state.auth);
+
+  const hasVerifiedTruck = user?.trucks?.some(truck => truck.verified);
+
   return (
     <Drawer
       drawerContent={CustomDrawerContent}
@@ -16,8 +21,10 @@ export default function DrawerLayout() {
         },
       }}
     >
-      <Drawer.Screen name="orders" />
-      <Drawer.Screen name="membership" />
+      <Drawer.Protected guard={!hasVerifiedTruck && user?.role === 'driver'}>
+        <Drawer.Screen name="orders" />
+        <Drawer.Screen name="membership" />
+      </Drawer.Protected>
       <Drawer.Screen name="profile" />
     </Drawer>
   );

@@ -12,6 +12,7 @@ import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import BoxContainer from './BoxContainer';
 import Button from './Button';
+import Label from './Label';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
@@ -51,6 +52,12 @@ const SingleOrder = ({ item }: Props) => {
       <Link href={`/orders/${item?.number}`} asChild>
         <TouchableOpacity>
           <BoxContainer p={undefined} overflow="hidden">
+            <Box alignItems="flex-end" pt="s" pr="s">
+              <Label
+                text={isRent ? 'Техник түрээс' : 'Ачаа тээвэрлэлт'}
+                backgroundColor={isRent ? 'yellow' : 'baseBlue'}
+              />
+            </Box>
             <Box flexDirection="row" alignItems="center" gap="s" p="m">
               <Box
                 width={100}

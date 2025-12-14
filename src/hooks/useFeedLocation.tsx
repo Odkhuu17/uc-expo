@@ -8,16 +8,15 @@ import { useAppSelector } from '@/redux/hooks';
 const LOCATION_INTERVAL = 30000; // 30 seconds
 
 const useFeedLocation = () => {
-  const { user } = useAppSelector(state => state.auth);
+  const { isAuthenticated } = useAppSelector(state => state.auth);
   const { data } = useGetMyTrucksQuery({
-    variables: { userId: user?.id || '' },
-    skip: !user,
+    skip: !isAuthenticated,
   });
   const [feedLocation] = useFeedLocationMutation();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (data && data.trucks?.nodes?.length) {
+    if (data?.me?.trucks && data?.me?.trucks?.length > 0) {
       init();
     }
 
@@ -34,7 +33,7 @@ const useFeedLocation = () => {
         accuracy: Location.Accuracy.Balanced,
       });
 
-      const trucks = data?.trucks?.nodes || [];
+      const trucks = data?.me?.trucks?.filter((i) => i.verified) || [];
 
       for (let i = 0; i < trucks.length; i++) {
         await feedLocation({

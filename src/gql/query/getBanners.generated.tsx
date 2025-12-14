@@ -6,54 +6,25 @@ import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type GetBannersQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']['input']>;
-  after?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  before?: Types.InputMaybe<Types.Scalars['String']['input']>;
-  last?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   filter?: Types.InputMaybe<Types.BannerFilter>;
   sort?: Types.InputMaybe<Types.SortFilter>;
 }>;
 
 
-export type GetBannersQuery = { __typename?: 'Query', banners: { __typename?: 'BannerConnection', totalCount: number, nodes: Array<{ __typename?: 'Banner', id: string, category?: string, image?: string, permalink?: string, position: number, status: string, data?: any, createdAt: any, updatedAt: any, imageObject?: { __typename?: 'ImageObject', id: string, url: string, fileName: string, recordId: number, recordType: string } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } };
+export type GetBannersQuery = { __typename?: 'Query', banners: { __typename?: 'BannerConnection', totalCount: number, nodes: Array<{ __typename?: 'Banner', id: string, image?: string, permalink?: string, position: number }> } };
 
 
 export const GetBannersDocument = gql`
-    query GetBanners($first: Int, $after: String, $before: String, $last: Int, $offset: Int, $filter: BannerFilter, $sort: SortFilter) {
-  banners(
-    first: $first
-    after: $after
-    before: $before
-    last: $last
-    offset: $offset
-    filter: $filter
-    sort: $sort
-  ) {
+    query GetBanners($first: Int, $offset: Int, $filter: BannerFilter, $sort: SortFilter) {
+  banners(first: $first, offset: $offset, filter: $filter, sort: $sort) {
+    totalCount
     nodes {
       id
-      category
       image
-      imageObject {
-        id
-        url
-        fileName
-        recordId
-        recordType
-      }
       permalink
       position
-      status
-      data
-      createdAt
-      updatedAt
     }
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
-    }
-    totalCount
   }
 }
     `;
@@ -71,9 +42,6 @@ export const GetBannersDocument = gql`
  * const { data, loading, error } = useGetBannersQuery({
  *   variables: {
  *      first: // value for 'first'
- *      after: // value for 'after'
- *      before: // value for 'before'
- *      last: // value for 'last'
  *      offset: // value for 'offset'
  *      filter: // value for 'filter'
  *      sort: // value for 'sort'

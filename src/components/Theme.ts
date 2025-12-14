@@ -33,6 +33,8 @@ export const theme = createTheme({
     error: '#DC2626',
     success: '#52C41A',
     warning: '#FAAD14',
+    yellow: '#FAAD14',
+    yellowLight: '#ffde9c',
   },
   gradients: {
     primary: ['#003A91', '#1265FF'] as const,

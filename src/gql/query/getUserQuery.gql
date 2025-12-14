@@ -9,15 +9,13 @@ query GetUser {
     nickName
     registerNum
     role
-    roles {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-    isAdmin
     subscribed
-    createdAt
-    updatedAt
+    verified
+    verifiedAt
+    trucks {
+      id
+      verified
+      verifiedAt
+    }
   }
 }

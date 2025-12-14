@@ -1,0 +1,17 @@
+mutation VerifyDriver(
+  $driverLicense: Upload!
+  $passport: Upload!
+  $passportBack: Upload!
+  $selfie: Upload!
+) {
+  verifyDriver(
+    input: {
+      driverLicense: $driverLicense
+      passport: $passport
+      passportBack: $passportBack
+      selfie: $selfie
+    }
+  ) {
+    id
+  }
+}

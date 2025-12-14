@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 
@@ -10,16 +10,14 @@ import {
   Container,
   Content,
   CustomKeyboardAvoidingView,
+  GroupedSelect,
   Input,
   MessageModal,
   NormalHeader,
-  Select,
 } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
 import { useVerifyRequestMutation } from '@/gql/mutations/verifyRequestMutation.generated';
-import { useGetMarksQuery } from '@/gql/query/getMarks.generated';
-import { useGetModelsQuery } from '@/gql/query/getModels.generated';
 import { useGetTaxonsQuery } from '@/gql/query/getTaxonsQuery.generated';
 import { useAppSelector } from '@/redux/hooks';
 import { imagesToFiles } from '@/utils/fileHelpers';
@@ -27,8 +25,8 @@ import ImageButton from './ImageButton';
 import Images from './Images';
 
 const schema = yup.object().shape({
-  markId: yup.string().required('Энэ талбар хоосон байна!'),
-  modelId: yup.string().required('Энэ талбар хоосон байна!'),
+  mark: yup.string().required('Энэ талбар хоосон байна!'),
+  model: yup.string().required('Энэ талбар хоосон байна!'),
   taxonId: yup.string().required('Энэ талбар хоосон байна!'),
   plateNumber: yup
     .string()
@@ -47,7 +45,6 @@ const AddTruckScreen = () => {
   const theme = useTheme();
   const router = useRouter();
   const [successModal, setSuccessModal] = useState(false);
-  const { data: marksData } = useGetMarksQuery();
   const { data: taxonsData } = useGetTaxonsQuery();
   const [images, setImages] = useState<string[]>([]);
 
@@ -58,12 +55,11 @@ const AddTruckScreen = () => {
     touched,
     handleBlur,
     handleChange,
-    setFieldValue,
     isSubmitting,
   } = useFormik({
     initialValues: {
-      markId: '',
-      modelId: '',
+      mark: '',
+      model: '',
       plateNumber: '',
       taxonId: '',
     },
@@ -82,8 +78,8 @@ const AddTruckScreen = () => {
       const { data } = await createTruck({
         variables: {
           taxonId: values.taxonId,
-          markId: values.markId,
-          modelId: values.modelId,
+          mark: values.mark,
+          model: values.model,
           userId: user!.id,
           plateNumber: values.plateNumber,
         },
@@ -99,15 +95,6 @@ const AddTruckScreen = () => {
     },
   });
 
-  const { data: modelsData } = useGetModelsQuery({
-    variables: { markId: values.markId },
-    skip: values.markId === '',
-  });
-
-  useEffect(() => {
-    setFieldValue('modelId', '');
-  }, [values.markId]);
-
   return (
     <>
       <Container>
@@ -115,16 +102,34 @@ const AddTruckScreen = () => {
           <NormalHeader title="Машин нэмэх" hasBack />
           <Content edges={[]}>
             <Box gap="m">
-              <Select
+              <GroupedSelect
                 placeholder="Машин төрөл"
-                options={
-                  taxonsData?.taxons?.edges?.map(i => {
-                    return {
-                      label: i?.node?.name || '',
-                      value: i?.node?.id || '',
-                    };
-                  }) || []
-                }
+                options={[
+                  {
+                    title: 'Ачааны машин',
+                    options:
+                      taxonsData?.taxons?.edges
+                        ?.filter(i => i?.node?.code === 'delivery')
+                        .map(i => {
+                          return {
+                            label: i?.node?.name || '',
+                            value: i?.node?.id || '',
+                          };
+                        }) || [],
+                  },
+                  {
+                    title: 'Техник түрээс',
+                    options:
+                      taxonsData?.taxons?.edges
+                        ?.filter(i => i?.node?.code === 'rent')
+                        .map(i => {
+                          return {
+                            label: i?.node?.name || '',
+                            value: i?.node?.id || '',
+                          };
+                        }) || [],
+                  },
+                ]}
                 setSelectedOption={handleChange('taxonId')}
                 selectedOption={
                   taxonsData?.taxons?.edges?.find(
@@ -135,40 +140,19 @@ const AddTruckScreen = () => {
                   touched.taxonId && errors.taxonId ? errors.taxonId : undefined
                 }
               />
-              <Select
+              <Input
                 placeholder="Марк"
-                setSelectedOption={handleChange('markId')}
-                options={
-                  marksData?.marks.nodes.map(mark => ({
-                    value: mark.id,
-                    label: mark.name,
-                  })) || []
-                }
-                selectedOption={
-                  marksData?.marks.nodes.find(mark => mark.id === values.markId)
-                    ?.name || ''
-                }
-                error={
-                  touched.markId && errors.markId ? errors.markId : undefined
-                }
+                value={values.mark}
+                onBlur={handleBlur('mark')}
+                onChangeText={handleChange('mark')}
+                error={touched.mark && errors.mark ? errors.mark : undefined}
               />
-              <Select
+              <Input
                 placeholder="Модел"
-                setSelectedOption={handleChange('modelId')}
-                options={
-                  modelsData?.models.nodes.map(model => ({
-                    value: model.id,
-                    label: model.name,
-                  })) || []
-                }
-                selectedOption={
-                  modelsData?.models.nodes.find(
-                    model => model.id === values.modelId
-                  )?.name || ''
-                }
-                error={
-                  touched.modelId && errors.modelId ? errors.modelId : undefined
-                }
+                value={values.model}
+                onBlur={handleBlur('model')}
+                onChangeText={handleChange('model')}
+                error={touched.model && errors.model ? errors.model : undefined}
               />
               <Input
                 placeholder="Машины дугаар УНА0123"

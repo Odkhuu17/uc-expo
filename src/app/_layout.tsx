@@ -22,14 +22,6 @@ import { theme } from '@/components/Theme';
 import Navigations from '@/Navigations';
 import { persistor, store } from '@/redux/store.instance';
 
-
-// SplashScreen.setOptions({
-//   duration: 1000,
-//   fade: true,
-// });
-
-// SplashScreen.preventAutoHideAsync();
-
 export const unstable_settings = {
   initialRouteName: 'index',
 };
@@ -44,8 +36,6 @@ export default function RootLayout() {
     Roboto_700Bold_Italic,
   });
 
-
-
   if (!fontsLoaded) {
     return null;
   }
@@ -58,12 +48,7 @@ export default function RootLayout() {
             <PersistGate loading={null} persistor={persistor}>
               <ThemeProvider theme={theme}>
                 <BottomSheetModalProvider>
-                  {/* <InstantSearch
-                    indexName="supp_tracks"
-                    searchClient={searchClient}
-                  > */}
                   <Navigations />
-                  {/* </InstantSearch> */}
                   <StatusBar style="auto" />
                 </BottomSheetModalProvider>
               </ThemeProvider>

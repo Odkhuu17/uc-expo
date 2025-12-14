@@ -3,6 +3,8 @@ mutation createTruck(
   $plateNumber: String
   $serial: String
   $weight: Int
+  $mark: String
+  $model: String
   $netWeight: Int
   $importedDate: ISO8601DateTime
   $manufacturedDate: ISO8601DateTime
@@ -18,28 +20,10 @@ mutation createTruck(
       importedDate: $importedDate
       manufacturedDate: $manufacturedDate
       taxonId: $taxonId
+      mark: $mark
+      model: $model
     }
   ) {
     id
-    plateNumber
-    serial
-    weight
-    netWeight
-    importedDate
-    manufacturedDate
-    user {
-      id
-      email
-      firstName
-      lastName
-    }
-    currentTrack {
-      id
-      latitude
-      longitude
-      createdAt
-    }
-    createdAt
-    updatedAt
   }
 }

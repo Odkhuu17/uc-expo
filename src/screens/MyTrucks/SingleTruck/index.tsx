@@ -2,7 +2,7 @@ import { useTheme } from '@shopify/restyle';
 import { Trash, Truck } from 'iconsax-react-nativejs';
 import { Alert } from 'react-native';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, IconButton, Label } from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { useDestroyTruckMutation } from '@/gql/mutations/destroyTruckMutation.generated';
 import { GetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
@@ -47,16 +47,9 @@ const SingleTruck = ({ item }: Props) => {
             <Text fontFamily="Roboto_500Medium" color="baseBlue">
               {item?.plateNumber}
             </Text>
-            {item?.verified && (
-              <Box backgroundColor="green" px="s" py="xs2" borderRadius="xs">
-                <Text variant="body3" color="white">
-                  Баталгаажсан
-                </Text>
-              </Box>
-            )}
             <Text variant="body2">{item?.taxon?.name}</Text>
-            <Text variant="body2">{item?.mark?.name}</Text>
-            <Text variant="body2">{item?.model?.name}</Text>
+            <Text variant="body2">{item?.mark}</Text>
+            <Text variant="body2">{item?.model}</Text>
           </Box>
         </Box>
         <IconButton
@@ -64,6 +57,14 @@ const SingleTruck = ({ item }: Props) => {
           backgroundColor="white"
           loading={loading}
           onPress={onPressDelete}
+        />
+      </Box>
+      <Box alignItems="flex-end">
+        <Label
+          text={
+            item?.verified ? 'Баталгаажсан' : 'Баталгаажуулалт хүлээгдэж байна'
+          }
+          backgroundColor={item.verified ? 'success' : 'warning'}
         />
       </Box>
       {!item?.verified &&

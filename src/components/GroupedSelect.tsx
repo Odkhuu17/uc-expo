@@ -14,7 +14,7 @@ interface Props<G = any> {
   width?: ViewStyle['width'];
   error?: string;
   icon?: IconType;
-  options: { value: G; label: string }[];
+  options: { title: string; options: { value: G; label: string }[] }[];
   setSelectedOption: (value: G) => void;
   selectedOption?: G;
   placeholder: string;
@@ -79,37 +79,49 @@ function Select({
       </Pressable>
       <CustomBottomSheetModal ref={ref}>
         <BottomSheetScrollView>
-          <Text variant="label" textAlign="center" mb="m">
-            {placeholder}
-          </Text>
           <Box px="m" gap="s">
-            {options.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                onPress={() => {
-                  ref.current?.dismiss();
-                  setSelectedOption(option.value);
-                }}
-              >
-                <Box
-                  justifyContent="space-between"
-                  flexDirection="row"
-                  alignItems="center"
-                  backgroundColor="grey3"
-                  borderRadius="xl"
-                  py="s"
-                  px="m"
-                >
-                  <Text key={option.value}>{option.label}</Text>
-                  {option.value === selectedOption && (
-                    <TickCircle
-                      size={theme.icon.m}
-                      color={theme.colors.baseBlue}
-                    />
-                  )}
+            {options.map(option => {
+              return (
+                <Box gap="s">
+                  <Text
+                    textAlign="center"
+                    fontFamily="Roboto_500Medium"
+                    variant="body2"
+                  >
+                    {option.title}
+                  </Text>
+                  {option?.options.map(o => {
+                    return (
+                      <TouchableOpacity
+                        key={o.value}
+                        onPress={() => {
+                          ref.current?.dismiss();
+                          setSelectedOption(o.value);
+                        }}
+                      >
+                        <Box
+                          justifyContent="space-between"
+                          flexDirection="row"
+                          alignItems="center"
+                          backgroundColor="grey3"
+                          borderRadius="xl"
+                          py="s"
+                          px="m"
+                        >
+                          <Text key={o.value}>{o.label}</Text>
+                          {o.value === selectedOption && (
+                            <TickCircle
+                              size={theme.icon.m}
+                              color={theme.colors.baseBlue}
+                            />
+                          )}
+                        </Box>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </Box>
-              </TouchableOpacity>
-            ))}
+              );
+            })}
           </Box>
         </BottomSheetScrollView>
       </CustomBottomSheetModal>

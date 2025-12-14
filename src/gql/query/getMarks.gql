@@ -1,9 +1,0 @@
-query GetMarks {
-  marks {
-    nodes {
-      id
-      name
-      code
-    }
-  }
-}
