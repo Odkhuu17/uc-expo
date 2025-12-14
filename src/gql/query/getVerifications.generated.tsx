@@ -13,7 +13,7 @@ export type GetVerificationsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetVerificationsQuery = { __typename?: 'Query', verifications: { __typename?: 'VerificationConnection', totalCount: number, edges: Array<{ __typename?: 'VerificationEdge', cursor: string, node?: { __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, userId: string, images?: Array<string>, createdAt: any, updatedAt: any, imageObjects?: Array<{ __typename?: 'ImageObject', id: string, url: string, fileName: string, recordId: number, recordType: string }>, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, respondedBy?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string } } }>, nodes: Array<{ __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } };
+export type GetVerificationsQuery = { __typename?: 'Query', verifications: { __typename?: 'VerificationConnection', totalCount: number, edges: Array<{ __typename?: 'VerificationEdge', cursor: string, node?: { __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, userId: string, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, respondedBy?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string } } }>, nodes: Array<{ __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } };
 
 
 export const GetVerificationsDocument = gql`
@@ -39,14 +39,6 @@ export const GetVerificationsDocument = gql`
         field4
         field5
         userId
-        images
-        imageObjects {
-          id
-          url
-          fileName
-          recordId
-          recordType
-        }
         user {
           id
           firstName

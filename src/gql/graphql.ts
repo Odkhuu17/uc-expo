@@ -507,6 +507,7 @@ export type Mutation = {
   updateUser?: Maybe<User>;
   verifyDriver?: Maybe<Verification>;
   verifyRequest?: Maybe<Verification>;
+  verifyTruck?: Maybe<Verification>;
 };
 
 
@@ -812,6 +813,11 @@ export type MutationVerifyDriverArgs = {
 
 export type MutationVerifyRequestArgs = {
   input: VerifyRequestInput;
+};
+
+
+export type MutationVerifyTruckArgs = {
+  input: VerifyTruckInput;
 };
 
 export type Node = {
@@ -1733,6 +1739,7 @@ export type Truck = BaseModelInterface & {
   createdAt: Scalars['ISO8601DateTime']['output'];
   currentTrack?: Maybe<TruckTrack>;
   id: Scalars['ID']['output'];
+  images: Array<Scalars['String']['output']>;
   importedDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
   manufacturedDate?: Maybe<Scalars['ISO8601DateTime']['output']>;
   mark?: Maybe<Scalars['String']['output']>;
@@ -2019,9 +2026,10 @@ export type Verification = BaseModelInterface & {
   field4?: Maybe<Scalars['String']['output']>;
   field5?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  imageObjects?: Maybe<Array<ImageObject>>;
-  images?: Maybe<Array<Scalars['String']['output']>>;
+  passport?: Maybe<Scalars['String']['output']>;
+  passportBack?: Maybe<Scalars['String']['output']>;
   respondedBy?: Maybe<User>;
+  selfie?: Maybe<Scalars['String']['output']>;
   status: Scalars['String']['output'];
   targetId: Scalars['ID']['output'];
   targetType: Scalars['String']['output'];
@@ -2302,6 +2310,7 @@ export type CreateUserInput = {
   mobile: Scalars['String']['input'];
   nickName?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
+  registerNum?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DestroyAddressInput = {
@@ -2584,6 +2593,7 @@ export type UpdateTaxonInput = {
 export type UpdateTruckInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   importedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   manufacturedDate?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   mark?: InputMaybe<Scalars['String']['input']>;
@@ -2608,7 +2618,6 @@ export type UpdateUserInput = {
 
 export type VerifyDriverInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  driverLicense: Scalars['Upload']['input'];
   passport: Scalars['Upload']['input'];
   passportBack: Scalars['Upload']['input'];
   selfie: Scalars['Upload']['input'];
@@ -2620,4 +2629,10 @@ export type VerifyRequestInput = {
   images: Array<Scalars['Upload']['input']>;
   kind: Scalars['String']['input'];
   targetId: Scalars['ID']['input'];
+};
+
+export type VerifyTruckInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  passport: Scalars['Upload']['input'];
+  truckId?: InputMaybe<Scalars['ID']['input']>;
 };

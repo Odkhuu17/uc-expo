@@ -44,7 +44,7 @@ const ProfileScreen = () => {
                 onPress={() => router.navigate('/profile/orders')}
               />
             )}
-            {user?.role !== 'driver' && !hasVerifiedTruck ? (
+            {user?.role === 'driver' && !hasVerifiedTruck ? (
               <Box gap="s">
                 <Warning description="Танд бүртгэлтэй машин байхгүй байна! Та машин нэмсний дараагаар манай системийг ашиглах боломжтой." />
                 <Button

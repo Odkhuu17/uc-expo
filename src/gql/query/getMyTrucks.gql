@@ -32,14 +32,6 @@ query GetMyTrucks {
             field3
             field4
             field5
-            # images
-            # imageObjects {
-            #   id
-            #   url
-            #   fileName
-            #   recordId
-            #   recordType
-            # }
             createdAt
             updatedAt
           }

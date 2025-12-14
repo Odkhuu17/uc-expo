@@ -54,7 +54,7 @@ const SingleOrder = ({ item }: Props) => {
           <BoxContainer p={undefined} overflow="hidden">
             <Box alignItems="flex-end" pt="s" pr="s">
               <Label
-                text={isRent ? 'Техник түрээс' : 'Ачаа тээвэрлэлт'}
+                text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
                 backgroundColor={isRent ? 'yellow' : 'baseBlue'}
               />
             </Box>

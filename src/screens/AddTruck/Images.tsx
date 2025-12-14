@@ -7,8 +7,8 @@ import { IconButton } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 
 interface Props {
-  images: string[];
-  setImages: Dispatch<SetStateAction<string[]>>;
+  image: string | null;
+  setImage: Dispatch<SetStateAction<string | null>>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Images = ({ images, setImages }: Props) => {
+const Images = ({ image, setImage }: Props) => {
   const styles = useStyles();
   const theme = useTheme();
 
@@ -31,9 +31,8 @@ const Images = ({ images, setImages }: Props) => {
       horizontal
       contentContainerStyle={styles.scrollView}
     >
-      {images.map((image, index) => (
+      {image && (
         <Box
-          key={index}
           borderWidth={1}
           borderRadius="m"
           borderColor="border"
@@ -50,14 +49,12 @@ const Images = ({ images, setImages }: Props) => {
               color="white"
               backgroundColor="backdrop"
               onPress={() => {
-                setImages(prevImages =>
-                  prevImages.filter((_, i) => i !== index)
-                );
+                setImage(null);
               }}
             />
           </Box>
         </Box>
-      ))}
+      )}
     </ScrollView>
   );
 };

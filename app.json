@@ -11,23 +11,30 @@
     "ios": {
       "bundleIdentifier": "com.unlimitedcarrier.ucexpo",
       "supportsTablet": true,
-      "associatedDomains": [
-        "qpaywallet://",
-        "khanbank://",
-        "statebankmongolia://",
-        "xacbank://",
-        "tdbbank://",
-        "socialpay-payment://"
-      ],
       "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": ["remote-notification"],
+        "LSApplicationQueriesSchemes": [
+          "qpaywallet",
+          "khanbank",
+          "statebankmongolia",
+          "xacbank",
+          "tdbbank",
+          "socialpay-payment",
+          "most",
+          "nibank",
+          "ckbank",
+          "capitronbank",
+          "bogdbank",
+          "transbank",
+          "mbank",
+          "ard",
+          "toki",
+          "arig",
+          "Monpay",
+          "hipay",
+          "tdbwallet"
+        ]
       }
-      // "entitlements": {
-      //   "aps-environment": "development",
-      //   "com.apple.security.application-groups": [
-      //     "group.com.unlimitedcarrier.ucexpo.onesignal"
-      //   ]
-      // }
     },
     "android": {
       "adaptiveIcon": {
@@ -42,16 +49,18 @@
       "favicon": "./assets/images/app-icon.png"
     },
     "plugins": [
-      // [
-      //   "onesignal-expo-plugin",
-      //   {
-      //     "mode": "development"
-      //   }
-      // ],
       [
         "expo-router",
         {
           "root": "./src/app"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": true
         }
       ],
       [

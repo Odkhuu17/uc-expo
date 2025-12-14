@@ -22,10 +22,7 @@ const schema = yup.object().shape({
     .string()
     .required('Энэ талбар хоосон байна!')
     .length(8, 'Утасны дугаар 8 оронтой байна'),
-  password: yup
-    .string()
-    .required('Энэ талбар хоосон байна!')
-    .min(6, '6-аас дээш тэмдэгт оруулна уу!'),
+  password: yup.string().required('Энэ талбар хоосон байна!'),
 });
 
 const LoginScreen = () => {

@@ -7,10 +7,10 @@ import { Alert, TouchableOpacity } from 'react-native';
 import { Box } from '@/components/Theme';
 
 interface Props {
-  setImages: Dispatch<SetStateAction<string[]>>;
+  setImage: Dispatch<SetStateAction<string | null>>;
 }
 
-const ImageButton = ({ setImages }: Props) => {
+const ImageButton = ({ setImage }: Props) => {
   const theme = useTheme();
   const onPickImage = async () => {
     const permissionResult =
@@ -32,7 +32,7 @@ const ImageButton = ({ setImages }: Props) => {
     });
 
     if (!result.canceled) {
-      setImages(prevImages => [...prevImages, result.assets[0].uri]);
+      setImage(result.assets[0].uri);
     }
   };
 

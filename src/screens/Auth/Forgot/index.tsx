@@ -16,12 +16,10 @@ const ForgotScreen = () => {
 
   const renderContent = () => {
     switch (step) {
-      case 1:
-        return <Step1 setStep={setStep} setPhoneNumber={setPhoneNumber} />;
       case 2:
         return <Step2 phoneNumber={phoneNumber} />;
       default:
-        return null;
+        return <Step1 setStep={setStep} setPhoneNumber={setPhoneNumber} />;
     }
   };
 

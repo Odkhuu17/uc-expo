@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 
 import {
-  BoxContainer,
   Button,
   Container,
   Content,
@@ -15,38 +14,31 @@ import {
   MessageModal,
   NormalHeader,
 } from '@/components';
-import { Box, Text, useTheme } from '@/components/Theme';
+import { Box, useTheme } from '@/components/Theme';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
-import { useVerifyRequestMutation } from '@/gql/mutations/verifyRequestMutation.generated';
+import { useVerifyTruckMutation } from '@/gql/mutations/verifyTruckMutation.generated';
 import { useGetTaxonsQuery } from '@/gql/query/getTaxonsQuery.generated';
 import { useAppSelector } from '@/redux/hooks';
-import { imagesToFiles } from '@/utils/fileHelpers';
-import ImageButton from './ImageButton';
-import Images from './Images';
+import { imageToFile } from '@/utils/fileHelpers';
+import ImageInput from './ImageInput';
 
 const schema = yup.object().shape({
   mark: yup.string().required('Энэ талбар хоосон байна!'),
   model: yup.string().required('Энэ талбар хоосон байна!'),
   taxonId: yup.string().required('Энэ талбар хоосон байна!'),
-  plateNumber: yup
-    .string()
-    .required('Энэ талбар хоосон байна!')
-    .matches(
-      /^[А-Я]{3}\d{4}$/,
-      'Дугаар нь А-Я (3 үсэг) + 0-9 (4 тоо) байх ёстой (жишээ: УНА0123)'
-    ),
+  plateNumber: yup.string().required('Энэ талбар хоосон байна!'),
 });
 
 const AddTruckScreen = () => {
   const { user } = useAppSelector(state => state.auth);
   const [createTruck] = useCreateTruckMutation();
-  const [verifyRequest] = useVerifyRequestMutation();
+  const [verifyTruck] = useVerifyTruckMutation();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
   const [successModal, setSuccessModal] = useState(false);
   const { data: taxonsData } = useGetTaxonsQuery();
-  const [images, setImages] = useState<string[]>([]);
+  const [passport, setPassport] = useState<string | null>(null);
 
   const {
     handleSubmit,
@@ -65,7 +57,7 @@ const AddTruckScreen = () => {
     },
     validationSchema: schema,
     onSubmit: async () => {
-      if (images.length === 0) {
+      if (!passport) {
         return router.navigate({
           pathname: '/modal',
           params: {
@@ -85,13 +77,24 @@ const AddTruckScreen = () => {
         },
       });
 
-      await verifyRequest({
+      const { data: verifyData } = await verifyTruck({
         variables: {
-          images: imagesToFiles(images),
-          kind: 'truck',
-          targetId: data?.createTruck?.id || '',
+          passport: imageToFile(passport),
+          truckId: data?.createTruck?.id || '',
         },
       });
+
+      if (verifyData?.verifyTruck?.status === 'rejected') {
+        return router.navigate({
+          pathname: '/modal',
+          params: {
+            type: 'error',
+            message:
+              verifyData?.verifyTruck?.field5 ||
+              'Баталгаажуулалт амжилтгүй боллоо',
+          },
+        });
+      }
     },
   });
 
@@ -157,6 +160,7 @@ const AddTruckScreen = () => {
               <Input
                 placeholder="Машины дугаар УНА0123"
                 value={values.plateNumber}
+                autoCapitalize="characters"
                 onBlur={handleBlur('plateNumber')}
                 onChangeText={handleChange('plateNumber')}
                 error={
@@ -165,20 +169,11 @@ const AddTruckScreen = () => {
                     : undefined
                 }
               />
-              <BoxContainer gap="m">
-                <Text
-                  variant="body1"
-                  color="baseBlue"
-                  fontFamily="Roboto_500Medium"
-                  flex={1}
-                >
-                  Машины гэрчилгээ болон холбогдох зургууд
-                </Text>
-                <Box flexDirection="row" gap="m">
-                  <ImageButton setImages={setImages} />
-                  <Images images={images} setImages={setImages} />
-                </Box>
-              </BoxContainer>
+              <ImageInput
+                label="Машины гэрчилгээ"
+                image={passport}
+                setImage={setPassport}
+              />
             </Box>
           </Content>
           <Box

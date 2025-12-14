@@ -26,14 +26,6 @@ query GetVerifications(
         field4
         field5
         userId
-        images
-        imageObjects {
-          id
-          url
-          fileName
-          recordId
-          recordType
-        }
         user {
           id
           firstName

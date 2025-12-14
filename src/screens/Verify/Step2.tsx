@@ -1,35 +1,20 @@
 import { Dispatch, SetStateAction } from 'react';
-
-import { Box } from '@/components/Theme';
 import { ImageInput } from './components';
 
 interface Props {
-  passportFront: string | null;
-  setPassportFront: Dispatch<SetStateAction<string | null>>;
-  passportBack: string | null;
-  setPassportBack: Dispatch<SetStateAction<string | null>>;
+  selfie: string | null;
+  setSelfie: Dispatch<SetStateAction<string | null>>;
 }
 
-const Step2 = ({
-  passportFront,
-  setPassportFront,
-  passportBack,
-  setPassportBack,
-}: Props) => {
+const Step3 = ({ selfie, setSelfie }: Props) => {
   return (
-    <Box gap="m">
-      <ImageInput
-        image={passportFront}
-        setImage={setPassportFront}
-        label="Иргэний үнэмлэхний зураг (Урд тал)"
-      />
-      <ImageInput
-        image={passportBack}
-        setImage={setPassportBack}
-        label="Иргэний үнэмлэхний зураг (Ар тал)"
-      />
-    </Box>
+    <ImageInput
+      image={selfie}
+      setImage={setSelfie}
+      label="Өөрийн зураг"
+      onlyCamera
+    />
   );
 };
 
-export default Step2;
+export default Step3;

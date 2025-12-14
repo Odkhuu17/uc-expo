@@ -6,6 +6,15 @@ import { Platform } from 'react-native';
 import { useLinkDeviceMutation } from '@/gql/mutations/linkDeviceMutation.generated';
 import { useAppSelector } from '@/redux/hooks';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
 const useLinkDevice = () => {
   const { user } = useAppSelector(state => state.auth);
   const [linkDevice] = useLinkDeviceMutation();

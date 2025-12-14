@@ -1,4 +1,3 @@
-import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { Call } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
@@ -6,7 +5,7 @@ import * as yup from 'yup';
 
 import { Button } from '@/components';
 import Input from '@/components/Input';
-import { useAuthCheckLoginMutation } from '@/gql/auth/authCheckLogin.generated';
+import { useSendOtpMutation } from '@/gql/mutations/sendOtp.generated';
 
 interface Props {
   setPhoneNumber: Dispatch<SetStateAction<string>>;
@@ -18,8 +17,7 @@ const schema = yup.object().shape({
 });
 
 const Step1 = ({ setStep, setPhoneNumber }: Props) => {
-  const [authCheckLogin, { loading }] = useAuthCheckLoginMutation();
-  const router = useRouter();
+  const [sendOtp, { loading }] = useSendOtpMutation();
 
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({
@@ -28,24 +26,13 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
       },
       validationSchema: schema,
       onSubmit: async () => {
-        authCheckLogin({
+        sendOtp({
           variables: {
             login: values.login,
-            sendToken: true,
           },
-        }).then(({ data }) => {
-          if (!data?.exists.exists) {
-            router.push({
-              pathname: '/modal',
-              params: {
-                type: 'error',
-                message: 'Та бүртгэлгүй байна.',
-              },
-            });
-          } else {
-            setStep(2);
-            setPhoneNumber(values.login);
-          }
+        }).then(() => {
+          setStep(2);
+          setPhoneNumber(values.login);
         });
       },
     });

@@ -11,7 +11,7 @@ export type VerifyRequestMutationVariables = Types.Exact<{
 }>;
 
 
-export type VerifyRequestMutation = { __typename?: 'Mutation', verifyRequest?: { __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, userId: string, images?: Array<string>, createdAt: any, updatedAt: any, imageObjects?: Array<{ __typename?: 'ImageObject', id: string, url: string, fileName: string, recordId: number, recordType: string }>, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, respondedBy?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string } } };
+export type VerifyRequestMutation = { __typename?: 'Mutation', verifyRequest?: { __typename?: 'Verification', id: string, status: string, targetId: string, targetType: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, userId: string, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string }, respondedBy?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, nickName?: string, mobile?: string, email?: string } } };
 
 
 export const VerifyRequestDocument = gql`
@@ -28,14 +28,6 @@ export const VerifyRequestDocument = gql`
     field4
     field5
     userId
-    images
-    imageObjects {
-      id
-      url
-      fileName
-      recordId
-      recordType
-    }
     user {
       id
       firstName

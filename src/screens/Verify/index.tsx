@@ -8,13 +8,11 @@ import { useVerifyDriverMutation } from '@/gql/mutations/verifyDriverMutation.ge
 import { imageToFile } from '@/utils/fileHelpers';
 import Step1 from './Step1';
 import Step2 from './Step2';
-import Step3 from './Step3';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const VerifyScreen = () => {
   const [step, setStep] = useState(1);
-  const [driverLicense, setDriverLicense] = useState<string | null>(null);
   const [passportFront, setPassportFront] = useState<string | null>(null);
   const [passportBack, setPassportBack] = useState<string | null>(null);
   const [selfie, setSelfie] = useState<string | null>(null);
@@ -26,8 +24,14 @@ const VerifyScreen = () => {
     switch (step) {
       case 2:
         return (
+          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
+            <Step2 selfie={selfie} setSelfie={setSelfie} />
+          </AnimatedBox>
+        );
+      default:
+        return (
           <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
-            <Step2
+            <Step1
               passportFront={passportFront}
               setPassportFront={setPassportFront}
               passportBack={passportBack}
@@ -35,38 +39,11 @@ const VerifyScreen = () => {
             />
           </AnimatedBox>
         );
-      case 3:
-        return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-            <Step3 selfie={selfie} setSelfie={setSelfie} />
-          </AnimatedBox>
-        );
-      default:
-        return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={1} flex={1}>
-            <Step1
-              driverLicense={driverLicense}
-              setDriverLicense={setDriverLicense}
-            />
-          </AnimatedBox>
-        );
     }
   };
 
-  const onPressNext = () => {
+  const onPressNext = async () => {
     if (step === 1) {
-      if (!driverLicense) {
-        return router.navigate({
-          pathname: '/modal',
-          params: {
-            type: 'error',
-            message: 'Та жолооны үнэмлэхний зургаа оруулна уу',
-          },
-        });
-      }
-
-      setStep(2);
-    } else if (step === 2) {
       if (!passportFront || !passportBack) {
         return router.navigate({
           pathname: '/modal',
@@ -77,7 +54,7 @@ const VerifyScreen = () => {
         });
       }
 
-      setStep(3);
+      setStep(2);
     } else {
       if (!selfie) {
         return router.navigate({
@@ -88,19 +65,30 @@ const VerifyScreen = () => {
           },
         });
       }
-      const driverLicenseImage = imageToFile(driverLicense!);
       const passportFrontImage = imageToFile(passportFront!);
       const passportBackImage = imageToFile(passportBack!);
       const selfieImage = imageToFile(selfie!);
 
-      verifyDriver({
+      const { data } = await verifyDriver({
         variables: {
-          driverLicense: driverLicenseImage,
           passport: passportFrontImage,
           passportBack: passportBackImage,
           selfie: selfieImage,
         },
       });
+
+      if (data?.verifyDriver?.status === 'rejected') {
+        return router.navigate({
+          pathname: '/modal',
+          params: {
+            type: 'error',
+            message:
+              data.verifyDriver.field5 || 'Баталгаажуулалт амжилтгүй боллоо',
+          },
+        });
+      } else {
+        router.replace('/profile');
+      }
     }
   };
 

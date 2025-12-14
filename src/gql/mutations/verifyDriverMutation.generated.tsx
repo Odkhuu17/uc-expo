@@ -5,22 +5,23 @@ import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type VerifyDriverMutationVariables = Types.Exact<{
-  driverLicense: Types.Scalars['Upload']['input'];
   passport: Types.Scalars['Upload']['input'];
   passportBack: Types.Scalars['Upload']['input'];
   selfie: Types.Scalars['Upload']['input'];
 }>;
 
 
-export type VerifyDriverMutation = { __typename?: 'Mutation', verifyDriver?: { __typename?: 'Verification', id: string } };
+export type VerifyDriverMutation = { __typename?: 'Mutation', verifyDriver?: { __typename?: 'Verification', id: string, status: string, field5?: string } };
 
 
 export const VerifyDriverDocument = gql`
-    mutation VerifyDriver($driverLicense: Upload!, $passport: Upload!, $passportBack: Upload!, $selfie: Upload!) {
+    mutation VerifyDriver($passport: Upload!, $passportBack: Upload!, $selfie: Upload!) {
   verifyDriver(
-    input: {driverLicense: $driverLicense, passport: $passport, passportBack: $passportBack, selfie: $selfie}
+    input: {passport: $passport, passportBack: $passportBack, selfie: $selfie}
   ) {
     id
+    status
+    field5
   }
 }
     `;
@@ -39,7 +40,6 @@ export type VerifyDriverMutationFn = ApolloReactCommon.MutationFunction<VerifyDr
  * @example
  * const [verifyDriverMutation, { data, loading, error }] = useVerifyDriverMutation({
  *   variables: {
- *      driverLicense: // value for 'driverLicense'
  *      passport: // value for 'passport'
  *      passportBack: // value for 'passportBack'
  *      selfie: // value for 'selfie'
