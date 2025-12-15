@@ -12,9 +12,11 @@ import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/query/getOrders.generated';
+import { useAppSelector } from '@/redux/hooks';
 import Banners from './Banners';
 
 const DriverOrdersScreen = () => {
+  const { mode } = useAppSelector(state => state.general);
   const [isRefetching, setIsRefetching] = useState(false);
 
   const { data, loading, fetchMore, refetch } = useGetOrdersQuery({
@@ -78,7 +80,10 @@ const DriverOrdersScreen = () => {
 
   return (
     <Container>
-      <NormalHeader title="Захиалгууд" hasBack />
+      <NormalHeader
+        title="Захиалгууд"
+        hasBack={mode === 'driver' ? false : true}
+      />
       <CustomFlatList
         ListHeaderComponent={<Banners />}
         data={orders}
