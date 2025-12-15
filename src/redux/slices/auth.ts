@@ -4,7 +4,7 @@ import { GetUserQuery } from '@/gql/query/getUserQuery.generated';
 
 export interface IAuthReduxState {
   isAuthenticated: boolean;
-  user?: GetUserQuery['me'];
+  user?: GetUserQuery['me'] & { verifyStatus?: string };
 }
 
 const initialState: IAuthReduxState = {

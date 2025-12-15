@@ -11,6 +11,7 @@ export type AuthRegisterMutationVariables = Types.Exact<{
   firstName: Types.Scalars['String']['input'];
   lastName: Types.Scalars['String']['input'];
   role: Types.Scalars['String']['input'];
+  registerNum?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
@@ -18,9 +19,9 @@ export type AuthRegisterMutation = { __typename?: 'Mutation', valid?: { __typena
 
 
 export const AuthRegisterDocument = gql`
-    mutation authRegister($login: String!, $token: String!, $password: String!, $firstName: String!, $lastName: String!, $role: String!) {
+    mutation authRegister($login: String!, $token: String!, $password: String!, $firstName: String!, $lastName: String!, $role: String!, $registerNum: String) {
   valid: authRegister(
-    input: {login: $login, token: $token, password: $password, firstName: $firstName, lastName: $lastName, role: $role}
+    input: {login: $login, token: $token, password: $password, firstName: $firstName, lastName: $lastName, role: $role, registerNum: $registerNum}
   ) {
     id
   }
@@ -47,6 +48,7 @@ export type AuthRegisterMutationFn = ApolloReactCommon.MutationFunction<AuthRegi
  *      firstName: // value for 'firstName'
  *      lastName: // value for 'lastName'
  *      role: // value for 'role'
+ *      registerNum: // value for 'registerNum'
  *   },
  * });
  */

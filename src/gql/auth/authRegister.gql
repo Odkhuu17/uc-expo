@@ -5,6 +5,7 @@ mutation authRegister(
   $firstName: String!
   $lastName: String!
   $role: String!
+  $registerNum: String
 ) {
   valid: authRegister(
     input: {
@@ -14,9 +15,9 @@ mutation authRegister(
       firstName: $firstName
       lastName: $lastName
       role: $role
+      registerNum: $registerNum
     }
   ) {
     id
-    
   }
 }

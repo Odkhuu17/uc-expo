@@ -8,7 +8,9 @@ import authSlice from '@/redux/slices/auth';
 const useInit = () => {
   const { isAuthenticated } = useAppSelector(state => state.auth);
   const appState = useRef(AppState.currentState);
-  const [getUser] = useGetUserLazyQuery();
+  const [getUser] = useGetUserLazyQuery({
+    fetchPolicy: 'no-cache',
+  });
   const dispatch = useAppDispatch();
 
   useEffect(() => {

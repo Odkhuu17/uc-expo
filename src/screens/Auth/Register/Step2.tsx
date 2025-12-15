@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
-import { Lock1, Profile2User, User } from 'iconsax-react-nativejs';
+import { Card, Lock1, Profile2User, User } from 'iconsax-react-nativejs';
 import { useState } from 'react';
 import * as yup from 'yup';
 
@@ -14,8 +14,15 @@ interface Props {
 }
 
 const schema = yup.object().shape({
-  lastname: yup.string().required('Энэ талбар хоосон байна!'),
-  firstname: yup.string().required('Энэ талбар хоосон байна!'),
+  lastname: yup
+    .string()
+    .required('Энэ талбар хоосон байна!')
+    .matches(/^[А-Яа-яӨөҮүЁё\s]+$/, 'Зөвхөн кирилл үсэг оруулна уу!'),
+  firstname: yup
+    .string()
+    .required('Энэ талбар хоосон байна!')
+    .matches(/^[А-Яа-яӨөҮүЁё\s]+$/, 'Зөвхөн кирилл үсэг оруулна уу!'),
+  registerNum: yup.string().required('Энэ талбар хоосон байна!'),
   password: yup.string().required('Энэ талбар хоосон байна!'),
   passwordConfirmation: yup
     .string()
@@ -37,6 +44,7 @@ const Step2 = ({ phoneNumber }: Props) => {
         password: '',
         passwordConfirmation: '',
         token: '',
+        registerNum: '',
       },
       validationSchema: schema,
       onSubmit: async () => {
@@ -47,6 +55,7 @@ const Step2 = ({ phoneNumber }: Props) => {
             login: phoneNumber,
             password: values.password,
             token: values.token,
+            registerNum: values.registerNum,
             role: mode === 'driver' ? 'driver' : 'member',
           },
         });
@@ -76,6 +85,20 @@ const Step2 = ({ phoneNumber }: Props) => {
         onChangeText={handleChange('firstname')}
         error={
           touched.firstname && errors.firstname ? errors.firstname : undefined
+        }
+      />
+      <Input
+        placeholder="Регистрийн дугаар"
+        width={270}
+        icon={Card}
+        autoCapitalize="characters"
+        value={values.registerNum}
+        onBlur={handleBlur('registerNum')}
+        onChangeText={handleChange('registerNum')}
+        error={
+          touched.registerNum && errors.registerNum
+            ? errors.registerNum
+            : undefined
         }
       />
       <Input

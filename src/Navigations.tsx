@@ -14,6 +14,22 @@ const Navigations = () => {
   useFeedLocation();
   useInit();
 
+  console.log(user, '123');
+
+  const pendingVerification =
+    isAuthenticated &&
+    mode === 'driver' &&
+    !user?.verified &&
+    user?.verifications?.edges?.length !== 0;
+
+  const notVerified =
+    isAuthenticated &&
+    mode === 'driver' &&
+    !user?.verified &&
+    user?.verifications?.edges?.length === 0;
+
+  console.log(isAuthenticated, mode, user?.verified, 'sdsd');
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={!isAuthenticated}>
@@ -22,10 +38,11 @@ const Navigations = () => {
         <Stack.Screen name="auth/register" />
         <Stack.Screen name="auth/forgot" />
       </Stack.Protected>
-      <Stack.Protected
-        guard={isAuthenticated && mode === 'driver' && user?.verified === false}
-      >
+      <Stack.Protected guard={notVerified}>
         <Stack.Screen name="verify" />
+      </Stack.Protected>
+      <Stack.Protected guard={pendingVerification}>
+        <Stack.Screen name="waiting" />
       </Stack.Protected>
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(drawer)" />

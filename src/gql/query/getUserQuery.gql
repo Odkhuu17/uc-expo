@@ -12,6 +12,14 @@ query GetUser {
     subscribed
     verified
     verifiedAt
+    verifications(filter: { status: { eq: "pending" } }) {
+      edges {
+        node {
+          id
+          status
+        }
+      }
+    }
     trucks {
       id
       verified

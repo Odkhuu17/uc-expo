@@ -17,10 +17,10 @@ const useFeedLocation = () => {
 
   useEffect(() => {
     if (
+      isAuthenticated &&
       data?.me?.trucks &&
       data?.me?.trucks?.filter(i => i.verified).length > 0
     ) {
-      console.log('thererer');
       init();
     }
 
@@ -29,7 +29,7 @@ const useFeedLocation = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [data]);
+  }, [data, isAuthenticated]);
 
   const sendLocation = async () => {
     try {

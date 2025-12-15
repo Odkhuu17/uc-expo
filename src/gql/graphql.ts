@@ -2087,6 +2087,7 @@ export type AuthRegisterInput = {
   lastName: Scalars['String']['input'];
   login: Scalars['String']['input'];
   password: Scalars['String']['input'];
+  registerNum?: InputMaybe<Scalars['String']['input']>;
   role: Scalars['String']['input'];
   token: Scalars['String']['input'];
 };
@@ -2613,6 +2614,7 @@ export type UpdateUserInput = {
   id: Scalars['ID']['input'];
   lastName?: InputMaybe<Scalars['String']['input']>;
   nickName?: InputMaybe<Scalars['String']['input']>;
+  registerNum?: InputMaybe<Scalars['String']['input']>;
   stateId?: InputMaybe<Scalars['ID']['input']>;
 };
 

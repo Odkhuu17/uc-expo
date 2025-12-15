@@ -2,12 +2,21 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { Button, Container, Content, NormalHeader } from '@/components';
+import {
+  Button,
+  Container,
+  Content,
+  MessageModal,
+  NormalHeader,
+} from '@/components';
 import { Box } from '@/components/Theme';
 import { useVerifyDriverMutation } from '@/gql/mutations/verifyDriverMutation.generated';
 import { imageToFile } from '@/utils/fileHelpers';
 import Step1 from './Step1';
 import Step2 from './Step2';
+import { useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import authSlice from '@/redux/slices/auth';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -17,6 +26,8 @@ const VerifyScreen = () => {
   const [passportBack, setPassportBack] = useState<string | null>(null);
   const [selfie, setSelfie] = useState<string | null>(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.auth);
 
   const [verifyDriver, { loading }] = useVerifyDriverMutation();
 
@@ -87,7 +98,10 @@ const VerifyScreen = () => {
           },
         });
       } else {
-        router.replace('/profile');
+        dispatch(
+          authSlice.actions.changeUser({ ...user!, verifyStatus: 'pending' })
+        );
+        router.push('/waiting');
       }
     }
   };
