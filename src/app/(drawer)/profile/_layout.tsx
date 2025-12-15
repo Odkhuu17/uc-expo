@@ -14,6 +14,7 @@ export default function ProfileLayout() {
       <Stack.Protected guard={mode === 'driver'}>
         <Stack.Screen name="trucks/index" />
         <Stack.Screen name="trucks/add" />
+        <Stack.Screen name="trucks/[id]/edit" />
       </Stack.Protected>
     </Stack>
   );

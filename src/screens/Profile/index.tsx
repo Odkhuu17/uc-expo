@@ -3,7 +3,6 @@ import { Box as BoxIcon, Truck, UserOctagon } from 'iconsax-react-nativejs';
 
 import {
   BoxContainer,
-  Button,
   Container,
   Content,
   NormalHeader,
@@ -23,7 +22,11 @@ const ProfileScreen = () => {
 
   return (
     <Container>
-      <NormalHeader title="Миний мэдээлэл" hasBack />
+      <NormalHeader
+        title="Миний мэдээлэл"
+        hasBack
+        noMenu={!hasVerifiedTruck && mode === 'driver'}
+      />
       <Content edges={[]}>
         <Box gap="m">
           <BoxContainer flexDirection="row" alignItems="center" gap="m">
@@ -47,21 +50,16 @@ const ProfileScreen = () => {
             )}
             {mode === 'driver' && (
               <>
-                {!hasVerifiedTruck ? (
-                  <Box gap="s">
+                {!hasVerifiedTruck && (
+                  <Box gap="s" pb="m">
                     <Warning description="Танд бүртгэлтэй машин байхгүй байна! Та машин нэмсний дараагаар манай системийг ашиглах боломжтой." />
-                    <Button
-                      title="Машин нэмэх"
-                      onPress={() => router.navigate('/profile/trucks/add')}
-                    />
                   </Box>
-                ) : (
-                  <SingleMenu
-                    title="Миний машин"
-                    icon={Truck}
-                    onPress={() => router.navigate('/profile/trucks')}
-                  />
                 )}
+                <SingleMenu
+                  title="Миний машин"
+                  icon={Truck}
+                  onPress={() => router.navigate('/profile/trucks')}
+                />
               </>
             )}
           </BoxContainer>

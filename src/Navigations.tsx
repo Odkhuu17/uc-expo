@@ -28,8 +28,6 @@ const Navigations = () => {
     !user?.verified &&
     user?.verifications?.edges?.length === 0;
 
-  console.log(isAuthenticated, mode, user?.verified, 'sdsd');
-
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={!isAuthenticated}>

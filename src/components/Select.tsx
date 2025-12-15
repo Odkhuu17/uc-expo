@@ -95,7 +95,7 @@ function Select({
                   justifyContent="space-between"
                   flexDirection="row"
                   alignItems="center"
-                  backgroundColor="grey3"
+                  backgroundColor="white"
                   borderRadius="xl"
                   py="s"
                   px="m"

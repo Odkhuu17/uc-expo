@@ -20,9 +20,8 @@ query GetMyTrucks {
       }
       verified
       verifiedAt
-      verifications {
+      verifications(filter: { status: { eq: "pending" } }) {
         edges {
-          cursor
           node {
             id
             status
@@ -35,13 +34,6 @@ query GetMyTrucks {
             createdAt
             updatedAt
           }
-        }
-        totalCount
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
         }
       }
       createdAt

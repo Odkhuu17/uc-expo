@@ -2,21 +2,15 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import {
-  Button,
-  Container,
-  Content,
-  MessageModal,
-  NormalHeader,
-} from '@/components';
+import { Button, Container, Content, NormalHeader } from '@/components';
 import { Box } from '@/components/Theme';
 import { useVerifyDriverMutation } from '@/gql/mutations/verifyDriverMutation.generated';
 import { imageToFile } from '@/utils/fileHelpers';
 import Step1 from './Step1';
 import Step2 from './Step2';
-import { useDispatch } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
+import { useGetUserLazyQuery } from '@/gql/query/getUserQuery.generated';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -27,7 +21,9 @@ const VerifyScreen = () => {
   const [selfie, setSelfie] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.auth);
+  const [getUser] = useGetUserLazyQuery({
+    fetchPolicy: 'no-cache',
+  });
 
   const [verifyDriver, { loading }] = useVerifyDriverMutation();
 
@@ -98,10 +94,9 @@ const VerifyScreen = () => {
           },
         });
       } else {
-        dispatch(
-          authSlice.actions.changeUser({ ...user!, verifyStatus: 'pending' })
-        );
-        router.push('/waiting');
+        getUser().then(({ data }) => {
+          dispatch(authSlice.actions.changeUser(data?.me));
+        });
       }
     }
   };

@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 
@@ -21,6 +21,8 @@ import { useGetTaxonsQuery } from '@/gql/query/getTaxonsQuery.generated';
 import { useAppSelector } from '@/redux/hooks';
 import { imageToFile } from '@/utils/fileHelpers';
 import ImageInput from './ImageInput';
+import { useGetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
+import { useUpdateTruckMutation } from '@/gql/mutations/updateTruckMutation.generated';
 
 const schema = yup.object().shape({
   mark: yup.string().required('Энэ талбар хоосон байна!'),
@@ -29,7 +31,8 @@ const schema = yup.object().shape({
   plateNumber: yup.string().required('Энэ талбар хоосон байна!'),
 });
 
-const AddTruckScreen = () => {
+const AddOrEditTruckScreen = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useAppSelector(state => state.auth);
   const [createTruck] = useCreateTruckMutation();
   const [verifyTruck] = useVerifyTruckMutation();
@@ -39,6 +42,19 @@ const AddTruckScreen = () => {
   const [successModal, setSuccessModal] = useState(false);
   const { data: taxonsData } = useGetTaxonsQuery();
   const [passport, setPassport] = useState<string | null>(null);
+  const { data: trucksData } = useGetMyTrucksQuery();
+  const [updateTruck] = useUpdateTruckMutation();
+
+  const truck = trucksData?.me?.trucks?.find(truck => truck.id === id);
+
+  useEffect(() => {
+    if (id) {
+      setFieldValue('mark', truck?.mark || '');
+      setFieldValue('model', truck?.model || '');
+      setFieldValue('plateNumber', truck?.plateNumber || '');
+      setFieldValue('taxonId', truck?.taxon?.id || '');
+    }
+  }, [truck]);
 
   const {
     handleSubmit,
@@ -47,6 +63,7 @@ const AddTruckScreen = () => {
     touched,
     handleBlur,
     handleChange,
+    setFieldValue,
     isSubmitting,
   } = useFormik({
     initialValues: {
@@ -67,34 +84,46 @@ const AddTruckScreen = () => {
         });
       }
 
-      const { data } = await createTruck({
-        variables: {
-          taxonId: values.taxonId,
-          mark: values.mark,
-          model: values.model,
-          userId: user!.id,
-          plateNumber: values.plateNumber,
-        },
-      });
+      if (id) {
+        await updateTruck({
+          variables: {
+            id,
+            taxonId: values.taxonId,
+            mark: values.mark,
+            model: values.model,
+            userId: user!.id,
+            plateNumber: values.plateNumber,
+          },
+        });
 
-      const { data: verifyData } = await verifyTruck({
-        variables: {
-          passport: imageToFile(passport),
-          truckId: data?.createTruck?.id || '',
-        },
-      });
+        await verifyTruck({
+          variables: {
+            passport: imageToFile(passport),
+            truckId: id || '',
+          },
+        });
 
-      if (verifyData?.verifyTruck?.status === 'rejected') {
-        return router.navigate({
-          pathname: '/modal',
-          params: {
-            type: 'error',
-            message:
-              verifyData?.verifyTruck?.field5 ||
-              'Баталгаажуулалт амжилтгүй боллоо',
+        setSuccessModal(true);
+      } else {
+        const { data } = await createTruck({
+          variables: {
+            taxonId: values.taxonId,
+            mark: values.mark,
+            model: values.model,
+            userId: user!.id,
+            plateNumber: values.plateNumber,
+          },
+        });
+
+        await verifyTruck({
+          variables: {
+            passport: imageToFile(passport),
+            truckId: data?.createTruck?.id || '',
           },
         });
       }
+
+      setSuccessModal(true);
     },
   });
 
@@ -190,7 +219,11 @@ const AddTruckScreen = () => {
       </Container>
       <MessageModal
         type="success"
-        message="Машин амжилттай нэмэгдлээ"
+        message={
+          id
+            ? 'Машин мэдээлэл амжилттай шинэчлэгдлээ'
+            : 'Машин амжилттай нэмэгдлээ'
+        }
         onClose={() => {
           router.dismissTo('/profile/trucks');
           setSuccessModal(false);
@@ -201,4 +234,4 @@ const AddTruckScreen = () => {
   );
 };
 
-export default AddTruckScreen;
+export default AddOrEditTruckScreen;

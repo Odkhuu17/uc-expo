@@ -16,7 +16,9 @@ import {
 import SingleTruck from './SingleTruck';
 
 const MyTrucks = () => {
-  const { data, loading, refetch } = useGetMyTrucksQuery();
+  const { data, loading, refetch } = useGetMyTrucksQuery({
+    fetchPolicy: 'no-cache',
+  });
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const router = useRouter();
@@ -50,12 +52,14 @@ const MyTrucks = () => {
           <Empty title="Машин" description="Машин олдсонгүй" />
         }
       />
-      <Box style={{ marginBottom: insets.bottom + theme.spacing.m }} mx="m">
-        <Button
-          title="Машин нэмэх"
-          onPress={() => router.push('/profile/trucks/add')}
-        />
-      </Box>
+      {data?.me?.trucks && data.me.trucks.length === 0 && (
+        <Box style={{ marginBottom: insets.bottom + theme.spacing.m }} mx="m">
+          <Button
+            title="Машин нэмэх"
+            onPress={() => router.push('/profile/trucks/add')}
+          />
+        </Box>
+      )}
     </Container>
   );
 };
