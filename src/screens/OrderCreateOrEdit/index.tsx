@@ -21,6 +21,7 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
+import { ChooseFromMap } from './Step2/components';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -345,7 +346,7 @@ const OrderCreateScreen = () => {
     } else if (step === 2) {
       return (
         <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
-          <Step2
+          <ChooseFromMap
             createdOrigin={createdOrigin}
             createdDestination={createdDestination}
             setCreatedOrigin={setCreatedOrigin}

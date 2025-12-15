@@ -94,6 +94,8 @@ const Step2 = ({
   const originModalRef = useRef<BottomSheetModal | null>(null);
   const destinationModalRef = useRef<BottomSheetModal | null>(null);
   const mapRef = useRef<MapView | null>(null);
+  const [showChooseFromMap, setShowChooseFromMap] = useState(false);
+
   const arcCoordinates = createArc(
     {
       latitude: origin?._source?.location.lat || 0,
