@@ -18,9 +18,15 @@ interface Props {
   setLocation: Dispatch<
     SetStateAction<NonNullable<SearchAddressQuery['searchAddress']>[0] | null>
   >;
+  setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
 }
 
-const Step2 = ({ title, location, setLocation }: Props) => {
+const ChooseFromMap = ({
+  title,
+  location,
+  setLocation,
+  setShowChooseFromMap,
+}: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [localLocation, setLocalLocation] = useState<
@@ -43,6 +49,7 @@ const Step2 = ({ title, location, setLocation }: Props) => {
 
   const onSubmit = async () => {
     setLocation(localLocation);
+    setShowChooseFromMap(false);
   };
 
   return (
@@ -76,7 +83,7 @@ const Step2 = ({ title, location, setLocation }: Props) => {
           backgroundColor="white"
         >
           <Box style={{ paddingBottom: insets.bottom }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowChooseFromMap(false)}>
               <Box
                 flexDirection="row"
                 alignItems="center"
@@ -136,4 +143,4 @@ const css = StyleSheet.create({
   },
 });
 
-export default Step2;
+export default ChooseFromMap;

@@ -346,7 +346,7 @@ const OrderCreateScreen = () => {
     } else if (step === 2) {
       return (
         <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
-          <ChooseFromMap
+          <Step2
             createdOrigin={createdOrigin}
             createdDestination={createdDestination}
             setCreatedOrigin={setCreatedOrigin}

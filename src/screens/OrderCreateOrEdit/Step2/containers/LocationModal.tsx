@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView from 'react-native-maps';
 
-import { CustomBottomSheetModal, Input } from '@/components';
+import { Button, CustomBottomSheetModal, Input } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import {
   SearchAddressQuery,
@@ -19,9 +19,16 @@ interface Props {
   >;
   location: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
   mapRef: RefObject<MapView | null>;
+  setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
 }
 
-const LocationModal = ({ ref, setLocation, location, mapRef }: Props) => {
+const LocationModal = ({
+  ref,
+  setLocation,
+  location,
+  mapRef,
+  setShowChooseFromMap,
+}: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
@@ -42,6 +49,11 @@ const LocationModal = ({ ref, setLocation, location, mapRef }: Props) => {
     }
   };
 
+  const onChooseFromMap = () => {
+    ref.current?.dismiss();
+    setShowChooseFromMap(true);
+  };
+
   return (
     <CustomBottomSheetModal ref={ref} onChange={onChangeSheet}>
       <Box px="m">
@@ -52,11 +64,18 @@ const LocationModal = ({ ref, setLocation, location, mapRef }: Props) => {
           value={address1}
         />
       </Box>
+      <Box p="m">
+        <Button
+          backgroundColor="white"
+          textColor="black"
+          title="Газрын зургаас сонгох"
+          onPress={onChooseFromMap}
+        />
+      </Box>
       <BottomSheetScrollView>
         <Box
           style={{ paddingBottom: insets.bottom + theme.spacing.m }}
           px="m"
-          pt="m"
           gap="m"
         >
           {searchData?.searchAddress?.map((address, index) => {
