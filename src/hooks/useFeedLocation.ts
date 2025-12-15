@@ -5,7 +5,7 @@ import { useFeedLocationMutation } from '@/gql/mutations/feedLocation.generated'
 import { useGetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
 import { useAppSelector } from '@/redux/hooks';
 
-const LOCATION_INTERVAL = 30000; // 30 seconds
+const LOCATION_INTERVAL = 60000; // 60 seconds
 
 const useFeedLocation = () => {
   const { isAuthenticated } = useAppSelector(state => state.auth);
@@ -16,7 +16,11 @@ const useFeedLocation = () => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (data?.me?.trucks && data?.me?.trucks?.length > 0) {
+    if (
+      data?.me?.trucks &&
+      data?.me?.trucks?.filter(i => i.verified).length > 0
+    ) {
+      console.log('thererer');
       init();
     }
 
@@ -33,7 +37,7 @@ const useFeedLocation = () => {
         accuracy: Location.Accuracy.Balanced,
       });
 
-      const trucks = data?.me?.trucks?.filter((i) => i.verified) || [];
+      const trucks = data?.me?.trucks?.filter(i => i.verified) || [];
 
       for (let i = 0; i < trucks.length; i++) {
         await feedLocation({
@@ -45,11 +49,7 @@ const useFeedLocation = () => {
         });
       }
 
-      console.log('Location sent:', {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        trucks: trucks.length,
-      });
+      console.log('Location sent:', trucks.length);
     } catch (error) {
       console.error('Error sending location:', error);
     }

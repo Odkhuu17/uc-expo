@@ -16,6 +16,7 @@ import SingleMenu from './SingleMenu';
 const ProfileScreen = () => {
   const theme = useTheme();
   const router = useRouter();
+  const { mode } = useAppSelector(state => state.general);
   const { user } = useAppSelector(state => state.auth);
 
   const hasVerifiedTruck = user?.trucks?.some(truck => truck.verified);
@@ -37,27 +38,31 @@ const ProfileScreen = () => {
             </Box>
           </BoxContainer>
           <BoxContainer>
-            {user?.role === 'member' && (
+            {mode === 'shipper' && (
               <SingleMenu
                 title="Миний захиалгууд"
                 icon={BoxIcon}
                 onPress={() => router.navigate('/profile/orders')}
               />
             )}
-            {user?.role === 'driver' && !hasVerifiedTruck ? (
-              <Box gap="s">
-                <Warning description="Танд бүртгэлтэй машин байхгүй байна! Та машин нэмсний дараагаар манай системийг ашиглах боломжтой." />
-                <Button
-                  title="Машин нэмэх"
-                  onPress={() => router.navigate('/profile/trucks/add')}
-                />
-              </Box>
-            ) : (
-              <SingleMenu
-                title="Миний машин"
-                icon={Truck}
-                onPress={() => router.navigate('/profile/trucks')}
-              />
+            {mode === 'driver' && (
+              <>
+                {!hasVerifiedTruck ? (
+                  <Box gap="s">
+                    <Warning description="Танд бүртгэлтэй машин байхгүй байна! Та машин нэмсний дараагаар манай системийг ашиглах боломжтой." />
+                    <Button
+                      title="Машин нэмэх"
+                      onPress={() => router.navigate('/profile/trucks/add')}
+                    />
+                  </Box>
+                ) : (
+                  <SingleMenu
+                    title="Миний машин"
+                    icon={Truck}
+                    onPress={() => router.navigate('/profile/trucks')}
+                  />
+                )}
+              </>
             )}
           </BoxContainer>
         </Box>

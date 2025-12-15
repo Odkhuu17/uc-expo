@@ -7,6 +7,7 @@ import { useAppSelector } from './redux/hooks';
 
 const Navigations = () => {
   const { isAuthenticated } = useAppSelector(state => state.auth);
+  const { mode } = useAppSelector(state => state.general);
   const { user } = useAppSelector(state => state.auth);
 
   useLinkDevice();
@@ -21,13 +22,11 @@ const Navigations = () => {
         <Stack.Screen name="auth/register" />
         <Stack.Screen name="auth/forgot" />
       </Stack.Protected>
-      {/* <Stack.Protected
-        guard={
-          isAuthenticated && user?.role === 'driver' && user?.verified === false
-        }
+      <Stack.Protected
+        guard={isAuthenticated && mode === 'driver' && user?.verified === false}
       >
         <Stack.Screen name="verify" />
-      </Stack.Protected> */}
+      </Stack.Protected>
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(drawer)" />
       </Stack.Protected>

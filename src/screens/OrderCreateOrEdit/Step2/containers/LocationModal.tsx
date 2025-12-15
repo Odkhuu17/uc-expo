@@ -3,13 +3,10 @@ import { ArrowRight2, Location } from 'iconsax-react-nativejs';
 import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import MapView from 'react-native-maps';
 
-import { Button, CustomBottomSheetModal, Input } from '@/components';
+import { CustomBottomSheetModal, Input } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
-import {
-  CreateAddressMutation,
-  useCreateAddressMutation,
-} from '@/gql/mutations/createAddressMutation.generated';
 import {
   SearchAddressQuery,
   useSearchAddressQuery,
@@ -17,22 +14,19 @@ import {
 
 interface Props {
   ref: RefObject<BottomSheetModal | null>;
-  setCreatedLocation: Dispatch<
-    SetStateAction<NonNullable<CreateAddressMutation['createAddress']> | null>
+  setLocation: Dispatch<
+    SetStateAction<NonNullable<SearchAddressQuery['searchAddress']>[0] | null>
   >;
   location: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
+  mapRef: RefObject<MapView | null>;
 }
 
-const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
+const LocationModal = ({ ref, setLocation, location, mapRef }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
 
-  const {
-    data: searchData,
-    loading: searchLoading,
-    refetch,
-  } = useSearchAddressQuery({
+  const { data: searchData } = useSearchAddressQuery({
     variables: {
       query: address1,
       location: {
@@ -42,11 +36,9 @@ const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
     },
   });
 
-  const [createAddress, { loading }] = useCreateAddressMutation();
-
   const onChangeSheet = (index: number) => {
     if (index !== -1) {
-      setAddress1('');
+      setAddress1(location?._source?.nameMn || '');
     }
   };
 
@@ -68,8 +60,19 @@ const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
           gap="m"
         >
           {searchData?.searchAddress?.map((address, index) => {
+            const onPressAddress = () => {
+              setLocation(address);
+              ref.current?.dismiss();
+              mapRef.current?.animateToRegion({
+                latitude: address?._source?.location.lat || 47.92123,
+                longitude: address?._source?.location.lon || 106.918556,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+              });
+            };
+
             return (
-              <TouchableOpacity key={index}>
+              <TouchableOpacity key={index} onPress={onPressAddress}>
                 <Box
                   flexDirection="row"
                   alignItems="center"
@@ -110,9 +113,6 @@ const LocationModal = ({ ref, setCreatedLocation, location }: Props) => {
           })}
         </Box>
       </BottomSheetScrollView>
-      <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
-        <Button title="Хадгалах" loading={loading} onPress={() => {}} />
-      </Box>
     </CustomBottomSheetModal>
   );
 };

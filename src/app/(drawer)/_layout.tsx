@@ -5,6 +5,7 @@ import { useAppSelector } from '@/redux/hooks';
 
 export default function DrawerLayout() {
   const { user } = useAppSelector(state => state.auth);
+  const { mode } = useAppSelector(state => state.general);
 
   const hasVerifiedTruck = user?.trucks?.some(truck => truck.verified);
 
@@ -21,7 +22,7 @@ export default function DrawerLayout() {
         },
       }}
     >
-      <Drawer.Protected guard={!hasVerifiedTruck && user?.role === 'driver'}>
+      <Drawer.Protected guard={mode !== 'driver' || !!hasVerifiedTruck}>
         <Drawer.Screen name="orders" />
         <Drawer.Screen name="membership" />
       </Drawer.Protected>

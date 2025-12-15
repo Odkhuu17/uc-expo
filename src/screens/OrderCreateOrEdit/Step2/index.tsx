@@ -1,12 +1,18 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useInfiniteHits } from 'react-instantsearch';
-import MapView, { Region } from 'react-native-maps';
+import MapView, { Marker, Polyline, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, OrderLocation } from '@/components';
+import { Button, FitImage, OrderLocation } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { carTypes, carTypes2 } from '@/constants';
 import {
@@ -19,6 +25,9 @@ import {
 } from '@/gql/query/searchAddressQuery.generated';
 import { CarTypes, MapPin } from './components';
 import { LocationModal } from './containers';
+import { createArc } from './helpers';
+
+const PIN_HEIGHT = 60;
 
 interface Props {
   isRent?: boolean;
@@ -84,6 +93,17 @@ const Step2 = ({
   const styles = useStyles();
   const originModalRef = useRef<BottomSheetModal | null>(null);
   const destinationModalRef = useRef<BottomSheetModal | null>(null);
+  const mapRef = useRef<MapView | null>(null);
+  const arcCoordinates = createArc(
+    {
+      latitude: origin?._source?.location.lat || 0,
+      longitude: origin?._source?.location.lon || 0,
+    },
+    {
+      latitude: destination?._source?.location.lat || 0,
+      longitude: destination?._source?.location.lon || 0,
+    }
+  );
 
   const {
     data: searchData,
@@ -111,10 +131,30 @@ const Step2 = ({
       },
     });
     if (selectedLocation === 'origin') {
-      setOrigin(data?.searchAddress?.[0] || null);
+      setOrigin(
+        data?.searchAddress?.[0]
+          ? {
+              ...data?.searchAddress?.[0],
+              _source: {
+                ...data?.searchAddress?.[0]._source,
+                location: { lat: region.latitude, lon: region.longitude },
+              },
+            }
+          : null
+      );
       setCreatedOrigin(null);
     } else {
-      setDestination(data?.searchAddress?.[0] || null);
+      setDestination(
+        data?.searchAddress?.[0]
+          ? {
+              ...data?.searchAddress?.[0],
+              _source: {
+                ...data?.searchAddress?.[0]._source,
+                location: { lat: region.latitude, lon: region.longitude },
+              },
+            }
+          : null
+      );
       setCreatedDestination(null);
     }
   };
@@ -191,10 +231,13 @@ const Step2 = ({
     escapeHTML: false,
   });
 
+  console.log(destination, 'wdwd');
+
   return (
     <>
       <MapView
         style={styles.map}
+        ref={mapRef}
         initialRegion={{
           latitude: 47.92123,
           longitude: 106.918556,
@@ -202,6 +245,62 @@ const Step2 = ({
           longitudeDelta: 0.03,
         }}
         onRegionChangeComplete={onRegionChangeComplete}
+      >
+        <Polyline
+          coordinates={arcCoordinates}
+          strokeColor={theme.colors.baseBlue}
+          strokeWidth={3}
+        />
+        {origin && (
+          <Marker
+            coordinate={{
+              latitude: origin?._source?.location.lat || 0,
+              longitude: origin?._source?.location.lon || 0,
+            }}
+          >
+            <Box
+              height={PIN_HEIGHT}
+              style={{
+                transform: [{ translateY: -13 }],
+              }}
+            >
+              <FitImage
+                source={require('assets/images/map_pin.png')}
+                height={PIN_HEIGHT}
+              />
+            </Box>
+          </Marker>
+        )}
+        {destination && (
+          <Marker
+            coordinate={{
+              latitude: destination?._source?.location.lat || 0,
+              longitude: destination?._source?.location.lon || 0,
+            }}
+          >
+            <Box
+              height={PIN_HEIGHT}
+              style={{
+                transform: [{ translateY: -13 }],
+              }}
+            >
+              <FitImage
+                source={require('assets/images/map_pin.png')}
+                height={PIN_HEIGHT}
+              />
+            </Box>
+          </Marker>
+        )}
+      </MapView>
+      <Box
+        flex={1}
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        alignItems="center"
+        justifyContent="center"
       >
         <Box position="absolute" top={theme.spacing.xl2} left={0}>
           <CarTypes
@@ -259,16 +358,18 @@ const Step2 = ({
             />
           </Box>
         </Box>
-      </MapView>
+      </Box>
       <LocationModal
         ref={originModalRef}
-        setCreatedLocation={setCreatedOrigin}
+        setLocation={setOrigin}
         location={origin}
+        mapRef={mapRef}
       />
       <LocationModal
         ref={destinationModalRef}
-        setCreatedLocation={setCreatedDestination}
+        setLocation={setDestination}
         location={destination}
+        mapRef={mapRef}
       />
     </>
   );
