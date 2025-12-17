@@ -3,6 +3,9 @@ import * as yup from 'yup';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { RefreshControl } from 'react-native-gesture-handler';
+import * as ImagePicker from 'expo-image-picker';
+import { Edit, UserOctagon } from 'iconsax-react-nativejs';
+import { Alert, TouchableOpacity } from 'react-native';
 
 import {
   Button,
@@ -13,11 +16,14 @@ import {
   NormalHeader,
   ScrollableContent,
 } from '@/components';
-import { Box } from '@/components/Theme';
+import { Box, useTheme } from '@/components/Theme';
 import { useUpdateUserMutation } from '@/gql/mutations/updateUserMutation.generated';
 import { useGetUserQuery } from '@/gql/query/getUserQuery.generated';
 import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
+import { Image } from 'expo-image';
+import { imageToFile } from '@/utils/fileHelpers';
+import { getImageUrl } from '@/utils/helpers';
 
 const schema = yup.object().shape({
   firstName: yup.string().required('Энэ талбар хоосон байна!'),
@@ -34,7 +40,11 @@ const ProfileUpdateScreen = () => {
   const dispatch = useAppDispatch();
   const [updateUser, { loading }] = useUpdateUserMutation();
   const [successModal, setSuccessModal] = useState(false);
+  const [avatar, setAvatar] = useState<string>('');
   const router = useRouter();
+  const theme = useTheme();
+
+  console.log('userData', userData);
 
   const {
     handleSubmit,
@@ -54,6 +64,7 @@ const ProfileUpdateScreen = () => {
     onSubmit: async () => {
       updateUser({
         variables: {
+          avatar: imageToFile(avatar),
           firstName: values.firstName,
           lastName: values.lastName,
           registerNum: values.registerNum,
@@ -72,11 +83,79 @@ const ProfileUpdateScreen = () => {
     }
   }, [userData]);
 
+  const onLaunchCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') return;
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+      cameraType: ImagePicker.CameraType.front,
+    });
+    if (!result.canceled) {
+      setAvatar(result.assets[0].uri);
+    }
+  };
+
+  const handlePickImage = async () => {
+    Alert.alert('Зураг оруулах', 'Зураг оруулах төрлөө сонгоно уу!', [
+      {
+        text: 'Камер нээх',
+        onPress: onLaunchCamera,
+      },
+      {
+        text: 'Зураг сонгох',
+        onPress: async () => {
+          const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') return;
+          const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 0.8,
+          });
+          if (!result.canceled) {
+            setAvatar(result.assets[0].uri);
+          }
+        },
+      },
+      { text: 'Буцах', style: 'cancel' },
+    ]);
+  };
+
   return (
     <>
       <CustomKeyboardAvoidingView>
         <Container>
           <NormalHeader title="Миний мэдээлэл" hasBack />
+          <Box alignItems="center" justifyContent="center" pt="m">
+            <Box
+              width={100}
+              height={100}
+              borderRadius="full"
+              alignItems="center"
+              backgroundColor="grey"
+              justifyContent="center"
+            >
+              {avatar || userData?.me?.avatar ? (
+                <Image
+                  contentPosition="center"
+                  contentFit="cover"
+                  source={{
+                    uri: avatar || getImageUrl(userData?.me?.avatar || ''),
+                  }}
+                  style={{ width: 100, height: 100, borderRadius: 50 }}
+                />
+              ) : (
+                <UserOctagon size={theme.icon.xl2} />
+              )}
+              <Box position="absolute" bottom={0} right={0}>
+                <TouchableOpacity onPress={handlePickImage}>
+                  <Edit size={theme.icon.l} />
+                </TouchableOpacity>
+              </Box>
+            </Box>
+          </Box>
           <ScrollableContent
             edges={['bottom']}
             refreshControl={

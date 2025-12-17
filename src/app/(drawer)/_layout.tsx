@@ -22,12 +22,13 @@ export default function DrawerLayout() {
         },
       }}
     >
-      <Drawer.Protected guard={mode !== 'driver' || !!hasVerifiedTruck}>
+      <Drawer.Protected
+        guard={mode !== 'driver' || (!!hasVerifiedTruck && !!user?.verified)}
+      >
         <Drawer.Screen name="orders" />
         <Drawer.Screen name="membership" />
       </Drawer.Protected>
       <Drawer.Screen name="profile" />
-      <Drawer.Screen name="profile/user/update" />
     </Drawer>
   );
 }

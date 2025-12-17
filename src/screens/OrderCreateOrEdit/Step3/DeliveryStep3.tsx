@@ -8,8 +8,9 @@ import {
   Clock,
   TruckFast,
 } from 'iconsax-react-nativejs';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 import { Masks } from 'react-native-mask-input';
+import { TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -71,6 +72,7 @@ const DeliveryStep3 = ({
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const { number } = useLocalSearchParams();
+  const refs = useRef<(TextInput | null)[]>([]);
 
   const {
     handleSubmit,
@@ -91,6 +93,12 @@ const DeliveryStep3 = ({
   const onPressDestination = () => {
     setStep(2);
     setSelectedLocation('destination');
+  };
+
+  const onSubmitEditing = (index: number) => {
+    if (refs.current[index + 1]) {
+      refs.current[index + 1]?.focus();
+    }
   };
 
   return (
@@ -158,6 +166,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('packageWeight')}
                 onChangeText={handleChange('packageWeight')}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[0] = el)}
+                onSubmitEditing={() => onSubmitEditing(0)}
                 error={
                   touched.packageWeight && errors.packageWeight
                     ? errors.packageWeight
@@ -173,6 +183,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('travelDay')}
                 onChangeText={handleChange('travelDay')}
                 returnKeyType="next"
+                onSubmitEditing={() => onSubmitEditing(1)}
+                ref={(el: TextInput | null) => (refs.current[1] = el)}
                 error={
                   touched.travelDay && errors.travelDay
                     ? errors.travelDay
@@ -188,7 +200,9 @@ const DeliveryStep3 = ({
                 placeholder="HH:mm"
                 onBlur={handleBlur('travelHour')}
                 onChangeText={handleChange('travelHour')}
+                onSubmitEditing={() => onSubmitEditing(2)}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[2] = el)}
                 error={
                   touched.travelHour && errors.travelHour
                     ? errors.travelHour
@@ -216,10 +230,12 @@ const DeliveryStep3 = ({
                   keyboardType="number-pad"
                   value={values.price}
                   onBlur={handleBlur('price')}
+                  onSubmitEditing={() => onSubmitEditing(3)}
                   returnKeyType="next"
                   onChangeText={(_, unmasked) =>
                     handleChange('price')(unmasked)
                   }
+                  ref={(el: TextInput | null) => (refs.current[3] = el)}
                   error={
                     touched.price && errors.price ? errors.price : undefined
                   }
@@ -234,6 +250,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('additionalInfo')}
                 onChangeText={handleChange('additionalInfo')}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[4] = el)}
+                onSubmitEditing={() => onSubmitEditing(4)}
                 error={
                   touched.additionalInfo && errors.additionalInfo
                     ? errors.additionalInfo
@@ -251,6 +269,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('senderName')}
                 onChangeText={handleChange('senderName')}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[5] = el)}
+                onSubmitEditing={() => onSubmitEditing(5)}
                 error={
                   touched.senderName && errors.senderName
                     ? errors.senderName
@@ -264,6 +284,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('senderMobile')}
                 onChangeText={handleChange('senderMobile')}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[6] = el)}
+                onSubmitEditing={() => onSubmitEditing(6)}
                 error={
                   touched.senderMobile && errors.senderMobile
                     ? errors.senderMobile
@@ -281,6 +303,8 @@ const DeliveryStep3 = ({
                 onBlur={handleBlur('receiverName')}
                 onChangeText={handleChange('receiverName')}
                 returnKeyType="next"
+                ref={(el: TextInput | null) => (refs.current[7] = el)}
+                onSubmitEditing={() => onSubmitEditing(7)}
                 error={
                   touched.receiverName && errors.receiverName
                     ? errors.receiverName
@@ -293,6 +317,7 @@ const DeliveryStep3 = ({
                 value={values.receiverMobile}
                 onBlur={handleBlur('receiverMobile')}
                 onChangeText={handleChange('receiverMobile')}
+                ref={(el: TextInput | null) => (refs.current[8] = el)}
                 error={
                   touched.receiverMobile && errors.receiverMobile
                     ? errors.receiverMobile

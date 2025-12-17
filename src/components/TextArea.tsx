@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, TextInputProps, ViewStyle } from 'react-native';
-
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+
 import { Box, makeStyles, Text, Theme } from './Theme';
 
 interface Props extends TextInputProps {

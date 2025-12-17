@@ -3,10 +3,14 @@ import { Box } from '@/components/Theme';
 
 const PIN_HEIGHT = 60;
 
-const MapPin = () => {
+interface Props {
+  isMarker?: boolean;
+}
+
+const MapPin = ({ isMarker }: Props) => {
   return (
     <Box
-      position="absolute"
+      position={isMarker ? undefined : 'absolute'}
       flex={1}
       height={PIN_HEIGHT}
       style={{

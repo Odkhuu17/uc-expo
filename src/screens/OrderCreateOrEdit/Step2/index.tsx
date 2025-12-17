@@ -237,7 +237,7 @@ const Step2 = ({
                   longitude: origin?._source?.location.lon || 0,
                 }}
               >
-                <MapPin />
+                <MapPin isMarker />
               </Marker>
             )}
             {!isRent && destination && (
@@ -247,7 +247,7 @@ const Step2 = ({
                   longitude: destination?._source?.location.lon || 0,
                 }}
               >
-                <MapPin />
+                <MapPin isMarker />
               </Marker>
             )}
           </MapView>

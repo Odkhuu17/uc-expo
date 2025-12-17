@@ -1865,6 +1865,7 @@ export type UbCabSource = {
 
 export type User = BaseModelInterface & {
   __typename?: 'User';
+  avatar?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['ISO8601DateTime']['output'];
   deliveryRequests: DeliveryRequestConnection;
   devices: DeviceConnection;
@@ -2303,6 +2304,7 @@ export type CreateUserAddressInput = {
 };
 
 export type CreateUserInput = {
+  avatar?: InputMaybe<Scalars['Upload']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firstName: Scalars['String']['input'];
@@ -2608,6 +2610,7 @@ export type UpdateTruckInput = {
 };
 
 export type UpdateUserInput = {
+  avatar?: InputMaybe<Scalars['Upload']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   firstName?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;

@@ -3,6 +3,7 @@ mutation updateUser(
   $firstName: String
   $lastName: String
   $registerNum: String
+  $avatar: Upload
 ) {
   updateUser(
     input: {
@@ -10,6 +11,7 @@ mutation updateUser(
       firstName: $firstName
       lastName: $lastName
       registerNum: $registerNum
+      avatar: $avatar
     }
   ) {
     id

@@ -1,5 +1,6 @@
-import { useAppSelector } from '@/redux/hooks';
 import { Stack } from 'expo-router';
+
+import { useAppSelector } from '@/redux/hooks';
 
 export default function ProfileLayout() {
   const { mode } = useAppSelector(state => state.general);
@@ -12,6 +13,8 @@ export default function ProfileLayout() {
         <Stack.Screen name="orders/[number]" />
       </Stack.Protected>
       <Stack.Protected guard={mode === 'driver'}>
+        <Stack.Screen name="update" />
+        <Stack.Screen name="verify" />
         <Stack.Screen name="trucks/index" />
         <Stack.Screen name="trucks/add" />
         <Stack.Screen name="trucks/[id]/edit" />

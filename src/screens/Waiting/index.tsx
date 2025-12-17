@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { RefreshControl } from 'react-native';
 
 import {
   BoxContainer,
@@ -13,7 +14,6 @@ import { Box } from '@/components/Theme';
 import { useGetUserLazyQuery } from '@/gql/query/getUserQuery.generated';
 import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
-import { RefreshControl } from 'react-native';
 
 const Waiting = () => {
   const [finishedProgress, setFinishedProgress] = useState(false);

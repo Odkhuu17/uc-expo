@@ -179,7 +179,7 @@ const RentStep3 = ({
             />
             <OrderInput
               icon={Clock}
-              label="Мот/цаг"
+              label="Ажиллах цаг"
               keyboardType="number-pad"
               value={values.motHour}
               onBlur={handleBlur('motHour')}

@@ -21,7 +21,6 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
-import { ChooseFromMap } from './Step2/components';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -38,7 +37,6 @@ const deliverySchema = yup.object().shape({
     otherwise: schema => schema,
   }),
   carType: yup.string().required('Энэ талбар хоосон байна!'),
-  quantity: yup.string(),
   additionalInfo: yup.string(),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
   receiverMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
@@ -107,7 +105,6 @@ const OrderCreateScreen = () => {
       vatIncluded: false,
       priceNegotiable: false,
       price: '',
-      quantity: '',
       additionalInfo: '',
       receiverName: '',
       receiverMobile: '',
@@ -137,7 +134,6 @@ const OrderCreateScreen = () => {
               vatIncluded: values.vatIncluded,
               price: values.priceNegotiable ? undefined : Number(values.price),
               data: {
-                quantity: values.quantity,
                 additionalInfo: values.additionalInfo,
               },
               receiverName: values.receiverName,
@@ -163,7 +159,6 @@ const OrderCreateScreen = () => {
             vatIncluded: values.vatIncluded,
             price: values.priceNegotiable ? undefined : Number(values.price),
             data: {
-              quantity: values.quantity,
               additionalInfo: values.additionalInfo,
             },
             receiverName: values.receiverName,
@@ -324,7 +319,6 @@ const OrderCreateScreen = () => {
           vatIncluded: data?.order?.vatIncluded || false,
           priceNegotiable: data?.order?.price ? false : true,
           price: String(data?.order?.price || ''),
-          quantity: data?.order?.data?.quantity || '',
           additionalInfo: data?.order?.data?.additionalInfo || '',
           receiverName: data?.order?.receiverName || '',
           receiverMobile: data?.order?.receiverMobile || '',

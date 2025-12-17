@@ -70,7 +70,6 @@ const OrderDetailDelivery = ({ order }: Props) => {
         />
         <SingleRow label="НӨАТ:" value={order?.vatIncluded ? 'Тийм' : 'Үгүй'} />
         <SingleRow label="Ачааны жин:" value={order?.packageWeight} />
-        <SingleRow label="Тоо ширхэг:" value={order?.data?.quantity} />
         <SingleRow
           label="Ачих өдөр:"
           value={order?.travelAt && dayjs(order?.travelAt).format('YYYY-MM-DD')}

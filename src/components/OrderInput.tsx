@@ -1,5 +1,5 @@
 import { Icon as IconType } from 'iconsax-react-nativejs';
-import React, { useRef } from 'react';
+import React, { RefObject, useRef } from 'react';
 import { Pressable, TextInput, ViewStyle } from 'react-native';
 import MaskInput, { MaskInputProps } from 'react-native-mask-input';
 
@@ -10,6 +10,7 @@ interface Props extends MaskInputProps {
   error?: string;
   icon?: IconType;
   label: string;
+  ref?: RefObject<TextInput | null>;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,14 +30,23 @@ function OrderInput({
   error,
   icon: IconComp,
   label,
+  ref,
   ...textInputProps
 }: Props) {
   const styles = useStyles();
   const theme = useTheme();
   const inputRef = useRef<TextInput | null>(null);
 
+  const onPress = () => {
+    if (ref?.current) {
+      ref.current.focus();
+    } else {
+      inputRef.current?.focus();
+    }
+  };
+
   return (
-    <Pressable onPress={() => inputRef.current?.focus()}>
+    <Pressable onPress={onPress}>
       <Box
         height={theme.button.m}
         width={width}
@@ -60,7 +70,7 @@ function OrderInput({
         </Box>
         <MaskInput
           {...textInputProps}
-          ref={inputRef}
+          ref={ref || inputRef}
           style={styles.input}
           placeholderTextColor={theme.colors.grey2}
         />

@@ -9,6 +9,7 @@ export type UpdateUserMutationVariables = Types.Exact<{
   firstName?: Types.InputMaybe<Types.Scalars['String']['input']>;
   lastName?: Types.InputMaybe<Types.Scalars['String']['input']>;
   registerNum?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  avatar?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
 }>;
 
 
@@ -16,9 +17,9 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typ
 
 
 export const UpdateUserDocument = gql`
-    mutation updateUser($id: ID!, $firstName: String, $lastName: String, $registerNum: String) {
+    mutation updateUser($id: ID!, $firstName: String, $lastName: String, $registerNum: String, $avatar: Upload) {
   updateUser(
-    input: {id: $id, firstName: $firstName, lastName: $lastName, registerNum: $registerNum}
+    input: {id: $id, firstName: $firstName, lastName: $lastName, registerNum: $registerNum, avatar: $avatar}
   ) {
     id
     firstName
@@ -46,6 +47,7 @@ export type UpdateUserMutationFn = ApolloReactCommon.MutationFunction<UpdateUser
  *      firstName: // value for 'firstName'
  *      lastName: // value for 'lastName'
  *      registerNum: // value for 'registerNum'
+ *      avatar: // value for 'avatar'
  *   },
  * });
  */
