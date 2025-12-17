@@ -59,7 +59,7 @@ const rentSchema = yup.object().shape({
     then: schema => schema.required('Энэ талбар хоосон байна!'),
     otherwise: schema => schema,
   }),
-  additionalInfo: yup.string(),
+  additionalInfo: yup.string().required('Энэ талбар хоосон байна!'),
   additionalAddress: yup.string(),
 });
 
@@ -417,32 +417,32 @@ const OrderCreateScreen = () => {
   };
 
   return (
-    <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
-      <>
-        <Container>
-          <NormalHeader
-            hasBack={!!number}
-            title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
-            onPressBack={step === 1 ? undefined : onPressBack}
-          />
-          {getOrderLoading ? <Loader /> : renderContent()}
-        </Container>
-        <MessageModal
-          type="success"
-          message={
-            number
-              ? 'Захиалга амжилттай шинэчлэгдлээ'
-              : 'Захиалга амжилттай үүслээ'
-          }
-          onClose={() => {
-            router.navigate('/profile/orders');
-            setSuccessModal(false);
-            resetState();
-          }}
-          visible={successModal}
+    // <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
+    <>
+      <Container>
+        <NormalHeader
+          hasBack={!!number}
+          title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
+          onPressBack={step === 1 ? undefined : onPressBack}
         />
-      </>
-    </InstantSearch>
+        {getOrderLoading ? <Loader /> : renderContent()}
+      </Container>
+      <MessageModal
+        type="success"
+        message={
+          number
+            ? 'Захиалга амжилттай шинэчлэгдлээ'
+            : 'Захиалга амжилттай үүслээ'
+        }
+        onClose={() => {
+          router.navigate('/profile/orders');
+          setSuccessModal(false);
+          resetState();
+        }}
+        visible={successModal}
+      />
+    </>
+    // </InstantSearch>
   );
 };
 

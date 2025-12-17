@@ -3,15 +3,10 @@ query GetUser {
     id
     firstName
     lastName
-    email
     mobile
-    gender
-    nickName
     registerNum
-    role
     subscribed
     verified
-    verifiedAt
     verifications(filter: { status: { eq: "pending" } }) {
       edges {
         node {

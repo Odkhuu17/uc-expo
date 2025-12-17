@@ -7,7 +7,7 @@ const defaultOptions = {} as const;
 export type GetUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, email?: string, mobile?: string, gender?: string, nickName?: string, registerNum?: string, role?: string, subscribed?: boolean, verified: boolean, verifiedAt?: any, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifiedAt?: any }> } };
+export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, registerNum?: string, subscribed?: boolean, verified: boolean, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifiedAt?: any }> } };
 
 
 export const GetUserDocument = gql`
@@ -16,15 +16,10 @@ export const GetUserDocument = gql`
     id
     firstName
     lastName
-    email
     mobile
-    gender
-    nickName
     registerNum
-    role
     subscribed
     verified
-    verifiedAt
     verifications(filter: {status: {eq: "pending"}}) {
       edges {
         node {

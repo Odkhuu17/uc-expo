@@ -1,7 +1,6 @@
 import { Stack } from 'expo-router';
 
 import useFeedLocation from './hooks/useFeedLocation';
-import useInit from './hooks/useInit';
 import useLinkDevice from './hooks/useLinkDevice';
 import { useAppSelector } from './redux/hooks';
 
@@ -12,9 +11,6 @@ const Navigations = () => {
 
   useLinkDevice();
   useFeedLocation();
-  useInit();
-
-  console.log(user, '123');
 
   const pendingVerification =
     isAuthenticated &&

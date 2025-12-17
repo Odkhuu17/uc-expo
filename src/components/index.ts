@@ -26,4 +26,4 @@ export { default as Select } from './Select';
 export { default as SingleOrder } from './SingleOrder';
 export { default as TextArea } from './TextArea';
 export { default as Warning } from './Warning';
-
+export { default as Progress } from './Progress';

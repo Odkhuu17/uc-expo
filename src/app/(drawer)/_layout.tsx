@@ -27,6 +27,7 @@ export default function DrawerLayout() {
         <Drawer.Screen name="membership" />
       </Drawer.Protected>
       <Drawer.Screen name="profile" />
+      <Drawer.Screen name="profile/user/update" />
     </Drawer>
   );
 }

@@ -20,6 +20,7 @@ interface Props {
   location: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
   mapRef: RefObject<MapView | null>;
   setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
+  isRent?: boolean;
 }
 
 const LocationModal = ({
@@ -28,6 +29,7 @@ const LocationModal = ({
   location,
   mapRef,
   setShowChooseFromMap,
+  isRent,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -41,6 +43,7 @@ const LocationModal = ({
         longitude: location?._source?.location.lon || 106.918556,
       },
     },
+    skip: address1.length < 3,
   });
 
   const onChangeSheet = (index: number) => {
@@ -58,6 +61,7 @@ const LocationModal = ({
     <CustomBottomSheetModal ref={ref} onChange={onChangeSheet}>
       <Box px="m">
         <Input
+          clearButtonMode="always"
           placeholder="Хаягаа бичих"
           autoFocus
           onChangeText={setAddress1}
@@ -65,12 +69,14 @@ const LocationModal = ({
         />
       </Box>
       <Box p="m">
-        <Button
-          backgroundColor="white"
-          textColor="black"
-          title="Газрын зургаас сонгох"
-          onPress={onChooseFromMap}
-        />
+        {!isRent && (
+          <Button
+            backgroundColor="white"
+            textColor="black"
+            title="Газрын зургаас сонгох"
+            onPress={onChooseFromMap}
+          />
+        )}
       </Box>
       <BottomSheetScrollView>
         <Box

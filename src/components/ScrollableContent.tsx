@@ -31,7 +31,7 @@ const ScrollableContent = ({
           px={noHSpace ? undefined : 'm'}
           py={noVSpace ? undefined : 'm'}
         >
-          <Box flex={1}>{children}</Box>
+          {children}
         </Box>
       </SafeAreaView>
     </ScrollView>

@@ -152,11 +152,12 @@ const DeliveryStep3 = ({
               />
               <OrderInput
                 icon={ArchiveBox}
-                label="Ачааны жин (кг)"
+                label="Ачааны жин (тн)"
                 keyboardType="number-pad"
                 value={values.packageWeight}
                 onBlur={handleBlur('packageWeight')}
                 onChangeText={handleChange('packageWeight')}
+                returnKeyType="next"
                 error={
                   touched.packageWeight && errors.packageWeight
                     ? errors.packageWeight
@@ -171,6 +172,7 @@ const DeliveryStep3 = ({
                 placeholder="YYYY/MM/DD"
                 onBlur={handleBlur('travelDay')}
                 onChangeText={handleChange('travelDay')}
+                returnKeyType="next"
                 error={
                   touched.travelDay && errors.travelDay
                     ? errors.travelDay
@@ -186,6 +188,7 @@ const DeliveryStep3 = ({
                 placeholder="HH:mm"
                 onBlur={handleBlur('travelHour')}
                 onChangeText={handleChange('travelHour')}
+                returnKeyType="next"
                 error={
                   touched.travelHour && errors.travelHour
                     ? errors.travelHour
@@ -213,6 +216,7 @@ const DeliveryStep3 = ({
                   keyboardType="number-pad"
                   value={values.price}
                   onBlur={handleBlur('price')}
+                  returnKeyType="next"
                   onChangeText={(_, unmasked) =>
                     handleChange('price')(unmasked)
                   }
@@ -224,23 +228,12 @@ const DeliveryStep3 = ({
               )}
             </BoxContainer>
             <BoxContainer gap="m">
-              <Input
-                placeholder="Тоо ширхэг"
-                keyboardType="number-pad"
-                value={values.quantity}
-                onBlur={handleBlur('quantity')}
-                onChangeText={handleChange('quantity')}
-                error={
-                  touched.quantity && errors.quantity
-                    ? errors.quantity
-                    : undefined
-                }
-              />
               <TextArea
-                placeholder="Ачааны нэмэлт мэдээлэл"
+                placeholder="Ачааны нэмэлт мэдээлэл болон тоо ширхэгээ бичнэ үү!"
                 value={values.additionalInfo}
                 onBlur={handleBlur('additionalInfo')}
                 onChangeText={handleChange('additionalInfo')}
+                returnKeyType="next"
                 error={
                   touched.additionalInfo && errors.additionalInfo
                     ? errors.additionalInfo
@@ -257,6 +250,7 @@ const DeliveryStep3 = ({
                 value={values.senderName}
                 onBlur={handleBlur('senderName')}
                 onChangeText={handleChange('senderName')}
+                returnKeyType="next"
                 error={
                   touched.senderName && errors.senderName
                     ? errors.senderName
@@ -269,6 +263,7 @@ const DeliveryStep3 = ({
                 value={values.senderMobile}
                 onBlur={handleBlur('senderMobile')}
                 onChangeText={handleChange('senderMobile')}
+                returnKeyType="next"
                 error={
                   touched.senderMobile && errors.senderMobile
                     ? errors.senderMobile
@@ -285,6 +280,7 @@ const DeliveryStep3 = ({
                 value={values.receiverName}
                 onBlur={handleBlur('receiverName')}
                 onChangeText={handleChange('receiverName')}
+                returnKeyType="next"
                 error={
                   touched.receiverName && errors.receiverName
                     ? errors.receiverName

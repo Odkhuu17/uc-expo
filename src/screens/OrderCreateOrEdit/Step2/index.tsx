@@ -12,7 +12,7 @@ import { useInfiniteHits } from 'react-instantsearch';
 import MapView, { Marker, Polyline, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, FitImage, OrderLocation } from '@/components';
+import { Button, OrderLocation } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { carTypes, carTypes2 } from '@/constants';
 import {
@@ -26,8 +26,6 @@ import {
 import { CarTypes, ChooseFromMap, MapPin } from './components';
 import { LocationModal } from './containers';
 import { createArc } from './helpers';
-
-const PIN_HEIGHT = 60;
 
 interface Props {
   isRent?: boolean;
@@ -206,9 +204,9 @@ const Step2 = ({
     destinationModalRef.current?.present();
   };
 
-  const { items, isLastPage, showMore } = useInfiniteHits({
-    escapeHTML: false,
-  });
+  // const { items, isLastPage, showMore } = useInfiniteHits({
+  //   escapeHTML: false,
+  // });
 
   return (
     <>
@@ -239,17 +237,7 @@ const Step2 = ({
                   longitude: origin?._source?.location.lon || 0,
                 }}
               >
-                <Box
-                  height={PIN_HEIGHT}
-                  style={{
-                    transform: [{ translateY: -13 }],
-                  }}
-                >
-                  <FitImage
-                    source={require('assets/images/map_pin.png')}
-                    height={PIN_HEIGHT}
-                  />
-                </Box>
+                <MapPin />
               </Marker>
             )}
             {!isRent && destination && (
@@ -259,17 +247,7 @@ const Step2 = ({
                   longitude: destination?._source?.location.lon || 0,
                 }}
               >
-                <Box
-                  height={PIN_HEIGHT}
-                  style={{
-                    transform: [{ translateY: -13 }],
-                  }}
-                >
-                  <FitImage
-                    source={require('assets/images/map_pin.png')}
-                    height={PIN_HEIGHT}
-                  />
-                </Box>
+                <MapPin />
               </Marker>
             )}
           </MapView>
@@ -362,6 +340,7 @@ const Step2 = ({
         location={origin}
         mapRef={mapRef}
         setShowChooseFromMap={setShowChooseFromMap}
+        isRent={isRent}
       />
       <LocationModal
         ref={destinationModalRef}
@@ -369,6 +348,7 @@ const Step2 = ({
         location={destination}
         mapRef={mapRef}
         setShowChooseFromMap={setShowChooseFromMap}
+        isRent={isRent}
       />
     </>
   );

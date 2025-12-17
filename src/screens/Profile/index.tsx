@@ -1,45 +1,58 @@
 import { useRouter } from 'expo-router';
 import { Box as BoxIcon, Truck, UserOctagon } from 'iconsax-react-nativejs';
+import { RefreshControl, TouchableOpacity } from 'react-native';
 
 import {
   BoxContainer,
   Container,
-  Content,
   NormalHeader,
+  ScrollableContent,
   Warning,
 } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
 import SingleMenu from './SingleMenu';
+import { useGetUserQuery } from '@/gql/query/getUserQuery.generated';
 
 const ProfileScreen = () => {
   const theme = useTheme();
   const router = useRouter();
+  const {
+    data: userData,
+    loading: userLoading,
+    refetch: userRefetch,
+  } = useGetUserQuery({ fetchPolicy: 'no-cache' });
   const { mode } = useAppSelector(state => state.general);
-  const { user } = useAppSelector(state => state.auth);
 
-  const hasVerifiedTruck = user?.trucks?.some(truck => truck.verified);
+  const hasVerifiedTruck = userData?.me?.trucks?.some(truck => truck.verified);
+
+  const onPressProfile = () => {
+    router.push('/profile/user/update');
+  };
 
   return (
     <Container>
-      <NormalHeader
-        title="Миний мэдээлэл"
-        hasBack
-        noMenu={!hasVerifiedTruck && mode === 'driver'}
-      />
-      <Content edges={[]}>
+      <NormalHeader title="Миний мэдээлэл" hasBack />
+      <ScrollableContent
+        edges={['bottom']}
+        refreshControl={
+          <RefreshControl onRefresh={userRefetch} refreshing={userLoading} />
+        }
+      >
         <Box gap="m">
-          <BoxContainer flexDirection="row" alignItems="center" gap="m">
-            <UserOctagon size={theme.icon.l} />
-            <Box>
-              <Text variant="header" numberOfLines={1}>
-                {`${user?.lastName}`} {user?.firstName}
-              </Text>
-              <Text variant="body1" opacity={0.8}>
-                {user?.mobile}
-              </Text>
-            </Box>
-          </BoxContainer>
+          <TouchableOpacity onPress={onPressProfile}>
+            <BoxContainer flexDirection="row" alignItems="center" gap="m">
+              <UserOctagon size={theme.icon.l} />
+              <Box>
+                <Text variant="header" numberOfLines={1}>
+                  {`${userData?.me?.lastName}`} {userData?.me?.firstName}
+                </Text>
+                <Text variant="body1" opacity={0.8}>
+                  {userData?.me?.mobile}
+                </Text>
+              </Box>
+            </BoxContainer>
+          </TouchableOpacity>
           <BoxContainer>
             {mode === 'shipper' && (
               <SingleMenu
@@ -64,7 +77,7 @@ const ProfileScreen = () => {
             )}
           </BoxContainer>
         </Box>
-      </Content>
+      </ScrollableContent>
     </Container>
   );
 };
