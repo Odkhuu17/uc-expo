@@ -7,7 +7,7 @@ const defaultOptions = {} as const;
 export type GetUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, registerNum?: string, subscribed?: boolean, verified: boolean, avatar?: string, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifiedAt?: any }> } };
+export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, registerNum?: string, subscribed?: boolean, verified: boolean, avatar?: string, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> } }> } };
 
 
 export const GetUserDocument = gql`
@@ -21,7 +21,7 @@ export const GetUserDocument = gql`
     subscribed
     verified
     avatar
-    verifications(filter: {status: {eq: "pending"}}) {
+    verifications {
       edges {
         node {
           id
@@ -32,7 +32,14 @@ export const GetUserDocument = gql`
     trucks {
       id
       verified
-      verifiedAt
+      verifications {
+        edges {
+          node {
+            id
+            status
+          }
+        }
+      }
     }
   }
 }

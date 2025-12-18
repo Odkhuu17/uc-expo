@@ -1,22 +1,20 @@
-import { UserOctagon } from 'iconsax-react-nativejs';
-
 import { useAppSelector } from '@/redux/hooks';
-import { Box, Text, useTheme } from '../Theme';
+import { Box, Text } from '../Theme';
+import UserAvatar from '../UserAvatar';
 
 const UserInfo = () => {
   const { user } = useAppSelector(state => state.auth);
-  const theme = useTheme();
 
   return (
     <Box
       flexDirection="row"
       alignItems="center"
-      gap="m"
+      gap="s"
       backgroundColor="white"
       borderRadius="full"
       p="s"
     >
-      <UserOctagon size={theme.icon.l} />
+      <UserAvatar avatar={user?.avatar} />
       <Box>
         <Text variant="header" numberOfLines={1}>
           {`${user?.lastName?.charAt(0).toUpperCase()}`}.{user?.firstName}

@@ -1,4 +1,5 @@
 import { Warning2 } from 'iconsax-react-nativejs';
+
 import BoxContainer from './BoxContainer';
 import { Box, Text, useTheme } from './Theme';
 

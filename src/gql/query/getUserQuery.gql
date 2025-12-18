@@ -19,7 +19,14 @@ query GetUser {
     trucks {
       id
       verified
-      verifiedAt
+      verifications {
+        edges {
+          node {
+            id
+            status
+          }
+        }
+      }
     }
   }
 }

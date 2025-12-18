@@ -1,11 +1,10 @@
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useEffect, useState } from 'react';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { RefreshControl } from 'react-native-gesture-handler';
-import * as ImagePicker from 'expo-image-picker';
-import { Edit, UserOctagon } from 'iconsax-react-nativejs';
-import { Alert, TouchableOpacity } from 'react-native';
+import { useFormik } from 'formik';
+import { Edit2, UserOctagon } from 'iconsax-react-nativejs';
+import { useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import * as yup from 'yup';
 
 import {
   Button,
@@ -18,10 +17,8 @@ import {
 } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
 import { useUpdateUserMutation } from '@/gql/mutations/updateUserMutation.generated';
-import { useGetUserQuery } from '@/gql/query/getUserQuery.generated';
-import { useAppDispatch } from '@/redux/hooks';
-import authSlice from '@/redux/slices/auth';
-import { Image } from 'expo-image';
+import useImagePick from '@/hooks/useImagePick';
+import { useAppSelector } from '@/redux/hooks';
 import { imageToFile } from '@/utils/fileHelpers';
 import { getImageUrl } from '@/utils/helpers';
 
@@ -32,19 +29,13 @@ const schema = yup.object().shape({
 });
 
 const ProfileUpdateScreen = () => {
-  const {
-    data: userData,
-    loading: userLoading,
-    refetch: userRefetch,
-  } = useGetUserQuery();
-  const dispatch = useAppDispatch();
+  const { user } = useAppSelector(state => state.auth);
   const [updateUser, { loading }] = useUpdateUserMutation();
   const [successModal, setSuccessModal] = useState(false);
-  const [avatar, setAvatar] = useState<string>('');
+  const [avatar, setAvatar] = useState<string | null>(null);
   const router = useRouter();
   const theme = useTheme();
-
-  console.log('userData', userData);
+  const { onPickImage } = useImagePick({ setImage: setAvatar });
 
   const {
     handleSubmit,
@@ -64,64 +55,23 @@ const ProfileUpdateScreen = () => {
     onSubmit: async () => {
       updateUser({
         variables: {
-          avatar: imageToFile(avatar),
+          avatar: avatar ? imageToFile(avatar) : undefined,
           firstName: values.firstName,
           lastName: values.lastName,
           registerNum: values.registerNum,
-          id: userData?.me?.id!, // Replace with actual user ID logic
+          id: user?.id!, // Replace with actual user ID logic
         },
       });
     },
   });
 
   useEffect(() => {
-    if (userData) {
-      setFieldValue('firstName', userData.me?.firstName || '');
-      setFieldValue('lastName', userData.me?.lastName || '');
-      setFieldValue('registerNum', userData.me?.registerNum || '');
-      dispatch(authSlice.actions.changeUser(userData?.me));
+    if (user) {
+      setFieldValue('firstName', user?.firstName || '');
+      setFieldValue('lastName', user?.lastName || '');
+      setFieldValue('registerNum', user?.registerNum || '');
     }
-  }, [userData]);
-
-  const onLaunchCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') return;
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.8,
-      cameraType: ImagePicker.CameraType.front,
-    });
-    if (!result.canceled) {
-      setAvatar(result.assets[0].uri);
-    }
-  };
-
-  const handlePickImage = async () => {
-    Alert.alert('Зураг оруулах', 'Зураг оруулах төрлөө сонгоно уу!', [
-      {
-        text: 'Камер нээх',
-        onPress: onLaunchCamera,
-      },
-      {
-        text: 'Зураг сонгох',
-        onPress: async () => {
-          const { status } =
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') return;
-          const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 0.8,
-          });
-          if (!result.canceled) {
-            setAvatar(result.assets[0].uri);
-          }
-        },
-      },
-      { text: 'Буцах', style: 'cancel' },
-    ]);
-  };
+  }, [user]);
 
   return (
     <>
@@ -137,12 +87,12 @@ const ProfileUpdateScreen = () => {
               backgroundColor="grey"
               justifyContent="center"
             >
-              {avatar || userData?.me?.avatar ? (
+              {avatar || user?.avatar ? (
                 <Image
                   contentPosition="center"
                   contentFit="cover"
                   source={{
-                    uri: avatar || getImageUrl(userData?.me?.avatar || ''),
+                    uri: avatar || getImageUrl(user?.avatar || ''),
                   }}
                   style={{ width: 100, height: 100, borderRadius: 50 }}
                 />
@@ -150,21 +100,20 @@ const ProfileUpdateScreen = () => {
                 <UserOctagon size={theme.icon.xl2} />
               )}
               <Box position="absolute" bottom={0} right={0}>
-                <TouchableOpacity onPress={handlePickImage}>
-                  <Edit size={theme.icon.l} />
+                <TouchableOpacity onPress={onPickImage}>
+                  <Box
+                    p="xs"
+                    backgroundColor="white"
+                    borderRadius="full"
+                    borderWidth={2}
+                  >
+                    <Edit2 size={theme.icon.m} />
+                  </Box>
                 </TouchableOpacity>
               </Box>
             </Box>
           </Box>
-          <ScrollableContent
-            edges={['bottom']}
-            refreshControl={
-              <RefreshControl
-                onRefresh={userRefetch}
-                refreshing={userLoading}
-              />
-            }
-          >
+          <ScrollableContent edges={['bottom']}>
             <Box gap="m">
               <Input
                 placeholder="Овог"

@@ -1,124 +1,88 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { Button, Container, Content, NormalHeader } from '@/components';
+import {
+  BottomContainer,
+  Button,
+  Container,
+  NormalHeader,
+  ScrollableContent,
+} from '@/components';
 import { Box } from '@/components/Theme';
 import { useVerifyDriverMutation } from '@/gql/mutations/verifyDriverMutation.generated';
 import { imageToFile } from '@/utils/fileHelpers';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import { useAppDispatch } from '@/redux/hooks';
-import authSlice from '@/redux/slices/auth';
-import { useGetUserLazyQuery } from '@/gql/query/getUserQuery.generated';
-
-const AnimatedBox = Animated.createAnimatedComponent(Box);
+import { ImageInput } from './components';
 
 const VerifyScreen = () => {
-  const [step, setStep] = useState(1);
   const [passportFront, setPassportFront] = useState<string | null>(null);
   const [passportBack, setPassportBack] = useState<string | null>(null);
   const [selfie, setSelfie] = useState<string | null>(null);
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const [getUser] = useGetUserLazyQuery({
-    fetchPolicy: 'no-cache',
-  });
 
   const [verifyDriver, { loading }] = useVerifyDriverMutation();
 
-  const renderStep = () => {
-    switch (step) {
-      case 2:
-        return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-            <Step2 selfie={selfie} setSelfie={setSelfie} />
-          </AnimatedBox>
-        );
-      default:
-        return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
-            <Step1
-              passportFront={passportFront}
-              setPassportFront={setPassportFront}
-              passportBack={passportBack}
-              setPassportBack={setPassportBack}
-            />
-          </AnimatedBox>
-        );
-    }
-  };
-
   const onPressNext = async () => {
-    if (step === 1) {
-      if (!passportFront || !passportBack) {
-        return router.navigate({
-          pathname: '/modal',
-          params: {
-            type: 'error',
-            message: 'Та иргэний үнэмлэхний зургаа оруулна уу',
-          },
-        });
-      }
-
-      setStep(2);
-    } else {
-      if (!selfie) {
-        return router.navigate({
-          pathname: '/modal',
-          params: {
-            type: 'error',
-            message: 'Та өөрийн зургаа оруулна уу',
-          },
-        });
-      }
-      const passportFrontImage = imageToFile(passportFront!);
-      const passportBackImage = imageToFile(passportBack!);
-      const selfieImage = imageToFile(selfie!);
-
-      const { data } = await verifyDriver({
-        variables: {
-          passport: passportFrontImage,
-          passportBack: passportBackImage,
-          selfie: selfieImage,
+    if (!passportFront || !passportBack) {
+      return router.navigate({
+        pathname: '/modal',
+        params: {
+          type: 'error',
+          message: 'Та иргэний үнэмлэхний зургаа оруулна уу',
         },
       });
-
-      if (data?.verifyDriver?.status === 'rejected') {
-        return router.navigate({
-          pathname: '/modal',
-          params: {
-            type: 'error',
-            message:
-              data.verifyDriver.field5 || 'Баталгаажуулалт амжилтгүй боллоо',
-          },
-        });
-      } else {
-        getUser().then(({ data }) => {
-          dispatch(authSlice.actions.changeUser(data?.me));
-        });
-      }
     }
-  };
 
-  const onPressBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
+    if (!selfie) {
+      return router.navigate({
+        pathname: '/modal',
+        params: {
+          type: 'error',
+          message: 'Та өөрийн зургаа оруулна уу',
+        },
+      });
     }
+
+    const passportFrontImage = imageToFile(passportFront!);
+    const passportBackImage = imageToFile(passportBack!);
+    const selfieImage = imageToFile(selfie!);
+
+    await verifyDriver({
+      variables: {
+        passport: passportFrontImage,
+        passportBack: passportBackImage,
+        selfie: selfieImage,
+      },
+    });
+
+    router.back();
   };
 
   return (
     <Container>
-      <NormalHeader
-        title="Баталгаажуулалт"
-        noMenu
-        hasBack
-        onPressBack={step === 1 ? undefined : onPressBack}
-      />
-      <Content edges={['bottom']}>
-        <Box flex={1}>{renderStep()}</Box>
+      <NormalHeader title="Баталгаажуулалт" noMenu hasBack />
+      <ScrollableContent edges={[]}>
+        <Box gap="m">
+          <ImageInput
+            image={passportFront}
+            setImage={setPassportFront}
+            label="Иргэний үнэмлэхний зураг (Урд тал)"
+          />
+          <ImageInput
+            image={passportBack}
+            setImage={setPassportBack}
+            label="Иргэний үнэмлэхний зураг (Ар тал)"
+          />
+          <ImageInput
+            image={selfie}
+            setImage={setSelfie}
+            label="Өөрийн зураг"
+            onlyCamera
+          />
+        </Box>
+      </ScrollableContent>
+      <BottomContainer>
         <Button title="Үргэлжлүүлэх" onPress={onPressNext} loading={loading} />
-      </Content>
+      </BottomContainer>
     </Container>
   );
 };

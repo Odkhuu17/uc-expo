@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { Add, Trash } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { BoxContainer, IconButton } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
+import useImagePick from '@/hooks/useImagePick';
 
 interface Props {
   label: string;
@@ -16,52 +16,7 @@ interface Props {
 
 const ImageInput = ({ image, setImage, label, onlyCamera }: Props) => {
   const theme = useTheme();
-
-  const onLaunchCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') return;
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.8,
-      cameraType: onlyCamera
-        ? ImagePicker.CameraType.front
-        : ImagePicker.CameraType.back,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const handlePickImage = async () => {
-    if (onlyCamera) {
-      return onLaunchCamera();
-    }
-
-    Alert.alert('Зураг оруулах', 'Зураг оруулах төрлөө сонгоно уу!', [
-      {
-        text: 'Камер нээх',
-        onPress: onLaunchCamera,
-      },
-      {
-        text: 'Зураг сонгох',
-        onPress: async () => {
-          const { status } =
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') return;
-          const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 0.8,
-          });
-          if (!result.canceled) {
-            setImage(result.assets[0].uri);
-          }
-        },
-      },
-      { text: 'Буцах', style: 'cancel' },
-    ]);
-  };
+  const { onPickImage } = useImagePick({ setImage, onlyCamera });
 
   const onDeleteImage = () => {
     setImage(null);
@@ -78,7 +33,7 @@ const ImageInput = ({ image, setImage, label, onlyCamera }: Props) => {
       {image ? (
         <Box width="100%" height="100%">
           <Box overflow="hidden" borderRadius="s" width="100%" height="100%">
-            <Image source={{ uri: image }} style={css.img} contentFit="cover" />
+            <Image source={{ uri: image }} style={css.img} contentFit="contain" />
           </Box>
           <Box
             position="absolute"
@@ -93,7 +48,7 @@ const ImageInput = ({ image, setImage, label, onlyCamera }: Props) => {
           </Box>
         </Box>
       ) : (
-        <TouchableOpacity onPress={handlePickImage}>
+        <TouchableOpacity onPress={onPickImage}>
           <Box
             alignItems="center"
             justifyContent="center"

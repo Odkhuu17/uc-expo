@@ -16,13 +16,13 @@ import {
 } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
+import { useUpdateTruckMutation } from '@/gql/mutations/updateTruckMutation.generated';
 import { useVerifyTruckMutation } from '@/gql/mutations/verifyTruckMutation.generated';
+import { useGetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
 import { useGetTaxonsQuery } from '@/gql/query/getTaxonsQuery.generated';
 import { useAppSelector } from '@/redux/hooks';
 import { imageToFile } from '@/utils/fileHelpers';
 import ImageInput from './ImageInput';
-import { useGetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
-import { useUpdateTruckMutation } from '@/gql/mutations/updateTruckMutation.generated';
 
 const schema = yup.object().shape({
   mark: yup.string().required('Энэ талбар хоосон байна!'),
@@ -210,7 +210,7 @@ const AddOrEditTruckScreen = () => {
             style={{ paddingBottom: insets.bottom + theme.spacing.m }}
           >
             <Button
-              title="Машин нэмэх"
+              title={id ? 'Мэдээлэл шинэчлэх' : 'Машин нэмэх'}
               onPress={handleSubmit}
               loading={isSubmitting}
             />
@@ -221,11 +221,11 @@ const AddOrEditTruckScreen = () => {
         type="success"
         message={
           id
-            ? 'Машин мэдээлэл амжилттай шинэчлэгдлээ'
+            ? 'Машины мэдээлэл амжилттай шинэчлэгдлээ'
             : 'Машин амжилттай нэмэгдлээ'
         }
         onClose={() => {
-          router.dismissTo('/profile/trucks');
+          router.back();
           setSuccessModal(false);
         }}
         visible={successModal}

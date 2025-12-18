@@ -19,8 +19,7 @@ query GetMyTrucks {
         link
       }
       verified
-      verifiedAt
-      verifications(filter: { status: { eq: "pending" } }) {
+      verifications {
         edges {
           node {
             id

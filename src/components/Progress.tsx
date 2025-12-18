@@ -1,12 +1,14 @@
+import { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-import { Box } from '@/components/Theme';
-import { useEffect } from 'react';
 import { scheduleOnRN } from 'react-native-worklets';
+
+import { Box, Text, useTheme } from '@/components/Theme';
+import BoxContainer from './BoxContainer';
 
 interface Props {
   sec: number;
@@ -17,6 +19,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 const Progress = ({ sec, onFinish }: Props) => {
   const width = useSharedValue(0);
+  const theme = useTheme();
 
   useEffect(() => {
     width.value = withTiming(100, { duration: sec * 1000 }, finished => {
@@ -33,20 +36,28 @@ const Progress = ({ sec, onFinish }: Props) => {
   });
 
   return (
-    <Box
-      width="100%"
-      height={5}
-      backgroundColor="grey"
-      borderRadius="m"
-      overflow="hidden"
-    >
-      <AnimatedBox
+    <BoxContainer gap="s" backgroundColor="yellowLight">
+      <Box flexDirection="row" alignItems="center" gap="s">
+        <ActivityIndicator color={theme.colors.black} />
+        <Box flex={1}>
+          <Text variant="body2">Таны бүртгэлийг баталгаажуулж байна!</Text>
+        </Box>
+      </Box>
+      <Box
+        width="100%"
+        height={5}
+        backgroundColor="white"
         borderRadius="m"
-        style={[animatedProgressStyle, { width: '0%' }]}
-        height="100%"
-        backgroundColor="baseBlue"
-      />
-    </Box>
+        overflow="hidden"
+      >
+        <AnimatedBox
+          borderRadius="m"
+          style={animatedProgressStyle}
+          height="100%"
+          backgroundColor="baseBlue"
+        />
+      </Box>
+    </BoxContainer>
   );
 };
 

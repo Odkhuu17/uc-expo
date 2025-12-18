@@ -1,3 +1,4 @@
+export { default as BottomContainer } from './BottomContainer';
 export { default as BoxContainer } from './BoxContainer';
 export { default as Button } from './Button';
 export { default as Checkbox } from './Checkbox';
@@ -21,9 +22,11 @@ export { default as MessageModal } from './MessageModal';
 export { default as NormalHeader } from './NormalHeader';
 export { default as OrderInput } from './OrderInput';
 export { default as OrderLocation } from './OrderLocation';
+export { default as Progress } from './Progress';
 export { default as ScrollableContent } from './ScrollableContent';
 export { default as Select } from './Select';
 export { default as SingleOrder } from './SingleOrder';
 export { default as TextArea } from './TextArea';
+export { default as UserAvatar } from './UserAvatar';
 export { default as Warning } from './Warning';
-export { default as Progress } from './Progress';
+

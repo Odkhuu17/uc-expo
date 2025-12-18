@@ -1,26 +1,22 @@
 import { useTheme } from '@shopify/restyle';
+import { useRouter } from 'expo-router';
 import { Trash, Truck } from 'iconsax-react-nativejs';
 import { Alert, TouchableOpacity } from 'react-native';
 
-import { BoxContainer, Button, IconButton, Label } from '@/components';
+import { BoxContainer, IconButton, Label, Progress } from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { useDestroyTruckMutation } from '@/gql/mutations/destroyTruckMutation.generated';
 import { GetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
-import ImageInput from './ImageInput';
-import { useState } from 'react';
-import { useVerifyTruckMutation } from '@/gql/mutations/verifyTruckMutation.generated';
-import { imageToFile } from '@/utils/fileHelpers';
-import { useRouter } from 'expo-router';
 
 interface Props {
   item: NonNullable<GetMyTrucksQuery['me']>['trucks'][0];
+  refetch: () => void;
 }
 
-const SingleTruck = ({ item }: Props) => {
+const SingleTruck = ({ item, refetch }: Props) => {
   const [destroyTruck, { loading }] = useDestroyTruckMutation();
+
   const theme = useTheme();
-  const [passport, setPassport] = useState<string | null>(null);
-  const [verifyTruck] = useVerifyTruckMutation();
   const router = useRouter();
 
   const onPressDelete = () => {
@@ -43,12 +39,17 @@ const SingleTruck = ({ item }: Props) => {
     );
   };
 
-  const pendingVerification = item?.verifications?.edges?.length !== 0;
+  const onPress = () => {
+    if (
+      !item?.verified &&
+      item?.verifications?.edges?.[0]?.node?.status !== 'pending'
+    ) {
+      router.navigate(`/profile/trucks/${item?.id}/edit`);
+    }
+  };
 
   return (
-    <TouchableOpacity
-      onPress={() => router.navigate(`/profile/trucks/${item?.id}/edit`)}
-    >
+    <TouchableOpacity onPress={onPress}>
       <BoxContainer gap="m">
         <Box flexDirection="row" gap="m">
           <Box flexDirection="row" alignItems="center" gap="m" flex={1}>
@@ -71,12 +72,12 @@ const SingleTruck = ({ item }: Props) => {
             onPress={onPressDelete}
           />
         </Box>
-        {pendingVerification && (
+        {item?.verifications?.edges?.[0]?.node?.status === 'pending' && (
+          <Progress sec={30} onFinish={refetch} />
+        )}
+        {item?.verified && (
           <Box alignItems="flex-end">
-            <Label
-              text="Баталгаажуулалт хүлээгдэж байна"
-              backgroundColor={item.verified ? 'success' : 'warning'}
-            />
+            <Label text="Баталгаажсан" backgroundColor="success" />
           </Box>
         )}
       </BoxContainer>
