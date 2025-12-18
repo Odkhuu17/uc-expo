@@ -63,7 +63,7 @@ const OrderDetailDelivery = ({ order }: Props) => {
         <Title title="Ерөнхий мэдээлэл" />
         <SingleRow label="Захиалгын дугаар:" value={order?.number} />
         <SingleRow label="Ачааны төрөл:" value={order?.packageType} />
-        <SingleRow label="Машины төрөл:" value={order?.carType} />
+        <SingleRow label="Техникийн төрөл:" value={order?.carType} />
         <SingleRow
           label="Үнэ:"
           value={order?.price ? moneyFormat(order?.price) : 'Тохиролцоно'}

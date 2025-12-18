@@ -101,7 +101,7 @@ const ProfileScreen = () => {
                   <ArrowRight2 size={theme.icon.m} />
                 </Box>
               </TouchableOpacity>
-              {!userData?.me?.verified && (
+              {!userData?.me?.verified && mode === 'driver' && (
                 <>
                   {userData?.me?.verifications?.edges?.[0]?.node?.status ===
                   'pending' ? (

@@ -124,7 +124,7 @@ const RentStep3 = ({
           <BoxContainer gap="m">
             <Select
               icon={TruckFast}
-              placeholder="Машины төрөл"
+              placeholder="Техникийн төрөл"
               options={carTypes2.map(p => ({
                 label: p.name,
                 value: p.name,

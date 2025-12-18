@@ -150,7 +150,7 @@ const DeliveryStep3 = ({
               />
               <Select
                 icon={TruckFast}
-                placeholder="Машины төрөл"
+                placeholder="Техникийн төрөл"
                 options={carTypes.map(p => ({
                   label: p.name,
                   value: p.name,

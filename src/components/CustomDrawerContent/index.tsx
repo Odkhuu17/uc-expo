@@ -25,6 +25,7 @@ import UserInfo from './UserInfo';
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const dispatch = useAppDispatch();
   const insets = useSafeAreaInsets();
+  const { user } = useAppSelector(state => state.auth);
   const theme = useTheme();
   const { mode } = useAppSelector(state => state.general);
 
@@ -69,12 +70,15 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                   href="/orders/create"
                 />
               )}
-              <SingleLinkButton
-                icon={BoxIcon}
-                title="Захиалгууд"
-                href="/orders"
-              />
-              {mode === 'driver' && (
+              {(mode === 'shipper' ||
+                (mode === 'driver' && user?.verified)) && (
+                <SingleLinkButton
+                  icon={BoxIcon}
+                  title="Захиалгууд"
+                  href="/orders"
+                />
+              )}
+              {mode === 'driver' && user?.verified && (
                 <SingleLinkButton
                   icon={UserAdd}
                   title="Гишүүнчлэл"

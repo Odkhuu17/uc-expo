@@ -36,7 +36,7 @@ const OrderDetailRent = ({ order }: Props) => {
       <BoxContainer gap="s">
         <Title title="Ерөнхий мэдээлэл" />
         <SingleRow label="Захиалгын дугаар:" value={order?.number} />
-        <SingleRow label="Машины төрөл:" value={order?.carType} />
+        <SingleRow label="Техникийн төрөл:" value={order?.carType} />
         <SingleRow label="Даац/Хэмжээ:" value={order?.carWeight} />
         <SingleRow
           label="Үнэ:"
