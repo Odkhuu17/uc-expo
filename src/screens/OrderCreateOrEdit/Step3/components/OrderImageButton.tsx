@@ -1,38 +1,23 @@
-import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'iconsax-react-nativejs';
-import { Dispatch, SetStateAction } from 'react';
-import { Alert } from 'react-native';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import OrderIconButton from './OrderIconButton';
+import useImagePick from '@/hooks/useImagePick';
 
 interface Props {
   setImages: Dispatch<SetStateAction<string[]>>;
 }
 
 const OrderImage = ({ setImages }: Props) => {
-  const onPickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const [image, setImage] = useState<string | null>(null);
 
-    if (!permissionResult.granted) {
-      Alert.alert(
-        'Permission required',
-        'Permission to access the media library is required.'
-      );
-      return;
+  useEffect(() => {
+    if (image) {
+      setImages(prevImages => [...prevImages, image]);
     }
+  }, [image]);
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImages(prevImages => [...prevImages, result.assets[0].uri]);
-    }
-  };
+  const { onPickImage } = useImagePick({ setImage });
 
   return (
     <OrderIconButton icon={Image} title="Зураг нэмэх" onPress={onPickImage} />

@@ -46,8 +46,8 @@ const OrderDetailRent = ({ order }: Props) => {
           label="Ажил эхлэх өдөр:"
           value={order?.travelAt && dayjs(order?.travelAt).format('YYYY-MM-DD')}
         />
-        <SingleRow label="Ажиллах хоног:" value={order?.data?.rentDay} />
-        <SingleRow label="Мот/цаг:" value={order?.data?.motHour} />
+        <SingleRow label="Түрээслэх хоног:" value={order?.data?.rentDay} />
+        <SingleRow label="Ажиллах хоног:" value={order?.data?.motHour} />
       </BoxContainer>
       {order?.data?.additionalInfo && (
         <BoxContainer gap="s">
@@ -55,7 +55,7 @@ const OrderDetailRent = ({ order }: Props) => {
           <Text variant="body2">{order?.data?.additionalInfo}</Text>
         </BoxContainer>
       )}
-      {order?.data?.additionalInfo && (
+      {order?.data?.additionalAddress && (
         <BoxContainer gap="s">
           <Title title="Дэлгэрэнгүй хаяг" />
           <Text variant="body2">{order?.data?.additionalAddress}</Text>

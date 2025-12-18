@@ -2,6 +2,7 @@ import { Icon as IconType } from 'iconsax-react-nativejs';
 import React, { RefObject, useRef } from 'react';
 import { Pressable, TextInput, ViewStyle } from 'react-native';
 import MaskInput, { MaskInputProps } from 'react-native-mask-input';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 
@@ -68,11 +69,12 @@ function DateInput({
             {label}
           </Text>
         </Box>
-        <MaskInput
-          {...textInputProps}
-          ref={ref || inputRef}
-          style={styles.input}
-          placeholderTextColor={theme.colors.grey2}
+        <DateTimePicker
+          locale="mn-MN"
+          accentColor={theme.colors.baseBlue}
+          display="compact"
+          mode="date"
+          value={new Date()}
         />
       </Box>
       {error && (
