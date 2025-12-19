@@ -1,0 +1,120 @@
+query GetDeliveryRequests(
+  $first: Int
+  $after: String
+  $before: String
+  $last: Int
+  $offset: Int
+  $filter: DeliveryRequestFilter
+  $sort: SortFilter = { field: "created_at", direction: desc }
+) {
+  deliveryRequests(
+    first: $first
+    after: $after
+    before: $before
+    last: $last
+    offset: $offset
+    filter: $filter
+    sort: $sort
+  ) {
+    edges {
+      cursor
+      node {
+        id
+        price
+        status
+        travelAt
+        active
+        user {
+          id
+          firstName
+          lastName
+          nickName
+          mobile
+          email
+        }
+        order {
+          id
+          number
+          title
+          status
+          published
+          my
+          requested
+          packageType
+          price
+          carType
+          carWeight
+          senderName
+          senderMobile
+          receiverName
+          receiverMobile
+          travelAt
+          images
+          origin {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+          destination {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+    }
+    nodes {
+      id
+      status
+    }
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}

@@ -1,31 +1,40 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
+import { useRouter } from 'expo-router';
 
-import { Button, CustomBottomSheetModal, Input } from '@/components';
+import {
+  Button,
+  CustomBottomSheetModal,
+  Input,
+  MessageModal,
+} from '@/components';
 import { Box, useTheme } from '@/components/Theme';
 import { useCreateDeliveryRequestMutation } from '@/gql/mutations/createDeliveryRequestMutation.generated';
 import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 
 interface Props {
   data: GetOrderQuery['order'];
+  refetch: () => void;
 }
 
 const schema = yup.object().shape({
   price: yup.string().required('Энэ талбар хоосон байна!'),
-  travelAt: yup.string().required('Энэ талбар хоосон байна!'),
+  travelAt: yup.string(),
 });
 
-const OrderRequestButton = ({ data }: Props) => {
+const OrderRequestButton = ({ data, refetch }: Props) => {
   const [createDeliveryRequest, { loading }] =
     useCreateDeliveryRequestMutation();
   const ref = useRef<BottomSheetModal | null>(null);
   const snapPoints = useMemo(() => [], []);
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const router = useRouter();
+  const [successModal, setSuccessModal] = useState(false);
 
   const onPress = () => {
     ref.current?.present();
@@ -51,12 +60,22 @@ const OrderRequestButton = ({ data }: Props) => {
       await createDeliveryRequest({
         variables: {
           orderId: data?.id!,
-          price: data?.price || 0,
-          travelAt: data?.travelAt || dayjs().format('YYYY-MM-DD'),
+          price: values?.price ? Number(values?.price) : 0,
+          travelAt: dayjs(values?.travelAt) || dayjs().format('YYYY-MM-DD'),
         },
-      }).finally(() => {
-        ref.current?.dismiss();
-      });
+      })
+        .then(() => {
+          return router.navigate({
+            pathname: '/modal',
+            params: {
+              type: 'success',
+              message: 'Таны хүсэлт амжилттай илгээгдлээ',
+            },
+          });
+        })
+        .finally(() => {
+          ref.current?.dismiss();
+        });
     },
   });
 
@@ -100,6 +119,15 @@ const OrderRequestButton = ({ data }: Props) => {
           </Box>
         </BottomSheetView>
       </CustomBottomSheetModal>
+      <MessageModal
+        type="success"
+        message="Таны хүсэлт амжилттай илгээгдлээ"
+        onClose={() => {
+          refetch();
+          setSuccessModal(false);
+        }}
+        visible={successModal}
+      />
     </>
   );
 };

@@ -10,6 +10,7 @@ const OrderLayout = () => {
         <Stack.Screen name="create" />
         <Stack.Screen name="[number]/edit" />
         <Stack.Screen name="[number]/requests" />
+        <Stack.Screen name="[number]/track" />
       </Stack.Protected>
       <Stack.Screen name="index" />
       <Stack.Screen name="[number]/index" />

@@ -78,7 +78,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                   href="/orders"
                 />
               )}
-              {mode === 'driver' && user?.verified && (
+              {mode === 'driver' && user?.verified && user?.subscribed && (
                 <SingleLinkButton
                   icon={UserAdd}
                   title="Гишүүнчлэл"
@@ -90,9 +90,13 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               <SingleLinkButton
                 icon={Note1}
                 title="Үйлчилгээний нөхцөл"
-                href="/"
+                href="/terms"
               />
-              <SingleLinkButton icon={Call} title="Холбоо барих" href="/" />
+              <SingleLinkButton
+                icon={Call}
+                title="Холбоо барих"
+                href="/contact"
+              />
             </Box>
             <Button title="Гарах" onPress={onLogout} />
           </Box>

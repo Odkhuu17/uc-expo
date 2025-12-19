@@ -2,8 +2,15 @@ import { useTheme } from '@shopify/restyle';
 import { useRouter } from 'expo-router';
 import { Trash, Truck } from 'iconsax-react-nativejs';
 import { Alert, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
 
-import { BoxContainer, IconButton, Label, Progress } from '@/components';
+import {
+  BoxContainer,
+  IconButton,
+  Label,
+  Progress,
+  Warning,
+} from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { useDestroyTruckMutation } from '@/gql/mutations/destroyTruckMutation.generated';
 import { GetMyTrucksQuery } from '@/gql/query/getMyTrucks.generated';
@@ -15,6 +22,29 @@ interface Props {
 
 const SingleTruck = ({ item, refetch }: Props) => {
   const [destroyTruck, { loading }] = useDestroyTruckMutation();
+  const [hasPendingUserVerification, setHasPendingUserVerification] =
+    useState(false);
+
+  useEffect(() => {
+    if (item?.verifications?.edges?.[0]?.node?.status === 'pending') {
+      setHasPendingUserVerification(true);
+    }
+  }, [item]);
+
+  useEffect(() => {
+    if (hasPendingUserVerification) {
+      if (item?.verified) {
+        setHasPendingUserVerification(false);
+        return router.navigate({
+          pathname: '/modal',
+          params: {
+            type: 'success',
+            message: 'Таны машин амжилттай баталгаажлаа.',
+          },
+        });
+      }
+    }
+  }, [item, hasPendingUserVerification]);
 
   const theme = useTheme();
   const router = useRouter();
@@ -74,6 +104,12 @@ const SingleTruck = ({ item, refetch }: Props) => {
         </Box>
         {item?.verifications?.edges?.[0]?.node?.status === 'pending' && (
           <Progress sec={30} onFinish={refetch} />
+        )}
+        {item?.verifications?.edges?.[0]?.node?.field5 && (
+          <Warning
+            type="error"
+            description={item?.verifications?.edges?.[0]?.node?.field5}
+          />
         )}
         {item?.verified && (
           <Box alignItems="flex-end">

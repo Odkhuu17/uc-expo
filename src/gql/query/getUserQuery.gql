@@ -13,6 +13,7 @@ query GetUser {
         node {
           id
           status
+          field5
         }
       }
     }
@@ -24,6 +25,7 @@ query GetUser {
           node {
             id
             status
+            field5
           }
         }
       }

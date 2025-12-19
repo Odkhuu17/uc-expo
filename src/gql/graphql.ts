@@ -204,11 +204,15 @@ export type DeliveryRequest = BaseModelInterface & {
   createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
   order: Order;
+  orderId: Scalars['ID']['output'];
   price: Scalars['Float']['output'];
   status: Scalars['String']['output'];
   travelAt: Scalars['ISO8601DateTime']['output'];
+  truck?: Maybe<Truck>;
+  truckId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
+  userId: Scalars['ID']['output'];
 };
 
 export type DeliveryRequestConnection = {
@@ -229,7 +233,11 @@ export type DeliveryRequestFilter = {
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
   order?: InputMaybe<OrderFilter>;
+  price?: InputMaybe<IntFilter>;
+  status?: InputMaybe<EnumStringFilter>;
+  truck?: InputMaybe<TruckFilter>;
   updatedAt?: InputMaybe<DateFilter>;
+  user?: InputMaybe<UserFilter>;
 };
 
 export type Device = BaseModelInterface & {
@@ -826,6 +834,7 @@ export type Node = {
 
 export type Order = BaseModelInterface & {
   __typename?: 'Order';
+  acceptedDeliveryRequest?: Maybe<DeliveryRequest>;
   audio?: Maybe<Scalars['String']['output']>;
   carType?: Maybe<Scalars['String']['output']>;
   carWeight?: Maybe<Scalars['String']['output']>;
@@ -838,6 +847,7 @@ export type Order = BaseModelInterface & {
   imageObjects?: Maybe<Array<ImageObject>>;
   images?: Maybe<Array<Scalars['String']['output']>>;
   my?: Maybe<Scalars['Boolean']['output']>;
+  myRequest?: Maybe<DeliveryRequest>;
   number?: Maybe<Scalars['String']['output']>;
   origin?: Maybe<Address>;
   packageDimensions?: Maybe<Scalars['String']['output']>;
@@ -2137,6 +2147,7 @@ export type CreateBannerInput = {
 
 export type CreateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  driverId?: InputMaybe<Scalars['ID']['input']>;
   orderId: Scalars['ID']['input'];
   price: Scalars['Float']['input'];
   skipSubscription?: InputMaybe<Scalars['Boolean']['input']>;

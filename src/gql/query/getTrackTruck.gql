@@ -1,4 +1,4 @@
-query GetOrder($number: String) {
+query GetTrackTruck($number: String) {
   order(number: $number) {
     id
     number
@@ -11,26 +11,14 @@ query GetOrder($number: String) {
     subscribed
     acceptedDeliveryRequest {
       id
-      price
-      status
-      travelAt
-      user {
+      truck {
         id
-        firstName
-        lastName
-        nickName
-        mobile
-        email
+        currentTrack {
+          id
+          latitude
+          longitude
+        }
       }
-    }
-    myRequest {
-      id
-      active
-      status
-      price
-      travelAt
-      createdAt
-      updatedAt
     }
     packageType
     packageWeight
@@ -50,14 +38,6 @@ query GetOrder($number: String) {
     audio
     video
     images
-    user {
-      id
-      firstName
-      lastName
-      nickName
-      mobile
-      email
-    }
     origin {
       id
       name
@@ -125,34 +105,6 @@ query GetOrder($number: String) {
       }
       createdAt
       updatedAt
-    }
-    deliveryRequests {
-      edges {
-        node {
-          id
-          active
-          status
-          price
-          travelAt
-          user {
-            id
-            firstName
-            lastName
-            nickName
-            mobile
-            email
-          }
-          createdAt
-          updatedAt
-        }
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-      totalCount
     }
     createdAt
     updatedAt

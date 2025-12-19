@@ -15,14 +15,21 @@ import {
 import { Box, makeStyles } from '@/components/Theme';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { useAppSelector } from '@/redux/hooks';
-import { getImageUrl, isRentOrder } from '@/utils/helpers';
-import { OrderDetailAudio, OrderDetailVideo } from './components';
+import { getImageUrl, isRentOrder, moneyFormat } from '@/utils/helpers';
+import {
+  OrderDetailAudio,
+  OrderDetailVideo,
+  SingleRow,
+  Title,
+} from './components';
 import {
   OrderDestroyButton,
   OrderDetailDelivery,
   OrderDetailRent,
   OrderRequestButton,
 } from './containers';
+import dayjs from 'dayjs';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -41,7 +48,7 @@ const OrderDetail = () => {
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const router = useRouter();
 
-  const { data, loading } = useGetOrderQuery({
+  const { data, loading, refetch } = useGetOrderQuery({
     variables: {
       number,
     },
@@ -66,11 +73,18 @@ const OrderDetail = () => {
     setIsImageViewVisible(false);
   };
 
+  console.log(data);
+
   return (
     <>
       <Container>
         <NormalHeader title={number as string} hasBack />
-        <ScrollableContent edges={['bottom']}>
+        <ScrollableContent
+          edges={['bottom']}
+          refreshControl={
+            <RefreshControl onRefresh={refetch} refreshing={loading} />
+          }
+        >
           {loading ? (
             <Loader />
           ) : (
@@ -115,28 +129,82 @@ const OrderDetail = () => {
               ) : (
                 <OrderDetailDelivery order={data?.order} />
               )}
-              {data?.order?.my && mode === 'shipper' && (
-                <>
-                  <Button
-                    title={`Захиалгын хүсэлтүүд (${data?.order?.deliveryRequests?.totalCount || 0})`}
-                    onPress={onPressRequests}
+              {data?.order?.my &&
+                mode === 'shipper' &&
+                data?.order?.status !== 'accepted' && (
+                  <>
+                    <Button
+                      title={`Захиалгын хүсэлтүүд (${data?.order?.deliveryRequests?.totalCount || 0})`}
+                      onPress={onPressRequests}
+                    />
+                    <Box flexDirection="row" gap="s">
+                      <Box flex={1}>
+                        <Button
+                          backgroundColor="green"
+                          title="Засах"
+                          onPress={onPressEdit}
+                        />
+                      </Box>
+                      <Box flex={1}>
+                        <OrderDestroyButton order={data?.order} />
+                      </Box>
+                    </Box>
+                  </>
+                )}
+              {mode === 'shipper' && data?.order?.acceptedDeliveryRequest && (
+                <BoxContainer gap="m">
+                  <Title title="Жолоочын мэдээлэл" />
+                  <SingleRow
+                    label="Үнэ:"
+                    value={moneyFormat(
+                      data?.order?.acceptedDeliveryRequest?.price
+                    )}
                   />
-                  <Box flexDirection="row" gap="s">
-                    <Box flex={1}>
-                      <Button
-                        backgroundColor="green"
-                        title="Засах"
-                        onPress={onPressEdit}
-                      />
-                    </Box>
-                    <Box flex={1}>
-                      <OrderDestroyButton order={data?.order} />
-                    </Box>
-                  </Box>
-                </>
+                  <SingleRow
+                    label="Овог"
+                    value={data?.order?.acceptedDeliveryRequest?.user?.lastName}
+                  />
+                  <SingleRow
+                    label="Нэр"
+                    value={
+                      data?.order?.acceptedDeliveryRequest?.user?.firstName
+                    }
+                  />
+                  <SingleRow
+                    label="Утасны дугаар"
+                    value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
+                  />
+                  <Button
+                    title="Ачаа хянах"
+                    onPress={() => router.navigate(`/orders/${number}/track`)}
+                  />
+                </BoxContainer>
+              )}
+              {mode === 'driver' && data?.order?.myRequest && (
+                <BoxContainer gap="m">
+                  <Title title="Миний хүсэлт" />
+                  <SingleRow
+                    label="Үнэ:"
+                    value={moneyFormat(data?.order?.myRequest?.price)}
+                  />
+                  <SingleRow
+                    label="Илгээсэн огноо:"
+                    value={dayjs(data?.order?.myRequest?.updatedAt).format(
+                      'YYYY/MM/DD HH:mm'
+                    )}
+                  />
+                  <SingleRow
+                    label="Төлөв:"
+                    value={
+                      data?.order?.myRequest?.status === 'pending'
+                        ? 'Хүлээгдэж буй'
+                        : 'Зөвшөөрөгдсөн'
+                    }
+                  />
+                </BoxContainer>
               )}
               {mode === 'driver' && data?.order?.status !== 'accepted' && (
-                <OrderRequestButton data={data?.order} />
+                <OrderRequestButton data={data?.order} refetch={refetch} />
               )}
             </Box>
           )}

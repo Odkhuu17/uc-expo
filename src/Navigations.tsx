@@ -18,6 +18,7 @@ const Navigations = () => {
         <Stack.Screen name="auth/register" />
         <Stack.Screen name="auth/forgot" />
       </Stack.Protected>
+      <Stack.Screen name="contact" />
       <Stack.Protected guard={isAuthenticated}>
         <Stack.Screen name="(drawer)" />
       </Stack.Protected>

@@ -109,16 +109,26 @@ const ProfileScreen = () => {
                   ) : (
                     <Warning description="Таны бүртгэл баталгаажаагүй байна! Та бүртгэлээ баталгаажуулсны дараа манай системийг ашиглах боломжтой." />
                   )}
-                  {userData?.me?.verifications?.edges?.length === 0 && (
-                    <Button
-                      title="Бүртгэл баталгаажуулах"
-                      onPress={onPressVerification}
+                  {userData?.me?.verifications?.edges?.[0]?.node?.field5 && (
+                    <Warning
+                      type="error"
+                      description={
+                        userData?.me?.verifications?.edges?.[0]?.node?.field5
+                      }
                     />
                   )}
+                  {!userData?.me?.verified &&
+                    userData?.me?.verifications?.edges?.[0]?.node?.status !==
+                      'pending' && (
+                      <Button
+                        title="Бүртгэл баталгаажуулах"
+                        onPress={onPressVerification}
+                      />
+                    )}
                 </>
               )}
             </BoxContainer>
-            <BoxContainer>
+            <BoxContainer gap="m">
               {mode === 'shipper' && (
                 <SingleMenu
                   title="Миний захиалгууд"
@@ -137,6 +147,13 @@ const ProfileScreen = () => {
                     <Warning description="Танд баталгаажсан машин байхгүй байна! Та машинаа баталгаажуулсны дараагаар манай системийг ашиглах боломжтой." />
                   )}
                 </Box>
+              )}
+              {mode === 'driver' && (
+                <SingleMenu
+                  title="Миний хүсэлтүүд"
+                  icon={BoxIcon}
+                  onPress={() => router.navigate('/profile/orders/requests')}
+                />
               )}
             </BoxContainer>
           </Box>

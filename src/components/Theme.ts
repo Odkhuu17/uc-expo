@@ -31,6 +31,7 @@ export const theme = createTheme({
     greenLight: '#d0fae5',
     transparent: 'transparent',
     error: '#DC2626',
+    redLight: '#ffbaba',
     success: '#52C41A',
     warning: '#FAAD14',
     yellow: '#FAAD14',

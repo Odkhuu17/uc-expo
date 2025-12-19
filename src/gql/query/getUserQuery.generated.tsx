@@ -7,7 +7,7 @@ const defaultOptions = {} as const;
 export type GetUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, registerNum?: string, subscribed?: boolean, verified: boolean, avatar?: string, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string } }> } }> } };
+export type GetUserQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, registerNum?: string, subscribed?: boolean, verified: boolean, avatar?: string, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string, field5?: string } }> }, trucks: Array<{ __typename?: 'Truck', id: string, verified: boolean, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string, field5?: string } }> } }> } };
 
 
 export const GetUserDocument = gql`
@@ -26,6 +26,7 @@ export const GetUserDocument = gql`
         node {
           id
           status
+          field5
         }
       }
     }
@@ -37,6 +38,7 @@ export const GetUserDocument = gql`
           node {
             id
             status
+            field5
           }
         }
       }
