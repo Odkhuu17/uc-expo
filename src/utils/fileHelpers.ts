@@ -47,7 +47,7 @@ export const uriToFile = (uri: string, filename: string, mimeType: string) => {
  */
 export const imagesToFiles = (uris: string[]) => {
   return uris.map((uri, index) =>
-    uriToFile(uri, `image_${Date.now()}_${index}.jpg`, 'image/jpeg')
+    uriToFile(uri, `image_${Date.now()}_${index}.jpg`, 'image/jpeg'),
   );
 };
 

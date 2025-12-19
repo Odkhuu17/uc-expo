@@ -1,9 +1,0 @@
-import React from 'react';
-
-import OrderCreateOrEditScreen from '@/screens/OrderCreateOrEdit';
-
-const OrderCreate = () => {
-  return <OrderCreateOrEditScreen />;
-};
-
-export default OrderCreate;
