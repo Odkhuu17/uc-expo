@@ -7,7 +7,7 @@ const defaultOptions = {} as const;
 export type GetMyTrucksQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMyTrucksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, trucks: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, mark?: string, model?: string, manufacturedDate?: any, verified: boolean, createdAt: any, updatedAt: any, taxon?: { __typename?: 'Taxon', id: string, name: string, code: string, icon?: string, link: string }, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, createdAt: any, updatedAt: any } }> } }> } };
+export type GetMyTrucksQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, trucks: Array<{ __typename?: 'Truck', id: string, plateNumber?: string, serial?: string, weight?: number, netWeight?: number, importedDate?: any, mark?: string, model?: string, manufacturedDate?: any, subscribed: boolean, subscribedUntil?: any, verified: boolean, createdAt: any, updatedAt: any, taxon?: { __typename?: 'Taxon', id: string, name: string, code: string, icon?: string, link: string }, verifications?: { __typename?: 'VerificationConnection', edges: Array<{ __typename?: 'VerificationEdge', node?: { __typename?: 'Verification', id: string, status: string, comment?: string, field1?: string, field2?: string, field3?: string, field4?: string, field5?: string, createdAt: any, updatedAt: any } }> } }> } };
 
 
 export const GetMyTrucksDocument = gql`
@@ -24,6 +24,8 @@ export const GetMyTrucksDocument = gql`
       mark
       model
       manufacturedDate
+      subscribed
+      subscribedUntil
       taxon {
         id
         name

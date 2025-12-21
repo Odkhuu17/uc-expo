@@ -1,4 +1,5 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Image } from 'expo-image';
 import {
   ArrowDown2,
   Icon as IconType,
@@ -14,7 +15,7 @@ interface Props<G = any> {
   width?: ViewStyle['width'];
   error?: string;
   icon?: IconType;
-  options: { value: G; label: string }[];
+  options: { value: G; label: string; image?: number }[];
   setSelectedOption: (value: G) => void;
   selectedOption?: G;
   placeholder: string;
@@ -25,6 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     flex: 1,
     paddingHorizontal: theme.spacing.s,
+  },
+  img: {
+    width: 40,
+    height: 40,
   },
 }));
 
@@ -100,7 +105,16 @@ function Select({
                   py="s"
                   px="m"
                 >
-                  <Text key={option.value}>{option.label}</Text>
+                  <Box flex={1} flexDirection="row" alignItems="center" gap="s">
+                    {option.image && (
+                      <Image
+                        source={option.image}
+                        style={styles.img}
+                        contentFit="contain"
+                      />
+                    )}
+                    <Text key={option.value}>{option.label}</Text>
+                  </Box>
                   {option.value === selectedOption && (
                     <TickCircle
                       size={theme.icon.m}

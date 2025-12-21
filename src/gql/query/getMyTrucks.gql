@@ -11,6 +11,8 @@ query GetMyTrucks {
       mark
       model
       manufacturedDate
+      subscribed
+      subscribedUntil
       taxon {
         id
         name

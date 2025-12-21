@@ -1,19 +1,20 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 
 import { Container, CustomFlatList, Empty, MessageModal } from '@/components';
 import Header from '@/components/NormalHeader';
+import { useGetMyTrucksLazyQuery } from '@/gql/query/getMyTrucks.generated';
 import {
   GetSubscriptionPlansQuery,
   useGetSubscriptionPlansQuery,
 } from '@/gql/query/getSubscriptionPlans.generated';
-import { useGetUserLazyQuery } from '@/gql/query/getUserQuery.generated';
 import SinglePlan from './SinglePlan';
 
 const MemberShipScreen = () => {
+  const { id } = useLocalSearchParams();
   const router = useRouter();
-  const [getUser] = useGetUserLazyQuery();
+  const [getTruck] = useGetMyTrucksLazyQuery();
   const appState = useRef(AppState.currentState);
   const [successModal, setSuccessModal] = useState(false);
 
@@ -24,12 +25,26 @@ const MemberShipScreen = () => {
   });
 
   const init = async () => {
-    const { data } = await getUser();
-
-    if (data?.me?.subscribed) {
-      setSuccessModal(true);
-    }
+    const { data } = await getTruck();
+    data?.me?.trucks.forEach(truck => {
+      if (truck.id === id) {
+        if (truck.subscribed) {
+          setSuccessModal(true);
+        }
+      }
+    });
   };
+
+  useEffect(() => {
+    init();
+    const interval = setInterval(() => {
+      init();
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {

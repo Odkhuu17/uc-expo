@@ -52,7 +52,8 @@ const SingleOrder = ({ item }: Props) => {
 
   const onNavigateToDetail = () => {
     if (!user?.subscribed && mode === 'driver') {
-      setMsgModal(true);
+      router.push(`/orders/${item?.number}`);
+      // setMsgModal(true);
     } else {
       router.push(`/orders/${item?.number}`);
     }
@@ -213,7 +214,10 @@ const SingleOrder = ({ item }: Props) => {
         visible={msgModal}
         message="Таны эрх дууссан байна!"
         onClose={() => setMsgModal(false)}
-        onRenew={() => router.navigate('/membership')}
+        onRenew={() => {
+          setMsgModal(false);
+          router.navigate('/membership');
+        }}
       />
     </>
   );

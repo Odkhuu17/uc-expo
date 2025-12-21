@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 
 import {
@@ -16,6 +16,7 @@ import { Box, makeStyles } from '@/components/Theme';
 import { useGetOrderQuery } from '@/gql/query/getOrder.generated';
 import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder, moneyFormat } from '@/utils/helpers';
+import dayjs from 'dayjs';
 import {
   OrderDetailAudio,
   OrderDetailVideo,
@@ -28,8 +29,6 @@ import {
   OrderDetailRent,
   OrderRequestButton,
 } from './containers';
-import dayjs from 'dayjs';
-import { RefreshControl } from 'react-native-gesture-handler';
 
 const useStyles = makeStyles(theme => ({
   img: {

@@ -15,7 +15,7 @@ const Contact = () => {
   };
 
   const onPressFacebook = () => {
-    Linking.openURL('https://www.facebook.com/profile.php?id=100075737932454');
+    Linking.openURL('https://www.facebook.com/UC.logistic');
   };
 
   const onPressMail = () => {
@@ -27,16 +27,23 @@ const Contact = () => {
       <NormalHeader title="Холбоо барих" hasBack />
       <ScrollableContent edges={['bottom']}>
         <BoxContainer gap="m">
-          <SingleContact title="76115522" icon={Call} onPress={onPressCall} />
+          <SingleContact
+            title="76115522"
+            icon={Call}
+            onPress={onPressCall}
+            color="success"
+          />
           <SingleContact
             title="Facebook"
             icon={Facebook}
             onPress={onPressFacebook}
+            color="baseBlue"
           />
           <SingleContact
             title="unlimitedcarrier2021@gmail.com"
             icon={SmsTracking}
             onPress={onPressMail}
+            color="red"
           />
         </BoxContainer>
       </ScrollableContent>

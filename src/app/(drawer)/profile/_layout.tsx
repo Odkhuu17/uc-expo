@@ -18,6 +18,7 @@ export default function ProfileLayout() {
         <Stack.Screen name="trucks/index" />
         <Stack.Screen name="trucks/add" />
         <Stack.Screen name="trucks/[id]/edit" />
+        <Stack.Screen name="trucks/[id]/membership" />
       </Stack.Protected>
     </Stack>
   );

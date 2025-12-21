@@ -15,6 +15,7 @@ import {
   NormalHeader,
 } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
+import { carTypes, carTypes2 } from '@/constants';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruckMutation.generated';
 import { useUpdateTruckMutation } from '@/gql/mutations/updateTruckMutation.generated';
 import { useVerifyTruckMutation } from '@/gql/mutations/verifyTruckMutation.generated';
@@ -146,6 +147,8 @@ const AddOrEditTruckScreen = () => {
                           return {
                             label: i?.node?.name || '',
                             value: i?.node?.id || '',
+                            image: carTypes?.find(k => k.name === i?.node?.name)
+                              ?.image,
                           };
                         }) || [],
                   },
@@ -158,6 +161,9 @@ const AddOrEditTruckScreen = () => {
                           return {
                             label: i?.node?.name || '',
                             value: i?.node?.id || '',
+                            image: carTypes2?.find(
+                              k => k?.name === i?.node?.name
+                            )?.image,
                           };
                         }) || [],
                   },

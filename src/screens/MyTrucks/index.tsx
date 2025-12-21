@@ -48,14 +48,12 @@ const MyTrucks = () => {
           <Empty title="Машин" description="Машин олдсонгүй" />
         }
       />
-      {data?.me?.trucks && data.me.trucks.length === 0 && (
-        <BottomContainer>
-          <Button
-            title="Машин нэмэх"
-            onPress={() => router.push('/profile/trucks/add')}
-          />
-        </BottomContainer>
-      )}
+      <BottomContainer>
+        <Button
+          title="Машин нэмэх"
+          onPress={() => router.push('/profile/trucks/add')}
+        />
+      </BottomContainer>
     </Container>
   );
 };

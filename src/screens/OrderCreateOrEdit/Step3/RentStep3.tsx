@@ -127,6 +127,7 @@ const RentStep3 = ({
               placeholder="Техникийн төрөл"
               options={carTypes2.map(p => ({
                 label: p.name,
+                image: p.image,
                 value: p.name,
               }))}
               selectedOption={values.carType}

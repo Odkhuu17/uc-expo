@@ -7,6 +7,7 @@ import {
 import React, { useRef } from 'react';
 import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
 
+import { Image } from 'expo-image';
 import CustomBottomSheetModal from './CustomBottomSheetModal';
 import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
 
@@ -14,7 +15,10 @@ interface Props<G = any> {
   width?: ViewStyle['width'];
   error?: string;
   icon?: IconType;
-  options: { title: string; options: { value: G; label: string }[] }[];
+  options: {
+    title: string;
+    options: { value: G; label: string; image?: number }[];
+  }[];
   setSelectedOption: (value: G) => void;
   selectedOption?: G;
   placeholder: string;
@@ -25,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     flex: 1,
     paddingHorizontal: theme.spacing.s,
+  },
+  img: {
+    width: 40,
+    height: 40,
   },
 }));
 
@@ -108,7 +116,21 @@ function Select({
                           py="s"
                           px="m"
                         >
-                          <Text key={o.value}>{o.label}</Text>
+                          <Box
+                            flex={1}
+                            flexDirection="row"
+                            alignItems="center"
+                            gap="s"
+                          >
+                            {o.image && (
+                              <Image
+                                source={o.image}
+                                style={styles.img}
+                                contentFit="contain"
+                              />
+                            )}
+                            <Text key={o.value}>{o.label}</Text>
+                          </Box>
                           {o.value === selectedOption && (
                             <TickCircle
                               size={theme.icon.m}

@@ -1,10 +1,10 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import dayjs from 'dayjs';
+import { useRouter } from 'expo-router';
 import { useFormik } from 'formik';
 import { useMemo, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
-import { useRouter } from 'expo-router';
 
 import {
   Button,
@@ -40,6 +40,11 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
     ref.current?.present();
   };
 
+  const formatNumberWithCommas = (value: string) => {
+    const numbers = value.replace(/[^\d]/g, '');
+    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   const {
     handleSubmit,
     values,
@@ -48,9 +53,10 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
     handleBlur,
     handleChange,
     resetForm,
+    setFieldValue,
   } = useFormik({
     initialValues: {
-      price: data?.price ? `${data?.price}` : '0',
+      price: data?.price ? formatNumberWithCommas(`${data?.price}`) : '0',
       travelAt: data?.travelAt
         ? dayjs(data?.travelAt).format('YYYY/MM/DD')
         : dayjs().format('YYYY/MM/DD'),
@@ -79,6 +85,11 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
     },
   });
 
+  const handlePriceChange = (text: string) => {
+    const formatted = formatNumberWithCommas(text);
+    setFieldValue('price', formatted);
+  };
+
   const onChangeSheet = (index: number) => {
     if (index === -1) {
       resetForm();
@@ -105,7 +116,7 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
               label="Үнэ"
               placeholder="Үнэ"
               keyboardAvoiding
-              onChangeText={handleChange('price')}
+              onChangeText={handlePriceChange}
               onBlur={handleBlur('price')}
               keyboardType="number-pad"
               value={values.price}

@@ -1,41 +1,64 @@
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   Linking,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomBottomSheetModal } from '@/components';
 import { Box, Text } from '@/components/Theme';
-import { PaymentMethodEnum } from '@/gql/graphql';
-import { useCreatePaymentMutation } from '@/gql/mutations/createPaymentMutation.generated';
+import { useCreateSubscriptionMutation } from '@/gql/mutations/createSubscription.generated';
 import { GetSubscriptionPlansQuery } from '@/gql/query/getSubscriptionPlans.generated';
+import { useAppSelector } from '@/redux/hooks';
 import { moneyFormat } from '@/utils/helpers';
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { Image } from 'expo-image';
-import { useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   node: GetSubscriptionPlansQuery['subscriptionPlans']['edges'][0]['node'];
 }
 
 const SinglePlan = ({ node }: Props) => {
+  const { id } = useLocalSearchParams();
+  const { user } = useAppSelector(state => state.auth);
   const bottomSheetModalRef = useRef<BottomSheetModal | null>(null);
-  const [createPayment, { data, loading }] = useCreatePaymentMutation();
+  const [createSubscription, { data, loading }] =
+    useCreateSubscriptionMutation();
   const insets = useSafeAreaInsets();
+  const appState = useRef(AppState.currentState);
 
   const onPress = async () => {
-    createPayment({
+    createSubscription({
       variables: {
-        action: 'q_pay_merchant' as PaymentMethodEnum,
+        truckId: id as string,
         subscriptionPlanId: node?.id as string,
+        userId: user?.id as string,
       },
     }).then(() => {
       bottomSheetModalRef.current?.present();
     });
   };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        bottomSheetModalRef.current?.dismiss();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <>
@@ -66,7 +89,7 @@ const SinglePlan = ({ node }: Props) => {
         <BottomSheetScrollView
           contentContainerStyle={{ paddingBottom: insets.bottom }}
         >
-          {data?.createPayment?.banks?.map(
+          {data?.createSubscription?.payments?.[0]?.source?.bank_list?.map(
             (
               bank: {
                 description: string;
@@ -76,7 +99,6 @@ const SinglePlan = ({ node }: Props) => {
               },
               index: number
             ) => {
-              console.log(bank.link, 'banklink');
               return (
                 <TouchableOpacity
                   key={index}

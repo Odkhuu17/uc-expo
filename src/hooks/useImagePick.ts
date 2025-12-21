@@ -13,8 +13,8 @@ const useImagePick = ({ setImage, onlyCamera }: Props) => {
     if (status !== 'granted') return;
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.8,
+      allowsEditing: false,
+      quality: 0.6,
       cameraType: ImagePicker.CameraType.front,
     });
     if (!result.canceled) {
@@ -40,8 +40,8 @@ const useImagePick = ({ setImage, onlyCamera }: Props) => {
           if (status !== 'granted') return;
           const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 0.8,
+            allowsEditing: false,
+            quality: 0.6,
           });
           if (!result.canceled) {
             setImage(result.assets[0].uri);

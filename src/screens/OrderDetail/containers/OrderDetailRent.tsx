@@ -5,12 +5,15 @@ import { Text } from '@/components/Theme';
 import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 import { moneyFormat } from '@/utils/helpers';
 import { SingleRow, Title } from '../components';
+import SingleCallRow from '../components/SingleCallRow';
 
 interface Props {
   order: GetOrderQuery['order'];
 }
 
 const OrderDetailRent = ({ order }: Props) => {
+  console.log(order);
+
   return (
     <>
       <BoxContainer gap="s">
@@ -61,6 +64,11 @@ const OrderDetailRent = ({ order }: Props) => {
           <Text variant="body2">{order?.data?.additionalAddress}</Text>
         </BoxContainer>
       )}
+      <BoxContainer gap="s">
+        <Title title="Захиалагчийн мэдээлэл" />
+        <SingleRow label="Нэр:" value={order?.user?.firstName} />
+        <SingleCallRow label="Утас:" value={order?.user?.mobile} />
+      </BoxContainer>
     </>
   );
 };

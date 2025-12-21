@@ -9,8 +9,8 @@ import {
   TruckFast,
 } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { Masks } from 'react-native-mask-input';
 import { TextInput } from 'react-native';
+import { Masks } from 'react-native-mask-input';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -153,6 +153,7 @@ const DeliveryStep3 = ({
                 placeholder="Техникийн төрөл"
                 options={carTypes.map(p => ({
                   label: p.name,
+                  img: p.image,
                   value: p.name,
                 }))}
                 selectedOption={values.carType}

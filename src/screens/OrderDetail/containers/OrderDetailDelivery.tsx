@@ -5,12 +5,15 @@ import { Text } from '@/components/Theme';
 import { GetOrderQuery } from '@/gql/query/getOrder.generated';
 import { moneyFormat } from '@/utils/helpers';
 import { SingleRow, Title } from '../components';
+import SingleCallRow from '../components/SingleCallRow';
 
 interface Props {
   order: GetOrderQuery['order'];
 }
 
 const OrderDetailDelivery = ({ order }: Props) => {
+  console.log(order, 'sdsdsd');
+
   return (
     <>
       <BoxContainer gap="s">
@@ -69,7 +72,7 @@ const OrderDetailDelivery = ({ order }: Props) => {
           value={order?.price ? moneyFormat(order?.price) : 'Тохиролцоно'}
         />
         <SingleRow label="НӨАТ:" value={order?.vatIncluded ? 'Тийм' : 'Үгүй'} />
-        <SingleRow label="Ачааны жин:" value={order?.packageWeight} />
+        <SingleRow label="Ачааны жин:" value={`${order?.packageWeight} тн`} />
         <SingleRow
           label="Ачих өдөр:"
           value={order?.travelAt && dayjs(order?.travelAt).format('YYYY-MM-DD')}
@@ -88,12 +91,12 @@ const OrderDetailDelivery = ({ order }: Props) => {
       <BoxContainer gap="s">
         <Title title="Илгээгчийн мэдээлэл" />
         <SingleRow label="Овог нэр:" value={order?.senderName} />
-        <SingleRow label="Утас:" value={order?.senderMobile} />
+        <SingleCallRow label="Утас:" value={order?.senderMobile} />
       </BoxContainer>
       <BoxContainer gap="s">
         <Title title="Хүлээн авагчийн мэдээлэл" />
         <SingleRow label="Овог нэр:" value={order?.receiverName} />
-        <SingleRow label="Утас:" value={order?.receiverMobile} />
+        <SingleCallRow label="Утас:" value={order?.receiverMobile} />
       </BoxContainer>
     </>
   );

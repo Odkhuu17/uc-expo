@@ -45,7 +45,7 @@ const LoginScreen = () => {
       try {
         await loginService(values);
         const { data } = await getUser();
-        dispatch(authSlice.actions.changeUser(data?.me));
+        await dispatch(authSlice.actions.changeUser(data?.me));
         dispatch(authSlice.actions.login());
       } catch {
         router.navigate({

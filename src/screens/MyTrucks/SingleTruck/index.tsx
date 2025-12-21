@@ -1,11 +1,13 @@
 import { useTheme } from '@shopify/restyle';
+import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { Trash, Truck } from 'iconsax-react-nativejs';
-import { Alert, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
+import { Alert, TouchableOpacity } from 'react-native';
 
 import {
   BoxContainer,
+  Button,
   IconButton,
   Label,
   Progress,
@@ -24,6 +26,8 @@ const SingleTruck = ({ item, refetch }: Props) => {
   const [destroyTruck, { loading }] = useDestroyTruckMutation();
   const [hasPendingUserVerification, setHasPendingUserVerification] =
     useState(false);
+
+  console.log(item, 'single truck item');
 
   useEffect(() => {
     if (item?.verifications?.edges?.[0]?.node?.status === 'pending') {
@@ -112,9 +116,24 @@ const SingleTruck = ({ item, refetch }: Props) => {
           />
         )}
         {item?.verified && (
-          <Box alignItems="flex-end">
-            <Label text="Баталгаажсан" backgroundColor="success" />
-          </Box>
+          <>
+            <Box alignItems="flex-end">
+              <Label text="Баталгаажсан" backgroundColor="success" />
+            </Box>
+          </>
+        )}
+        {item?.subscribed ? (
+          <Text variant="label" textAlign="right">
+            Эрх дуусах хугацаа:{' '}
+            {dayjs(item?.subscribedUntil).format('YYYY/MM/DD')}
+          </Text>
+        ) : (
+          <Button
+            title="Эрх сунгах"
+            onPress={() =>
+              router.navigate(`/profile/trucks/${item?.id}/membership`)
+            }
+          />
         )}
       </BoxContainer>
     </TouchableOpacity>

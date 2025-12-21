@@ -2,8 +2,8 @@ import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { ArrowRight2, Location } from 'iconsax-react-nativejs';
 import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, CustomBottomSheetModal, Input } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
@@ -43,7 +43,7 @@ const LocationModal = ({
         longitude: location?._source?.location.lon || 106.918556,
       },
     },
-    skip: address1.length < 3 || !location,
+    skip: address1.length < 2 || !!!location,
   });
 
   const onChangeSheet = (index: number) => {

@@ -53,7 +53,7 @@ const ProfileUpdateScreen = () => {
     },
     validationSchema: schema,
     onSubmit: async () => {
-      updateUser({
+      await updateUser({
         variables: {
           avatar: avatar ? imageToFile(avatar) : undefined,
           firstName: values.firstName,
@@ -62,6 +62,7 @@ const ProfileUpdateScreen = () => {
           id: user?.id!, // Replace with actual user ID logic
         },
       });
+      setSuccessModal(true);
     },
   });
 
