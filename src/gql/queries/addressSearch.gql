@@ -1,0 +1,28 @@
+query AddressSearch($query: String, $location: LatLngInput, $page: Int) {
+  searchAddress(query: $query, location: $location, page: $page) {
+    _id
+    _index
+    _source {
+      location {
+        lat
+        lon
+      }
+      nameFullMn
+      nameMn
+      nameShortMn
+    }
+    _type
+    quarter {
+      id
+      name
+      district {
+        id
+        name
+        state {
+          id
+          name
+        }
+      }
+    }
+  }
+}

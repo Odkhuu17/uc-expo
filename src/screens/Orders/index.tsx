@@ -81,10 +81,7 @@ const Orders = () => {
 
   return (
     <Container>
-      <HeaderNormal
-        title="Захиалгууд"
-        hasBack={mode === 'driver' ? false : true}
-      />
+      <HeaderNormal title="Захиалгууд" />
       <CustomFlatList
         ListHeaderComponent={<Banners />}
         data={orders}

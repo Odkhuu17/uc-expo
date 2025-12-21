@@ -1,0 +1,142 @@
+import type * as Types from '../graphql';
+
+import { gql } from '@apollo/client';
+import type * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client/react';
+const defaultOptions = {} as const;
+export type GetOrdersMyQueryVariables = Types.Exact<{
+  ordersFirst?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  after?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  sort?: Types.InputMaybe<Types.SortFilter>;
+}>;
+
+
+export type GetOrdersMyQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, orders: { __typename?: 'OrderConnection', totalCount: number, edges: Array<{ __typename?: 'OrderEdge', cursor: string, node?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, packageType?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, images?: Array<string>, createdAt: any, updatedAt: any, origin?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } }, destination?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string, endCursor?: string } } } };
+
+
+export const GetOrdersMyDocument = gql`
+    query GetOrdersMy($ordersFirst: Int, $after: String, $sort: SortFilter = {field: "created_at", direction: desc}) {
+  me {
+    id
+    orders(first: $ordersFirst, after: $after, sort: $sort) {
+      edges {
+        node {
+          id
+          number
+          title
+          status
+          published
+          my
+          requested
+          packageType
+          price
+          carType
+          carWeight
+          senderName
+          senderMobile
+          receiverName
+          receiverMobile
+          travelAt
+          images
+          origin {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+          destination {
+            id
+            name
+            address1
+            address2
+            latitude
+            longitude
+            country {
+              id
+              name
+            }
+            state {
+              id
+              name
+            }
+            district {
+              id
+              name
+            }
+            quarter {
+              id
+              name
+            }
+          }
+          createdAt
+          updatedAt
+        }
+        cursor
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrdersMyQuery__
+ *
+ * To run a query within a React component, call `useGetOrdersMyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrdersMyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrdersMyQuery({
+ *   variables: {
+ *      ordersFirst: // value for 'ordersFirst'
+ *      after: // value for 'after'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useGetOrdersMyQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetOrdersMyQuery, GetOrdersMyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetOrdersMyQuery, GetOrdersMyQueryVariables>(GetOrdersMyDocument, options);
+      }
+export function useGetOrdersMyLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOrdersMyQuery, GetOrdersMyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetOrdersMyQuery, GetOrdersMyQueryVariables>(GetOrdersMyDocument, options);
+        }
+// @ts-ignore
+export function useGetOrdersMySuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetOrdersMyQuery, GetOrdersMyQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetOrdersMyQuery, GetOrdersMyQueryVariables>;
+export function useGetOrdersMySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrdersMyQuery, GetOrdersMyQueryVariables>): ApolloReactHooks.UseSuspenseQueryResult<GetOrdersMyQuery | undefined, GetOrdersMyQueryVariables>;
+export function useGetOrdersMySuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrdersMyQuery, GetOrdersMyQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetOrdersMyQuery, GetOrdersMyQueryVariables>(GetOrdersMyDocument, options);
+        }
+export type GetOrdersMyQueryHookResult = ReturnType<typeof useGetOrdersMyQuery>;
+export type GetOrdersMyLazyQueryHookResult = ReturnType<typeof useGetOrdersMyLazyQuery>;
+export type GetOrdersMySuspenseQueryHookResult = ReturnType<typeof useGetOrdersMySuspenseQuery>;
+export type GetOrdersMyQueryResult = ApolloReactCommon.QueryResult<GetOrdersMyQuery, GetOrdersMyQueryVariables>;

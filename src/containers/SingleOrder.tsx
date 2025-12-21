@@ -11,6 +11,8 @@ import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import { Label, Button, BoxContainer, ModalMsg } from '@/components';
 import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
+import { deliveryCarTypes, rentCarTypes } from '@/constants/transportTypes';
+import { INavigation } from '@/navigations';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
@@ -24,18 +26,23 @@ const useStyles = makeStyles(theme => ({
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
+  carImage: {
+    width: 50,
+    height: 50,
+  },
 }));
 
 const SingleOrder = ({ item }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<INavigation>();
   const { mode } = useAppSelector(state => state.general);
   const { user } = useAppSelector(state => state.auth);
   const [msgModal, setMsgModal] = useState(false);
 
   const hasImages = item?.images && item?.images.length > 0;
+  const isRent = isRentOrder(item?.carType);
 
   const onPressEdit = () => {
     navigation.navigate('OrderEdit', { orderNumber: item?.number });
@@ -45,13 +52,11 @@ const SingleOrder = ({ item }: Props) => {
     setIsImageViewVisible(true);
   };
 
-  const isRent = isRentOrder(item?.carType);
-
   const onNavigateToDetail = () => {
     if (!user?.subscribed && mode === 'driver') {
       setMsgModal(true);
     } else {
-      navigation.navigate(`/orders/${item?.number}`);
+      navigation.navigate('OrderDetail', { number: item?.number! });
     }
   };
 
@@ -68,7 +73,26 @@ const SingleOrder = ({ item }: Props) => {
     <>
       <TouchableOpacity onPress={onNavigateToDetail}>
         <BoxContainer p={undefined} overflow="hidden">
-          <Box alignItems="flex-end" pt="s" pr="s">
+          <Box
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            px="m"
+            pt="m"
+          >
+            <Box flexDirection="row" alignItems="center" gap="s">
+              <Image
+                style={styles.carImage}
+                resizeMode="contain"
+                source={
+                  isRent
+                    ? rentCarTypes.find(i => i.name === item?.carType)?.image
+                    : deliveryCarTypes?.find(i => i.name === item?.carType)
+                        ?.image
+                }
+              />
+              <Text variant="label">{item?.carType}</Text>
+            </Box>
             <Label
               text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
               backgroundColor={isRent ? 'rent' : 'delivery'}
@@ -101,7 +125,7 @@ const SingleOrder = ({ item }: Props) => {
             </Box>
             <Box flex={1} gap="m">
               {!isRent && (
-                <Text color="primary" fontFamily="Roboto_500Medium">
+                <Text color="primary" variant="title">
                   {item?.packageType}
                 </Text>
               )}
@@ -162,7 +186,7 @@ const SingleOrder = ({ item }: Props) => {
                     </Text>
                   </Box>
                   <Box>
-                    <Text variant="body2" color="grey2">
+                    <Text variant="body2" color="grey3">
                       {isRent
                         ? dayjs(item?.travelAt).format('YYYY/MM/DD')
                         : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
@@ -174,7 +198,7 @@ const SingleOrder = ({ item }: Props) => {
                     <Text variant="body2">Захиалсан:</Text>
                   </Box>
                   <Box>
-                    <Text variant="body2" color="grey2">
+                    <Text variant="body2" color="grey3">
                       {dayjs(item?.createdAt).format('YYYY/MM/DD')}
                     </Text>
                   </Box>
@@ -188,12 +212,18 @@ const SingleOrder = ({ item }: Props) => {
             flexDirection="row"
             justifyContent="space-between"
             alignItems="center"
+            backgroundColor={item?.status === 'pending' ? 'primary' : 'grey4'}
           >
-            <Text variant="label">
+            <Text variant="label" color="white">
               {item?.status === 'pending' ? 'Идэвхтэй' : 'Идэвхгүй'}
             </Text>
             {mode === 'shipper' && item?.my && item?.status === 'pending' ? (
-              <Button title="Засах" size="s" onPress={onPressEdit} />
+              <Button
+                title="Засах"
+                color="secondary"
+                size="s"
+                onPress={onPressEdit}
+              />
             ) : (
               <Box height={theme.button.s} />
             )}

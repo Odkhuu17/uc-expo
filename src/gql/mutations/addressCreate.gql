@@ -1,0 +1,48 @@
+mutation AddressCreate(
+  $address1: String
+  $address2: String
+  $location: LatLngInput
+  $sdq: [ID!]
+) {
+  createAddress(
+    input: {
+      address1: $address1
+      address2: $address2
+      location: $location
+      sdq: $sdq
+    }
+  ) {
+    id
+    name
+    address1
+    address2
+    mobile
+    email
+    firstName
+    lastName
+    alternativeMobile
+    alternativeEmail
+    zipcode
+    latitude
+    longitude
+    preferences
+    country {
+      id
+      name
+    }
+    state {
+      id
+      name
+    }
+    district {
+      id
+      name
+    }
+    quarter {
+      id
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}

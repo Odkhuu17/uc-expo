@@ -15,11 +15,16 @@ export const theme = createTheme({
     primary: '#1265FF',
     secondary: '#45C4FA',
     backdrop: 'rgba(0, 0, 0, 0.5)',
-    rent: '#FAAD14',
+    rent: '#ffab00',
     delivery: '#429AFF',
 
     white: '#FFFFFF',
     black: '#000000',
+
+    amber1: '#fff8e1',
+    amber2: '#ffd740',
+    amber3: '#ffc400',
+    amber4: '#ffab00',
 
     red1: '#ff8a80',
     red2: '#ff5252',
@@ -71,6 +76,10 @@ export const theme = createTheme({
   },
   textVariants: {
     defaults: { fontSize: 16 },
+    title: {
+      fontSize: 16,
+      fontWeight: '600',
+    },
     body1: { fontSize: 16 },
     body2: {
       fontSize: 14,

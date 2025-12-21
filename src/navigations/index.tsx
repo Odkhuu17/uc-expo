@@ -5,8 +5,6 @@ import {
   StackNavigationProp,
   TransitionPresets,
 } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
-import { IAuthReduxState } from '@/redux/slices/auth';
 
 import { useTheme } from '@/components/Theme';
 import AuthChooseType from '@/screens/AuthChooseType';
@@ -16,6 +14,8 @@ import AuthRegister from '@/screens/AuthRegister';
 import AuthForgot from '@/screens/AuthForgot';
 import Tabs from './Tabs';
 import { useAppSelector } from '@/redux/hooks';
+import OrderDetail from '@/screens/OrderDetail';
+import OrderCreateOrEdit from '@/screens/OrderCreateOrEdit';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -27,6 +27,14 @@ export type TAppRoutes = {
     msg: string;
   };
   Tabs: undefined;
+  OrderDetail: {
+    number: string;
+  };
+  OrdersMy: undefined;
+  OrderCreateOrEdit: {
+    number?: string;
+  };
+  Profile: undefined;
 };
 
 export interface INavigationProps<RouteName extends keyof TAppRoutes> {
@@ -42,8 +50,6 @@ const AppNavigator = () => {
   const theme = useTheme();
   const { isAuthenticated } = useAppSelector(state => state.auth);
 
-  console.log('isAuthenticated', isAuthenticated);
-
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!isAuthenticated ? (
@@ -56,6 +62,11 @@ const AppNavigator = () => {
       ) : (
         <Stack.Group screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Tabs" component={Tabs} />
+          <Stack.Screen name="OrderDetail" component={OrderDetail} />
+          <Stack.Screen
+            name="OrderCreateOrEdit"
+            component={OrderCreateOrEdit}
+          />
         </Stack.Group>
       )}
       <Stack.Group

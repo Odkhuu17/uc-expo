@@ -1,0 +1,37 @@
+mutation createDeliveryRequest(
+  $orderId: ID!
+  $price: Float!
+  $travelAt: ISO8601DateTime!
+  $userId: ID
+  $clientMutationId: String
+) {
+  createDeliveryRequest(
+    input: {
+      orderId: $orderId
+      price: $price
+      travelAt: $travelAt
+      userId: $userId
+      clientMutationId: $clientMutationId
+    }
+  ) {
+    id
+    price
+    status
+    travelAt
+    active
+    order {
+      id
+      number
+      title
+    }
+    user {
+      id
+      firstName
+      lastName
+      mobile
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}

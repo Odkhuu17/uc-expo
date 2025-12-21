@@ -30,7 +30,7 @@ export const formatDuration = (durationMillis?: number | null) => {
 };
 
 export const getImageUrl = (url: string) => {
-  return `${Config.API_URl}${url}`;
+  return `${Config.API_URL}${url}`;
 };
 
 export const isRentOrder = (carType?: string) => {

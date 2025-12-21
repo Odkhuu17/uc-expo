@@ -64,7 +64,6 @@ const Banners = () => {
       >
         {data?.banners?.nodes?.map(banner => (
           <TouchableOpacity key={banner.id} activeOpacity={0.9}>
-            {console.log(getImageUrl(banner.image || ''))}
             <Box
               width={width}
               height={BANNER_HEIGHT}
@@ -96,7 +95,7 @@ const Banners = () => {
               width={activeIndex === index ? 20 : 8}
               height={8}
               borderRadius="full"
-              // backgroundColor={activeIndex === index ? 'baseBlue' : 'grey3'}
+              backgroundColor={activeIndex === index ? 'primary' : 'grey3'}
             />
           ))}
         </Box>

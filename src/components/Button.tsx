@@ -12,7 +12,7 @@ interface Props {
   title: string;
   onPress: () => void;
   variant?: 'text' | 'outlined' | 'contained';
-  color?: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary' | 'error' | 'success';
   size?: keyof Theme['button'];
   loading?: boolean;
   fullWidth?: boolean;
@@ -43,6 +43,10 @@ const Button = ({
     switch (color) {
       case 'secondary':
         return 'secondary';
+      case 'error':
+        return 'error';
+      case 'success':
+        return 'success';
       default:
         return 'primary';
     }
@@ -52,8 +56,12 @@ const Button = ({
     if (variant === 'contained') return 'white';
 
     switch (color) {
-      case 'primary':
-        return 'primary';
+      case 'secondary':
+        return 'secondary';
+      case 'error':
+        return 'error';
+      case 'success':
+        return 'success';
       default:
         return 'primary';
     }
@@ -63,8 +71,12 @@ const Button = ({
     if (variant === 'text') return 'transparent';
 
     switch (color) {
-      case 'primary':
-        return 'primary';
+      case 'secondary':
+        return 'secondary';
+      case 'error':
+        return 'error';
+      case 'success':
+        return 'success';
       default:
         return 'primary';
     }

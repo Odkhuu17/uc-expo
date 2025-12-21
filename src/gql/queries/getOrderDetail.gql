@@ -1,0 +1,160 @@
+query GetOrderDetail($number: String) {
+  order(number: $number) {
+    id
+    number
+    title
+    description
+    status
+    published
+    my
+    requested
+    subscribed
+    acceptedDeliveryRequest {
+      id
+      price
+      status
+      travelAt
+      user {
+        id
+        firstName
+        lastName
+        nickName
+        mobile
+        email
+      }
+    }
+    myRequest {
+      id
+      active
+      status
+      price
+      travelAt
+      createdAt
+      updatedAt
+    }
+    packageType
+    packageWeight
+    packageDimensions
+    price
+    vatIncluded
+    carType
+    carWeight
+    senderName
+    senderMobile
+    receiverName
+    receiverMobile
+    travelAt
+    travelDistance
+    travelDuration
+    data
+    audio
+    video
+    images
+    user {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
+    }
+    origin {
+      id
+      name
+      address1
+      address2
+      mobile
+      email
+      firstName
+      lastName
+      alternativeMobile
+      alternativeEmail
+      zipcode
+      latitude
+      longitude
+      preferences
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
+      }
+      createdAt
+      updatedAt
+    }
+    destination {
+      id
+      name
+      address1
+      address2
+      mobile
+      email
+      firstName
+      lastName
+      alternativeMobile
+      alternativeEmail
+      zipcode
+      latitude
+      longitude
+      preferences
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
+      }
+      createdAt
+      updatedAt
+    }
+    deliveryRequests {
+      edges {
+        node {
+          id
+          active
+          status
+          price
+          travelAt
+          user {
+            id
+            firstName
+            lastName
+            nickName
+            mobile
+            email
+          }
+          createdAt
+          updatedAt
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      totalCount
+    }
+    createdAt
+    updatedAt
+  }
+}
