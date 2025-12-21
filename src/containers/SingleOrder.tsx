@@ -1,0 +1,222 @@
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import { Image, TouchableOpacity } from 'react-native';
+import ImageView from 'react-native-image-viewing';
+import { useNavigation } from '@react-navigation/native';
+import { HugeiconsIcon } from '@hugeicons/react-native';
+import { Location05Icon, PackageIcon } from '@hugeicons/core-free-icons';
+
+import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
+import { useAppSelector } from '@/redux/hooks';
+import { getImageUrl, isRentOrder } from '@/utils/helpers';
+import { Label, Button, BoxContainer, ModalMsg } from '@/components';
+import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
+
+interface Props {
+  item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
+}
+
+const useStyles = makeStyles(theme => ({
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: theme.borderRadii.xs,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+}));
+
+const SingleOrder = ({ item }: Props) => {
+  const theme = useTheme();
+  const styles = useStyles();
+  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+  const navigation = useNavigation();
+  const { mode } = useAppSelector(state => state.general);
+  const { user } = useAppSelector(state => state.auth);
+  const [msgModal, setMsgModal] = useState(false);
+
+  const hasImages = item?.images && item?.images.length > 0;
+
+  const onPressEdit = () => {
+    navigation.navigate('OrderEdit', { orderNumber: item?.number });
+  };
+
+  const onPressImage = () => {
+    setIsImageViewVisible(true);
+  };
+
+  const isRent = isRentOrder(item?.carType);
+
+  const onNavigateToDetail = () => {
+    if (!user?.subscribed && mode === 'driver') {
+      setMsgModal(true);
+    } else {
+      navigation.navigate(`/orders/${item?.number}`);
+    }
+  };
+
+  const handleCloseMsgModal = () => {
+    setMsgModal(false);
+  };
+
+  const handleConfirmMsgModal = () => {
+    setMsgModal(false);
+    navigation.navigate('Subscription');
+  };
+
+  return (
+    <>
+      <TouchableOpacity onPress={onNavigateToDetail}>
+        <BoxContainer p={undefined} overflow="hidden">
+          <Box alignItems="flex-end" pt="s" pr="s">
+            <Label
+              text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
+              backgroundColor={isRent ? 'rent' : 'delivery'}
+            />
+          </Box>
+          <Box flexDirection="row" alignItems="center" gap="s" p="m">
+            <Box
+              width={100}
+              height={100}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {hasImages ? (
+                <TouchableOpacity onPress={onPressImage}>
+                  <Image
+                    source={{
+                      uri: getImageUrl(item.images![0]),
+                    }}
+                    resizeMode="cover"
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <HugeiconsIcon
+                  icon={PackageIcon}
+                  size={theme.icon.xl2}
+                  color={theme.colors.grey2}
+                />
+              )}
+            </Box>
+            <Box flex={1} gap="m">
+              {!isRent && (
+                <Text color="primary" fontFamily="Roboto_500Medium">
+                  {item?.packageType}
+                </Text>
+              )}
+              <Box>
+                <Box flexDirection="row" alignItems="center" gap="xs">
+                  <Box alignItems="center">
+                    <HugeiconsIcon icon={Location05Icon} size={theme.icon.s} />
+                  </Box>
+                  <Box>
+                    <Text variant="body2">{item?.origin?.address1}</Text>
+                  </Box>
+                </Box>
+                {!isRent && (
+                  <>
+                    <Box
+                      alignItems="center"
+                      width={theme.icon.s}
+                      justifyContent="center"
+                    >
+                      <Box height={15}>
+                        <Box
+                          width={1}
+                          overflow="hidden"
+                          top={-5}
+                          bottom={-5}
+                          position="absolute"
+                        >
+                          <Box
+                            borderWidth={1}
+                            width={1}
+                            height="100%"
+                            borderStyle="dashed"
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box flexDirection="row" alignItems="center" gap="xs">
+                      <Box>
+                        <HugeiconsIcon
+                          icon={Location05Icon}
+                          size={theme.icon.s}
+                        />
+                      </Box>
+                      <Box>
+                        <Text variant="body2">
+                          {item?.destination?.address1}
+                        </Text>
+                      </Box>
+                    </Box>
+                  </>
+                )}
+              </Box>
+              <Box gap="xs">
+                <Box flexDirection="row" alignItems="center" gap="xs">
+                  <Box flex={1}>
+                    <Text variant="body2">
+                      {isRent ? 'Ажил эхлэх өдөр:' : 'Ачих:'}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Text variant="body2" color="grey2">
+                      {isRent
+                        ? dayjs(item?.travelAt).format('YYYY/MM/DD')
+                        : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
+                    </Text>
+                  </Box>
+                </Box>
+                <Box flexDirection="row" alignItems="center" gap="xs">
+                  <Box flex={1}>
+                    <Text variant="body2">Захиалсан:</Text>
+                  </Box>
+                  <Box>
+                    <Text variant="body2" color="grey2">
+                      {dayjs(item?.createdAt).format('YYYY/MM/DD')}
+                    </Text>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+          <Box
+            p="xs"
+            px="m"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Text variant="label">
+              {item?.status === 'pending' ? 'Идэвхтэй' : 'Идэвхгүй'}
+            </Text>
+            {mode === 'shipper' && item?.my && item?.status === 'pending' ? (
+              <Button title="Засах" size="s" onPress={onPressEdit} />
+            ) : (
+              <Box height={theme.button.s} />
+            )}
+          </Box>
+        </BoxContainer>
+      </TouchableOpacity>
+      {hasImages && (
+        <ImageView
+          images={item?.images?.map(img => ({ uri: getImageUrl(img) })) || []}
+          imageIndex={0}
+          visible={isImageViewVisible}
+          onRequestClose={() => setIsImageViewVisible(false)}
+        />
+      )}
+      <ModalMsg
+        type="error"
+        visible={msgModal}
+        msg="Таны эрх дууссан байна! Та эрхээ сунгах уу?"
+        handleClose={handleCloseMsgModal}
+        handleConfirm={handleConfirmMsgModal}
+      />
+    </>
+  );
+};
+
+export default SingleOrder;

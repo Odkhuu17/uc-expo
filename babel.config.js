@@ -1,6 +1,16 @@
-api.cache(false);
-
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
-  plugins: [['react-native-worklets/plugin']],
+  plugins: [
+    [
+      'module-resolver',
+      {
+        root: ['./src'],
+        extensions: ['.ts', '.tsx', '.json'],
+        alias: {
+          '@': './src',
+        },
+      },
+    ],
+    ['react-native-worklets/plugin'],
+  ],
 };

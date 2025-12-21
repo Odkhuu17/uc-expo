@@ -5,10 +5,6 @@ import Config from 'react-native-config';
 
 import constants from '@/constants';
 
-const axiosClient = axios.create({
-  baseURL: Config.API_URL,
-});
-
 export const refreshAccessToken = async (): Promise<string> => {
   const credentials = await Keychain.getGenericPassword({
     service: constants.keyChainAuthServiceKey,
@@ -19,8 +15,8 @@ export const refreshAccessToken = async (): Promise<string> => {
   ).toString('base64');
 
   if (!credentials) {
-    const { data } = await axiosClient.post(
-      '/oauth/token',
+    const { data } = await axios.post(
+      `${Config.API_URL}/oauth/token`,
       {
         grant_type: 'client_credentials',
         scope: 'public backoffice',
@@ -39,8 +35,8 @@ export const refreshAccessToken = async (): Promise<string> => {
     return data.access_token;
   }
 
-  const { data } = await axiosClient.post(
-    '/oauth/token',
+  const { data } = await axios.post(
+    `${Config.API_URL}/oauth/token`,
     {
       grant_type: 'refresh_token',
       refresh_token: credentials.password,

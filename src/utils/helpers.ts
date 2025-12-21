@@ -1,9 +1,11 @@
-import { carTypes2 } from '@/constants';
+import Config from 'react-native-config';
 import { createNumberMask } from 'react-native-mask-input';
+
+import { rentCarTypes } from '@/constants/transportTypes';
 
 export const moneyFormat = (
   amount: number | string,
-  decimalPlaces: number = 0
+  decimalPlaces: number = 0,
 ) => {
   return `${Number(amount)
     .toFixed(decimalPlaces)
@@ -28,11 +30,11 @@ export const formatDuration = (durationMillis?: number | null) => {
 };
 
 export const getImageUrl = (url: string) => {
-  return `${process.env.EXPO_PUBLIC_IMAGE_URL}${url}`;
+  return `${Config.API_URl}${url}`;
 };
 
 export const isRentOrder = (carType?: string) => {
-  const found = carTypes2.find(car => car.name === carType);
+  const found = rentCarTypes.find(car => car.name === carType);
 
   return found ? true : false;
 };

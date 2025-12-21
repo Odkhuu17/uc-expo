@@ -16,9 +16,13 @@ import { useNavigation } from '@react-navigation/native';
 
 import { refreshAccessToken } from './helpers';
 import constants from '@/constants';
+import { INavigation } from '@/navigations';
+import { useAppDispatch } from '@/redux/hooks';
+import authSlice from '@/redux/slices/auth';
 
 const useClient = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<INavigation>();
+  const dispatch = useAppDispatch();
 
   return useMemo(() => {
     const authLink = new SetContextLink(async (prevContext, operation) => {
@@ -43,24 +47,24 @@ const useClient = () => {
     const errorLink = new ErrorLink(({ error, operation }) => {
       if (CombinedGraphQLErrors.is(error)) {
         error.errors.forEach(({ message, locations, path }) => {
-          return navigation.navigate({
-            pathname: '/modal',
-            params: { type: 'error', message },
+          return navigation.navigate('MsgModal', {
+            type: 'error',
+            msg: message,
           });
         });
       } else if (CombinedProtocolErrors.is(error)) {
         console.log('uregferugeiewm');
 
         error.errors.forEach(({ message, extensions }) =>
-          navigation.navigate({
-            pathname: '/modal',
-            params: { type: 'error', message },
+          navigation.navigate('MsgModal', {
+            type: 'error',
+            msg: message,
           }),
         );
       } else if (ServerError.is(error) && error.statusCode !== 401) {
-        return navigation.navigate({
-          pathname: '/modal',
-          params: { type: 'error', message: error.message },
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: error.message,
         });
       }
     });
@@ -94,8 +98,8 @@ const useClient = () => {
               await Keychain.resetGenericPassword({
                 service: constants.keyChainAuthServiceKey,
               });
-              navigation.replace('/auth/login');
               observer.error(refreshError);
+              dispatch(authSlice.actions.logout());
             });
         });
       }

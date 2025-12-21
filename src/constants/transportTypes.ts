@@ -18,7 +18,7 @@ export const packageTypes = [
   'Бусад',
 ];
 
-export const carTypes = [
+export const deliveryCarTypes = [
   { name: 'Задгай', image: require('assets/images/cars/porter.png') },
   { name: 'Бүхээгтэй', image: require('assets/images/cars/truck.png') },
   { name: 'Хөргүүртэй', image: require('assets/images/cars/fridge.png') },
@@ -26,7 +26,7 @@ export const carTypes = [
   { name: 'Трейлэр', image: require('assets/images/cars/trailer.png') },
 ];
 
-export const carTypes2 = [
+export const rentCarTypes = [
   {
     name: 'Экскаватор',
     image: require('assets/images/cars/excavator.png'),

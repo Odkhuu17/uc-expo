@@ -1,0 +1,5 @@
+mutation SendOtp($login: String!) {
+  sendOtp(input: { login: $login }) {
+    id
+  }
+}
