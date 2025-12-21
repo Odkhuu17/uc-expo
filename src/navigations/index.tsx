@@ -63,10 +63,10 @@ const AppNavigator = () => {
         <Stack.Group screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Tabs" component={Tabs} />
           <Stack.Screen name="OrderDetail" component={OrderDetail} />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="OrderCreateOrEdit"
             component={OrderCreateOrEdit}
-          />
+          /> */}
         </Stack.Group>
       )}
       <Stack.Group

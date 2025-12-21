@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshControl } from 'react-native';
-import {
-  ContainerTruck01Icon,
-  DeliveryBox01Icon,
-} from '@hugeicons/core-free-icons';
+import { ContainerTruck01Icon } from '@hugeicons/core-free-icons';
 import { INavigationProps } from '@/navigations';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -128,15 +125,8 @@ const ProfileScreen = ({ navigation }: Props) => {
                   </>
                 )}
               </BoxContainer>
-              <BoxContainer gap="m">
-                {mode === 'shipper' && (
-                  <SingleMenu
-                    title="Миний захиалгууд"
-                    icon={DeliveryBox01Icon}
-                    onPress={onPressMyOrders}
-                  />
-                )}
-                {mode === 'driver' && (
+              {mode === 'driver' && (
+                <BoxContainer gap="m">
                   <Box gap="m">
                     <SingleMenu
                       title="Миний машин"
@@ -147,8 +137,8 @@ const ProfileScreen = ({ navigation }: Props) => {
                       <Warning description="Танд баталгаажсан машин байхгүй байна! Та машинаа баталгаажуулсны дараагаар манай системийг ашиглах боломжтой." />
                     )}
                   </Box>
-                )}
-              </BoxContainer>
+                </BoxContainer>
+              )}
             </Box>
           </ContentScrollable>
           <BottomContainer noInsets>
