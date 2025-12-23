@@ -3,7 +3,7 @@ import Slider from '@react-native-community/slider';
 import { AudioContext } from 'react-native-audio-api';
 import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { formatDuration } from '@/utils/helpers';
 
@@ -190,7 +190,7 @@ const OrderDetailAudio = ({ audio }: Props) => {
         </Text>
       </Box>
       <Box flexDirection="row" alignItems="center" gap="s">
-        <IconButton
+        <ButtonIcon
           color="primary"
           icon={isPlaying ? PauseIcon : PlayIcon}
           size="m"

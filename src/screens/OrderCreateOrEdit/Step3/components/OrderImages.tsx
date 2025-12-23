@@ -3,7 +3,7 @@ import { Trash } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
 import { ScrollView } from 'react-native';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 
 interface Props {
@@ -46,7 +46,7 @@ const OrderImages = ({ images, setImages }: Props) => {
               top={theme.spacing.xs}
               right={theme.spacing.xs}
             >
-              <IconButton
+              <ButtonIcon
                 icon={Trash}
                 color="white"
                 backgroundColor="backdrop"

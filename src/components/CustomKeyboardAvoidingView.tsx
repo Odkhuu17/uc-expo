@@ -10,7 +10,6 @@ const CustomKeyboardAvoidingView = ({ children }: Props) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? -40 : undefined}
       style={css.container}
     >
       {children}

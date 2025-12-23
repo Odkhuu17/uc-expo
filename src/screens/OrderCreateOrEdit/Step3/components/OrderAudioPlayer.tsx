@@ -4,7 +4,7 @@ import { CloseCircle, Pause, Play } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction } from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { formatDuration } from '@/utils/helpers';
 import useOnRemoveAudio from '../hooks/useOnRemoveAudio';
@@ -51,7 +51,7 @@ const OrderAudioPlayer = ({ audio, setAudio }: Props) => {
         </TouchableOpacity>
       </Box>
       <Box flexDirection="row" alignItems="center" gap="s">
-        <IconButton
+        <ButtonIcon
           color="baseBlue"
           icon={status.playing ? Pause : Play}
           size="m"

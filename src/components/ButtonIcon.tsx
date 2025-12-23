@@ -13,7 +13,7 @@ interface Props {
   variant?: 'text' | 'outlined' | 'contained';
 }
 
-const IconButton = ({
+const ButtonIcon = ({
   onPress,
   variant = 'outlined',
   color = 'primary',
@@ -80,4 +80,4 @@ const IconButton = ({
   );
 };
 
-export default IconButton;
+export default ButtonIcon

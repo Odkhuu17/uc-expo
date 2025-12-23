@@ -41,6 +41,8 @@ export const theme = createTheme({
     green3: '#00e676',
     green4: '#00c853',
 
+    facebook:'#1877F2',
+
     transparent: 'transparent',
   },
   spacing: {

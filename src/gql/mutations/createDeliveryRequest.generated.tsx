@@ -6,18 +6,18 @@ import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CreateDeliveryRequestMutationVariables = Types.Exact<{
   orderId: Types.Scalars['ID']['input'];
-  price: Types.Scalars['Float']['input'];
+  price: Types.Scalars['String']['input'];
   travelAt: Types.Scalars['ISO8601DateTime']['input'];
   userId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   clientMutationId?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
-export type CreateDeliveryRequestMutation = { __typename?: 'Mutation', createDeliveryRequest?: { __typename?: 'DeliveryRequest', id: string, price: number, status: string, travelAt: any, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, email?: string } } };
+export type CreateDeliveryRequestMutation = { __typename?: 'Mutation', createDeliveryRequest?: { __typename?: 'DeliveryRequest', id: string, price: string, status: string, travelAt: any, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, email?: string } } };
 
 
 export const CreateDeliveryRequestDocument = gql`
-    mutation createDeliveryRequest($orderId: ID!, $price: Float!, $travelAt: ISO8601DateTime!, $userId: ID, $clientMutationId: String) {
+    mutation createDeliveryRequest($orderId: ID!, $price: String!, $travelAt: ISO8601DateTime!, $userId: ID, $clientMutationId: String) {
   createDeliveryRequest(
     input: {orderId: $orderId, price: $price, travelAt: $travelAt, userId: $userId, clientMutationId: $clientMutationId}
   ) {

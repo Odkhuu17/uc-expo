@@ -3,7 +3,7 @@ import { CloseCircle, VideoPlay } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 
 interface Props {
@@ -77,7 +77,7 @@ const OrderVideo = ({ video, setVideo }: Props) => {
           justifyContent="center"
           alignItems="center"
         >
-          <IconButton
+          <ButtonIcon
             icon={VideoPlay}
             backgroundColor="backdrop"
             color="white"

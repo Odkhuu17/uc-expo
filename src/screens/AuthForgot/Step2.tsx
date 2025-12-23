@@ -7,7 +7,7 @@ import {
   LockPasswordIcon,
 } from '@hugeicons/core-free-icons';
 
-import { Button, MsgModal } from '@/components';
+import { Button, ModalMsg } from '@/components';
 import Input from '@/components/Input';
 import { INavigation } from '@/navigations';
 import { useResetPasswordMutation } from '@/gql/mutations/resetPassword.generated';
@@ -103,7 +103,7 @@ const Step2 = ({ phoneNumber }: Props) => {
         loading={loading}
         onPress={handleSubmit}
       />
-      <MsgModal
+      <ModalMsg
         type="success"
         msg="Таны нууц үг амжилттай солигдлоо"
         handleClose={handleCloseSuccessModal}

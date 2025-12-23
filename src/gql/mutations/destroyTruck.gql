@@ -1,0 +1,13 @@
+mutation DestroyTruck($id: ID!) {
+  destroyTruck(input: { id: $id }) {
+    id
+    plateNumber
+    serial
+    weight
+    netWeight
+    importedDate
+    manufacturedDate
+    createdAt
+    updatedAt
+  }
+}

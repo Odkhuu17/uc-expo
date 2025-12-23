@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { PlayCircleIcon } from '@hugeicons/core-free-icons';
 
-import { BoxContainer, IconButton } from '@/components';
+import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 
 interface Props {
@@ -72,7 +72,7 @@ const OrderDetailVideo = ({ video }: Props) => {
           {isLoading ? (
             <ActivityIndicator size="large" color={theme.colors.primary} />
           ) : (
-            <IconButton
+            <ButtonIcon
               icon={PlayCircleIcon}
               backgroundColor="backdrop"
               onPress={handlePlayFullscreen}

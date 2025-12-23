@@ -1,0 +1,22 @@
+mutation updateUser(
+  $id: ID!
+  $firstName: String
+  $lastName: String
+  $registerNum: String
+  $avatar: Upload
+) {
+  updateUser(
+    input: {
+      id: $id
+      firstName: $firstName
+      lastName: $lastName
+      registerNum: $registerNum
+      avatar: $avatar
+    }
+  ) {
+    id
+    firstName
+    lastName
+    registerNum
+  }
+}

@@ -16,6 +16,11 @@ import Tabs from './Tabs';
 import { useAppSelector } from '@/redux/hooks';
 import OrderDetail from '@/screens/OrderDetail';
 import OrderCreateOrEdit from '@/screens/OrderCreateOrEdit';
+import Contact from '@/screens/Contact';
+import Terms from '@/screens/Terms';
+import ProfileUpdate from '@/screens/ProfileUpdate';
+import TrucksMy from '@/screens/TrucksMy';
+import TruckAddOrEdit from '@/screens/TruckAddOrEdit';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -35,6 +40,13 @@ export type TAppRoutes = {
     number?: string;
   };
   Profile: undefined;
+  ProfileUpdate: undefined;
+  Contact: undefined;
+  Terms: undefined;
+  TrucksMy: undefined;
+  TruckAddOrEdit: {
+    id?: string;
+  };
 };
 
 export interface INavigationProps<RouteName extends keyof TAppRoutes> {
@@ -63,6 +75,12 @@ const AppNavigator = () => {
         <Stack.Group screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Tabs" component={Tabs} />
           <Stack.Screen name="OrderDetail" component={OrderDetail} />
+          <Stack.Screen name="Contact" component={Contact} />
+          <Stack.Screen name="Terms" component={Terms} />
+          <Stack.Screen name="ProfileUpdate" component={ProfileUpdate} />
+          <Stack.Screen name="TrucksMy" component={TrucksMy} />
+          <Stack.Screen name="TruckAddOrEdit" component={TruckAddOrEdit} />
+
           {/* <Stack.Screen
             name="OrderCreateOrEdit"
             component={OrderCreateOrEdit}

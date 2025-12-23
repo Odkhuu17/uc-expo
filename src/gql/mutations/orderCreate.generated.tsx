@@ -22,11 +22,9 @@ export type OrderCreateMutationVariables = Types.Exact<{
   originId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   destinationId?: Types.InputMaybe<Types.Scalars['ID']['input']>;
   published?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
-  images?: Types.InputMaybe<Array<Types.Scalars['Upload']['input']> | Types.Scalars['Upload']['input']>;
-  audio?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
-  video?: Types.InputMaybe<Types.Scalars['Upload']['input']>;
   vatIncluded?: Types.InputMaybe<Types.Scalars['Boolean']['input']>;
   data?: Types.InputMaybe<Types.Scalars['JSON']['input']>;
+  taxonId: Types.Scalars['ID']['input'];
 }>;
 
 
@@ -34,9 +32,9 @@ export type OrderCreateMutation = { __typename?: 'Mutation', createOrder?: { __t
 
 
 export const OrderCreateDocument = gql`
-    mutation orderCreate($title: String, $packageType: String, $packageWeight: String, $packageDimensions: String, $price: Float, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: String, $travelDuration: String, $originId: ID, $destinationId: ID, $published: Boolean, $images: [Upload!], $audio: Upload, $video: Upload, $vatIncluded: Boolean, $data: JSON) {
+    mutation orderCreate($title: String, $packageType: String, $packageWeight: String, $packageDimensions: String, $price: Float, $senderName: String, $senderMobile: String, $receiverName: String, $receiverMobile: String, $carType: String, $carWeight: String, $travelAt: ISO8601DateTime, $travelDistance: String, $travelDuration: String, $originId: ID, $destinationId: ID, $published: Boolean, $vatIncluded: Boolean, $data: JSON, $taxonId: ID!) {
   createOrder(
-    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, images: $images, audio: $audio, video: $video, vatIncluded: $vatIncluded, data: $data}
+    input: {title: $title, packageType: $packageType, packageWeight: $packageWeight, packageDimensions: $packageDimensions, price: $price, senderName: $senderName, senderMobile: $senderMobile, receiverName: $receiverName, receiverMobile: $receiverMobile, carType: $carType, carWeight: $carWeight, travelAt: $travelAt, originId: $originId, destinationId: $destinationId, travelDistance: $travelDistance, travelDuration: $travelDuration, published: $published, vatIncluded: $vatIncluded, data: $data, taxonId: $taxonId}
   ) {
     id
     number
@@ -151,11 +149,9 @@ export type OrderCreateMutationFn = ApolloReactCommon.MutationFunction<OrderCrea
  *      originId: // value for 'originId'
  *      destinationId: // value for 'destinationId'
  *      published: // value for 'published'
- *      images: // value for 'images'
- *      audio: // value for 'audio'
- *      video: // value for 'video'
  *      vatIncluded: // value for 'vatIncluded'
  *      data: // value for 'data'
+ *      taxonId: // value for 'taxonId'
  *   },
  * });
  */

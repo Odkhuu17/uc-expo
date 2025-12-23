@@ -72,7 +72,7 @@ const SingleOrder = ({ item }: Props) => {
   return (
     <>
       <TouchableOpacity onPress={onNavigateToDetail}>
-        <BoxContainer p={undefined} overflow="hidden">
+        <BoxContainer p={undefined} overflow="hidden" gap="m">
           <Box
             flexDirection="row"
             justifyContent="space-between"
@@ -98,7 +98,14 @@ const SingleOrder = ({ item }: Props) => {
               backgroundColor={isRent ? 'rent' : 'delivery'}
             />
           </Box>
-          <Box flexDirection="row" alignItems="center" gap="s" p="m">
+          <Box px="m">
+            {!isRent && (
+              <Text color="primary" variant="title">
+                {item?.packageType}
+              </Text>
+            )}
+          </Box>
+          <Box flexDirection="row" alignItems="center" gap="s" px="m">
             <Box
               width={100}
               height={100}
@@ -124,11 +131,6 @@ const SingleOrder = ({ item }: Props) => {
               )}
             </Box>
             <Box flex={1} gap="m">
-              {!isRent && (
-                <Text color="primary" variant="title">
-                  {item?.packageType}
-                </Text>
-              )}
               <Box>
                 <Box flexDirection="row" alignItems="center" gap="xs">
                   <Box alignItems="center">

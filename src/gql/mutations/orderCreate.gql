@@ -16,11 +16,9 @@ mutation orderCreate(
   $originId: ID
   $destinationId: ID
   $published: Boolean
-  $images: [Upload!]
-  $audio: Upload
-  $video: Upload
   $vatIncluded: Boolean
   $data: JSON
+  $taxonId: ID!
 ) {
   createOrder(
     input: {
@@ -41,11 +39,9 @@ mutation orderCreate(
       travelDistance: $travelDistance
       travelDuration: $travelDuration
       published: $published
-      images: $images
-      audio: $audio
-      video: $video
       vatIncluded: $vatIncluded
       data: $data
+      taxonId: $taxonId
     }
   ) {
     id

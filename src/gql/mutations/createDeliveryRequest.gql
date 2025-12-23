@@ -1,6 +1,6 @@
 mutation createDeliveryRequest(
   $orderId: ID!
-  $price: Float!
+  $price: String!
   $travelAt: ISO8601DateTime!
   $userId: ID
   $clientMutationId: String

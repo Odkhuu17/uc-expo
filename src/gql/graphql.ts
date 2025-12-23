@@ -205,7 +205,7 @@ export type DeliveryRequest = BaseModelInterface & {
   id: Scalars['ID']['output'];
   order: Order;
   orderId: Scalars['ID']['output'];
-  price: Scalars['Float']['output'];
+  price: Scalars['String']['output'];
   status: Scalars['String']['output'];
   travelAt: Scalars['ISO8601DateTime']['output'];
   truck?: Maybe<Truck>;
@@ -233,7 +233,7 @@ export type DeliveryRequestFilter = {
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
   order?: InputMaybe<OrderFilter>;
-  price?: InputMaybe<IntFilter>;
+  price?: InputMaybe<StringFilter>;
   status?: InputMaybe<EnumStringFilter>;
   truck?: InputMaybe<TruckFilter>;
   updatedAt?: InputMaybe<DateFilter>;
@@ -456,6 +456,9 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptDeliveryRequest?: Maybe<DeliveryRequest>;
   approveVerification?: Maybe<Verification>;
+  attachOrderImage?: Maybe<Order>;
+  attachOrderVideo?: Maybe<Order>;
+  attachOrderVoice?: Maybe<Order>;
   authCheckLogin: Scalars['JSON']['output'];
   authRegister?: Maybe<User>;
   checkPayment?: Maybe<Scalars['JSON']['output']>;
@@ -484,6 +487,7 @@ export type Mutation = {
   destroyMark?: Maybe<Mark>;
   destroyModel?: Maybe<Model>;
   destroyOrder?: Maybe<Order>;
+  destroyOrderImage?: Maybe<Order>;
   destroyPaymentMethod?: Maybe<PaymentMethod>;
   destroySendEmail?: Maybe<SendEmail>;
   destroySubscription?: Maybe<Subscription>;
@@ -526,6 +530,21 @@ export type MutationAcceptDeliveryRequestArgs = {
 
 export type MutationApproveVerificationArgs = {
   input: ApproveVerificationInput;
+};
+
+
+export type MutationAttachOrderImageArgs = {
+  input: AttachOrderImageInput;
+};
+
+
+export type MutationAttachOrderVideoArgs = {
+  input: AttachOrderVideoInput;
+};
+
+
+export type MutationAttachOrderVoiceArgs = {
+  input: AttachOrderVoiceInput;
 };
 
 
@@ -666,6 +685,11 @@ export type MutationDestroyModelArgs = {
 
 export type MutationDestroyOrderArgs = {
   input: DestroyOrderInput;
+};
+
+
+export type MutationDestroyOrderImageArgs = {
+  input: DestroyOrderImageInput;
 };
 
 
@@ -862,6 +886,8 @@ export type Order = BaseModelInterface & {
   senderName?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   subscribed: Scalars['Boolean']['output'];
+  taxon?: Maybe<Taxon>;
+  taxonId?: Maybe<Scalars['ID']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   travelAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   travelDistance?: Maybe<Scalars['String']['output']>;
@@ -933,24 +959,13 @@ export type Payment = BaseModelInterface & {
   createdAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
   number: Scalars['String']['output'];
-  paymentCaptureEvents: Array<PaymentCaptureEvent>;
   paymentMethod: PaymentMethod;
   preferences?: Maybe<Scalars['JSON']['output']>;
+  qPayEvents?: Maybe<Scalars['JSON']['output']>;
   referenceNo?: Maybe<Scalars['String']['output']>;
   source?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   subscription?: Maybe<Subscription>;
-  updatedAt: Scalars['ISO8601DateTime']['output'];
-};
-
-export type PaymentCaptureEvent = BaseModelInterface & {
-  __typename?: 'PaymentCaptureEvent';
-  amount: Scalars['Float']['output'];
-  createdAt: Scalars['ISO8601DateTime']['output'];
-  id: Scalars['ID']['output'];
-  paymentId?: Maybe<Scalars['Int']['output']>;
-  preferences?: Maybe<Scalars['JSON']['output']>;
-  source?: Maybe<Scalars['JSON']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
@@ -1612,9 +1627,11 @@ export type Subscription = BaseModelInterface & {
   payments: Array<Payment>;
   startAt: Scalars['ISO8601DateTime']['output'];
   subscriptionPlan: SubscriptionPlan;
+  truck?: Maybe<Truck>;
+  truckId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   user: User;
-  valid: Scalars['Boolean']['output'];
+  userId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type SubscriptionConnection = {
@@ -1637,6 +1654,7 @@ export type SubscriptionFilter = {
   paymentStatus?: InputMaybe<IntFilter>;
   subscriptionPlan?: InputMaybe<SubscriptionPlanFilter>;
   subscriptionPlanId?: InputMaybe<IdFilter>;
+  truck?: InputMaybe<TruckFilter>;
   updatedAt?: InputMaybe<DateFilter>;
   user?: InputMaybe<UserFilter>;
   userId?: InputMaybe<IdFilter>;
@@ -1757,6 +1775,9 @@ export type Truck = BaseModelInterface & {
   netWeight?: Maybe<Scalars['Int']['output']>;
   plateNumber?: Maybe<Scalars['String']['output']>;
   serial?: Maybe<Scalars['String']['output']>;
+  subscribed: Scalars['Boolean']['output'];
+  subscribedUntil?: Maybe<Scalars['ISO8601DateTime']['output']>;
+  subscriptions: SubscriptionConnection;
   taxon?: Maybe<Taxon>;
   taxonId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
@@ -1766,6 +1787,17 @@ export type Truck = BaseModelInterface & {
   verified: Scalars['Boolean']['output'];
   verifiedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   weight?: Maybe<Scalars['Int']['output']>;
+};
+
+
+export type TruckSubscriptionsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SubscriptionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
 };
 
 
@@ -1803,6 +1835,7 @@ export type TruckFilter = {
   netWeight?: InputMaybe<IntFilter>;
   plateNumber?: InputMaybe<StringFilter>;
   serial?: InputMaybe<StringFilter>;
+  subscribedUntil?: InputMaybe<DateFilter>;
   taxon?: InputMaybe<TaxonFilter>;
   taxonId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateFilter>;
@@ -1894,6 +1927,8 @@ export type User = BaseModelInterface & {
   state?: Maybe<State>;
   stateId?: Maybe<Scalars['ID']['output']>;
   subscribed?: Maybe<Scalars['Boolean']['output']>;
+  subscribedTaxons: Array<Scalars['String']['output']>;
+  subscribedUntil?: Maybe<Scalars['ISO8601DateTime']['output']>;
   subscriptions: SubscriptionConnection;
   trucks: Array<Truck>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
@@ -2023,6 +2058,7 @@ export type UserFilter = {
   nickName?: InputMaybe<StringFilter>;
   registerNum?: InputMaybe<StringFilter>;
   role?: InputMaybe<IntFilter>;
+  subscribedUntil?: InputMaybe<DateFilter>;
   updatedAt?: InputMaybe<DateFilter>;
   verifiedAt?: InputMaybe<DateFilter>;
 };
@@ -2084,6 +2120,24 @@ export type ApproveVerificationInput = {
   comment: Scalars['String']['input'];
   id: Scalars['ID']['input'];
   status: Scalars['String']['input'];
+};
+
+export type AttachOrderImageInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  images: Array<Scalars['Upload']['input']>;
+  number: Scalars['String']['input'];
+};
+
+export type AttachOrderVideoInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['String']['input'];
+  video: Scalars['Upload']['input'];
+};
+
+export type AttachOrderVoiceInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['String']['input'];
+  voice: Scalars['Upload']['input'];
 };
 
 export type AuthCheckLoginInput = {
@@ -2149,7 +2203,7 @@ export type CreateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   driverId?: InputMaybe<Scalars['ID']['input']>;
   orderId: Scalars['ID']['input'];
-  price: Scalars['Float']['input'];
+  price: Scalars['String']['input'];
   skipSubscription?: InputMaybe<Scalars['Boolean']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
@@ -2183,7 +2237,6 @@ export type CreateModelInput = {
 };
 
 export type CreateOrderInput = {
-  audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
@@ -2191,7 +2244,6 @@ export type CreateOrderInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
-  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
   packageDimensions?: InputMaybe<Scalars['String']['input']>;
@@ -2203,13 +2255,13 @@ export type CreateOrderInput = {
   receiverName?: InputMaybe<Scalars['String']['input']>;
   senderMobile?: InputMaybe<Scalars['String']['input']>;
   senderName?: InputMaybe<Scalars['String']['input']>;
+  taxonId: Scalars['ID']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   travelDistance?: InputMaybe<Scalars['String']['input']>;
   travelDuration?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
   vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
-  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type CreatePaymentInput = {
@@ -2238,9 +2290,11 @@ export type CreateSendEmailInput = {
 export type CreateSubscriptionInput = {
   autoRenew?: InputMaybe<Scalars['Boolean']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  createPayment?: InputMaybe<Scalars['Boolean']['input']>;
   endAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   startAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   subscriptionPlanId: Scalars['ID']['input'];
+  truckId?: InputMaybe<Scalars['ID']['input']>;
   userId: Scalars['ID']['input'];
 };
 
@@ -2352,6 +2406,12 @@ export type DestroyMarkInput = {
 export type DestroyModelInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+export type DestroyOrderImageInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  imageId: Scalars['ID']['input'];
+  number: Scalars['String']['input'];
 };
 
 export type DestroyOrderInput = {
@@ -2483,7 +2543,7 @@ export type UpdateBannerInput = {
 export type UpdateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  price?: InputMaybe<Scalars['Float']['input']>;
+  price?: InputMaybe<Scalars['String']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
 };
 
@@ -2505,7 +2565,6 @@ export type UpdateModelInput = {
 };
 
 export type UpdateOrderInput = {
-  audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
@@ -2514,7 +2573,6 @@ export type UpdateOrderInput = {
   destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
   id: Scalars['ID']['input'];
-  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
   packageDimensions?: InputMaybe<Scalars['String']['input']>;
@@ -2527,12 +2585,12 @@ export type UpdateOrderInput = {
   senderMobile?: InputMaybe<Scalars['String']['input']>;
   senderName?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
+  taxonId?: InputMaybe<Scalars['ID']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   travelDistance?: InputMaybe<Scalars['String']['input']>;
   travelDuration?: InputMaybe<Scalars['String']['input']>;
   vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
-  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type UpdatePaymentMethodInput = {
@@ -2561,6 +2619,7 @@ export type UpdateSubscriptionInput = {
   id: Scalars['ID']['input'];
   startAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
   subscriptionPlanId?: InputMaybe<Scalars['ID']['input']>;
+  truckId?: InputMaybe<Scalars['ID']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
 

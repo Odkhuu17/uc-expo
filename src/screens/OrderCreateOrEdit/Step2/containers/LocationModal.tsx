@@ -44,7 +44,7 @@ const LocationModal = ({
         longitude: location?._source?.location.lon || 106.918556,
       },
     },
-    skip: address1.length < 3 || !location,
+    skip: address1.length < 2 && !location,
   });
 
   const onChangeSheet = (index: number) => {

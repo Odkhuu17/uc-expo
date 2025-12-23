@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
-import { ContainerTruck01Icon } from '@hugeicons/core-free-icons';
-import { INavigationProps } from '@/navigations';
+import { Alert, RefreshControl } from 'react-native';
+import {
+  Book02Icon,
+  CallIcon,
+  ContainerTruck01Icon,
+} from '@hugeicons/core-free-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 import {
@@ -20,6 +23,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
 import { SingleMenu, UserInfo } from './components';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
+import { INavigationProps } from '@/navigations';
 
 interface Props {
   navigation: INavigationProps<'Profile'>['navigation'];
@@ -67,7 +71,7 @@ const ProfileScreen = ({ navigation }: Props) => {
   }, [userData, hasPendingUserVerification]);
 
   const onPressProfile = () => {
-    navigation.navigate('/profile/user/update');
+    navigation.navigate('ProfileUpdate');
   };
 
   const onPressVerification = () => {
@@ -75,12 +79,32 @@ const ProfileScreen = ({ navigation }: Props) => {
   };
 
   const onLogout = () => {
-    dispatch(authSlice.actions.logout());
+    Alert.alert('Гарах', 'Та системээс гарахдаа итгэлтэй байна уу?', [
+      {
+        text: 'Буцах',
+        style: 'cancel',
+      },
+      {
+        text: 'Тийм',
+        style: 'destructive',
+        onPress: () => {
+          dispatch(authSlice.actions.logout());
+        },
+      },
+    ]);
   };
 
-  const onPressMyOrders = () => {};
+  const onPressMyTrucks = () => {
+    navigation.navigate('TrucksMy');
+  };
 
-  const onPressMyTrucks = () => {};
+  const onPressContact = () => {
+    navigation.navigate('Contact');
+  };
+
+  const onPressTerms = () => {
+    navigation.navigate('Terms');
+  };
 
   return (
     <Container>
@@ -139,6 +163,18 @@ const ProfileScreen = ({ navigation }: Props) => {
                   </Box>
                 </BoxContainer>
               )}
+              <BoxContainer gap="m">
+                <SingleMenu
+                  title="Холбоо барих"
+                  icon={CallIcon}
+                  onPress={onPressContact}
+                />
+                <SingleMenu
+                  title="Үйлчилгээний нөхцөл"
+                  icon={Book02Icon}
+                  onPress={onPressTerms}
+                />
+              </BoxContainer>
             </Box>
           </ContentScrollable>
           <BottomContainer noInsets>
