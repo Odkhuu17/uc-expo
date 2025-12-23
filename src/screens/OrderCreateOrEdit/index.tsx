@@ -118,10 +118,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
     },
     validationSchema: deliverySchema,
     onSubmit: async () => {
-      const imageFiles = images.length > 0 ? imagesToFiles(images) : [];
-      const videoFile = video ? videoToFile(video) : null;
-      const audioFile = audio ? audioToFile(audio) : null;
-
       const values = formik.values;
 
       if (number) {
@@ -144,9 +140,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
               receiverMobile: values.receiverMobile,
               senderName: values.senderName,
               senderMobile: values.senderMobile,
-              images: imageFiles.length > 0 ? imageFiles : undefined,
-              video: videoFile,
-              audio: audioFile,
               published: true,
             },
           },
@@ -154,25 +147,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
       } else {
         await createOrder({
           variables: {
-            originId: createdOrigin?.id,
-            destinationId: createdDestination?.id,
-            packageType: values.packageType,
-            carType: values.carType,
-            packageWeight: values.packageWeight,
-            travelAt: dayjs(`${values.travelDay} ${values.travelHour}`),
-            vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : Number(values.price),
-            data: {
-              additionalInfo: values.additionalInfo,
-            },
-            receiverName: values.receiverName,
-            receiverMobile: values.receiverMobile,
-            senderName: values.senderName,
-            senderMobile: values.senderMobile,
-            images: imageFiles.length > 0 ? imageFiles : undefined,
-            video: videoFile,
-            audio: audioFile,
-            published: true,
+            taxonId: '1',
           },
         });
       }
