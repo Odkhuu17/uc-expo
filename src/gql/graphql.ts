@@ -1089,6 +1089,7 @@ export type Query = {
   paymentMethod: PaymentMethod;
   paymentMethods: PaymentMethodConnection;
   payments: PaymentConnection;
+  placeDetails?: Maybe<UbCab>;
   quarters: QuarterConnection;
   queryTest?: Maybe<Scalars['JSON']['output']>;
   searchAddress?: Maybe<Array<UbCab>>;
@@ -1296,6 +1297,12 @@ export type QueryPaymentsArgs = {
 };
 
 
+export type QueryPlaceDetailsArgs = {
+  language?: InputMaybe<Scalars['String']['input']>;
+  placeId: Scalars['String']['input'];
+};
+
+
 export type QueryQuartersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -1308,9 +1315,12 @@ export type QueryQuartersArgs = {
 
 
 export type QuerySearchAddressArgs = {
+  language?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<LatLngInput>;
   page?: InputMaybe<Scalars['Int']['input']>;
+  provider?: InputMaybe<Scalars['String']['input']>;
   query?: InputMaybe<Scalars['String']['input']>;
+  radius?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -1896,14 +1906,20 @@ export type UbCabLocation = {
 
 export type UbCabSource = {
   __typename?: 'UbCabSource';
-  location: UbCabLocation;
+  formattedAddress?: Maybe<Scalars['String']['output']>;
+  location?: Maybe<UbCabLocation>;
   nameEn: Scalars['String']['output'];
   nameFullEn: Scalars['String']['output'];
   nameFullMn: Scalars['String']['output'];
   nameMn: Scalars['String']['output'];
   nameShortEn: Scalars['String']['output'];
   nameShortMn: Scalars['String']['output'];
+  placeId?: Maybe<Scalars['String']['output']>;
   regionType: Scalars['Int']['output'];
+  requiresDetails?: Maybe<Scalars['Boolean']['output']>;
+  secondaryText?: Maybe<Scalars['String']['output']>;
+  types?: Maybe<Array<Scalars['String']['output']>>;
+  vicinity?: Maybe<Scalars['String']['output']>;
 };
 
 export type User = BaseModelInterface & {

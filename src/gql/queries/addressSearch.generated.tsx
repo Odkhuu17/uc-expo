@@ -11,7 +11,7 @@ export type AddressSearchQueryVariables = Types.Exact<{
 }>;
 
 
-export type AddressSearchQuery = { __typename?: 'Query', searchAddress?: Array<{ __typename?: 'UbCab', _id: string, _index: string, _type: string, _source: { __typename?: 'UbCabSource', nameFullMn: string, nameMn: string, nameShortMn: string, location: { __typename?: 'UbCabLocation', lat: number, lon: number } }, quarter?: { __typename?: 'Quarter', id: string, name: string, district: { __typename?: 'District', id: string, name: string, state: { __typename?: 'State', id: string, name: string } } } }> };
+export type AddressSearchQuery = { __typename?: 'Query', searchAddress?: Array<{ __typename?: 'UbCab', _id: string, _index: string, _type: string, _source: { __typename?: 'UbCabSource', nameFullMn: string, nameMn: string, nameShortMn: string, location?: { __typename?: 'UbCabLocation', lat: number, lon: number } }, quarter?: { __typename?: 'Quarter', id: string, name: string, district: { __typename?: 'District', id: string, name: string, state: { __typename?: 'State', id: string, name: string } } } }> };
 
 
 export const AddressSearchDocument = gql`

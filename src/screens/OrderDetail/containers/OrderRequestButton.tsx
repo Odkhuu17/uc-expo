@@ -63,10 +63,7 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
     },
     validationSchema: schema,
     onSubmit: async () => {
-      // Remove commas and convert to number
-      const priceValue = values?.price
-        ? Number(values.price.replace(/,/g, ''))
-        : 0;
+      const priceValue = values?.price ? values.price.replace(/,/g, '') : '0';
 
       await createDeliveryRequest({
         variables: {
@@ -119,6 +116,7 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
               onChangeText={handlePriceChange}
               onBlur={handleBlur('price')}
               keyboardAvoiding
+              autoFocus
               keyboardType="number-pad"
               label="Үнэ"
               placeholder="Үнэ"

@@ -30,7 +30,7 @@ const ModalMsgContent = ({
       p="xl2"
     >
       <Box backgroundColor="white" width="100%" gap="m" p="m" borderRadius="s">
-        <Text textAlign="center">
+        <Text textAlign="center" variant="title">
           {type === 'error' ? 'Алдаа' : 'Амжилттай'}
         </Text>
         <Box alignItems="center">
@@ -48,10 +48,16 @@ const ModalMsgContent = ({
             />
           )}
         </Box>
-        <Text textAlign="center">{msg}</Text>
+        <Text textAlign="center" variant="body2">
+          {msg}
+        </Text>
         <Box flexDirection="row" gap="m">
           <Box flex={1}>
-            <Button onPress={handleClose} title="Хаах" />
+            <Button
+              onPress={handleClose}
+              title="Хаах"
+              variant={handleConfirm ? 'outlined' : undefined}
+            />
           </Box>
           {handleConfirm && (
             <Box flex={1}>

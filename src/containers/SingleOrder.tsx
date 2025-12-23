@@ -53,11 +53,13 @@ const SingleOrder = ({ item }: Props) => {
   };
 
   const onNavigateToDetail = () => {
-    if (!user?.subscribed && mode === 'driver') {
-      setMsgModal(true);
-    } else {
-      navigation.navigate('OrderDetail', { number: item?.number! });
-    }
+    //TUR LOGIC
+    // if (!user?.subscribed && mode === 'driver') {
+    //   setMsgModal(true);
+    // } else {
+    //   navigation.navigate('OrderDetail', { number: item?.number! });
+    // }
+    navigation.navigate('OrderDetail', { number: item?.number! });
   };
 
   const handleCloseMsgModal = () => {

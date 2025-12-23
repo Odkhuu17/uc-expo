@@ -21,6 +21,7 @@ import Terms from '@/screens/Terms';
 import ProfileUpdate from '@/screens/ProfileUpdate';
 import TrucksMy from '@/screens/TrucksMy';
 import TruckAddOrEdit from '@/screens/TruckAddOrEdit';
+import TruckSubscription from '@/screens/TruckSubscription';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -46,6 +47,9 @@ export type TAppRoutes = {
   TrucksMy: undefined;
   TruckAddOrEdit: {
     id?: string;
+  };
+  TruckSubscription: {
+    truckId: string;
   };
 };
 
@@ -80,6 +84,7 @@ const AppNavigator = () => {
           <Stack.Screen name="ProfileUpdate" component={ProfileUpdate} />
           <Stack.Screen name="TrucksMy" component={TrucksMy} />
           <Stack.Screen name="TruckAddOrEdit" component={TruckAddOrEdit} />
+          <Stack.Screen name="TruckSubscription" component={TruckSubscription} />
 
           {/* <Stack.Screen
             name="OrderCreateOrEdit"
