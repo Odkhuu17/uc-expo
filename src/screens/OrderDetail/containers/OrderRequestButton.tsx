@@ -8,7 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Button, ModalBottomSheet, Input, ModalMsg } from '@/components';
 import { Box, useTheme } from '@/components/Theme';
-import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
+import {
+  GetOrderDetailQuery,
+  GetOrderDetailDocument,
+} from '@/gql/queries/getOrderDetail.generated';
 import { INavigation } from '@/navigations';
 import { useCreateDeliveryRequestMutation } from '@/gql/mutations/createDeliveryRequest.generated';
 
@@ -71,6 +74,13 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
           price: priceValue,
           travelAt: dayjs(values?.travelAt) || dayjs().format('YYYY-MM-DD'),
         },
+        refetchQueries: [
+          {
+            query: GetOrderDetailDocument,
+            variables: { id: data?.id! },
+          },
+        ],
+        awaitRefetchQueries: true,
       })
         .then(() => {
           navigation.navigate('MsgModal', {

@@ -15,6 +15,7 @@ import {
   useGetOrdersMyQuery,
 } from '@/gql/queries/getOrdersMy.generated';
 import { INavigationProps } from '@/navigations';
+import Status from '@/containers/SingleOrder/Status';
 
 interface Props {
   navigation: INavigationProps<'OrdersMy'>['navigation'];
@@ -91,7 +92,11 @@ const OrdersMy = ({ navigation }: Props) => {
   }: {
     item: NonNullable<GetOrdersMyQuery['me']>['orders']['edges'][0]['node'];
   }) => {
-    return <SingleOrder item={item} />;
+    return (
+      <SingleOrder item={item}>
+        <Status item={item} />
+      </SingleOrder>
+    );
   };
 
   return (

@@ -13,6 +13,7 @@ export const theme = createTheme({
     error: '#d50000',
     success: '#00c853',
     primary: '#1265FF',
+    pending: '#ffab00',
     secondary: '#45C4FA',
     backdrop: 'rgba(0, 0, 0, 0.5)',
     rent: '#ffab00',
@@ -41,7 +42,7 @@ export const theme = createTheme({
     green3: '#00e676',
     green4: '#00c853',
 
-    facebook:'#1877F2',
+    facebook: '#1877F2',
 
     transparent: 'transparent',
   },

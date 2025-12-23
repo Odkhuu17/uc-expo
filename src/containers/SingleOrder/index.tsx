@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import { useNavigation } from '@react-navigation/native';
@@ -9,13 +9,15 @@ import { Location05Icon, PackageIcon } from '@hugeicons/core-free-icons';
 import { Box, makeStyles, Text, useTheme } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
-import { Label, Button, BoxContainer, ModalMsg } from '@/components';
+import { Label, BoxContainer, ModalMsg } from '@/components';
 import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
 import { deliveryCarTypes, rentCarTypes } from '@/constants/transportTypes';
 import { INavigation } from '@/navigations';
+import Status from './Status';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
+  children?: ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SingleOrder = ({ item }: Props) => {
+const SingleOrder = ({ item, children }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const [isImageViewVisible, setIsImageViewVisible] = useState(false);
@@ -43,10 +45,6 @@ const SingleOrder = ({ item }: Props) => {
 
   const hasImages = item?.images && item?.images.length > 0;
   const isRent = isRentOrder(item?.carType);
-
-  const onPressEdit = () => {
-    navigation.navigate('OrderEdit', { orderNumber: item?.number });
-  };
 
   const onPressImage = () => {
     setIsImageViewVisible(true);
@@ -210,28 +208,7 @@ const SingleOrder = ({ item }: Props) => {
               </Box>
             </Box>
           </Box>
-          <Box
-            p="xs"
-            px="m"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-            backgroundColor={item?.status === 'pending' ? 'primary' : 'grey4'}
-          >
-            <Text variant="label" color="white">
-              {item?.status === 'pending' ? 'Идэвхтэй' : 'Идэвхгүй'}
-            </Text>
-            {mode === 'shipper' && item?.my && item?.status === 'pending' ? (
-              <Button
-                title="Засах"
-                color="secondary"
-                size="s"
-                onPress={onPressEdit}
-              />
-            ) : (
-              <Box height={theme.button.s} />
-            )}
-          </Box>
+          {children}
         </BoxContainer>
       </TouchableOpacity>
       {hasImages && (

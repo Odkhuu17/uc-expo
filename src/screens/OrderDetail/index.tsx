@@ -74,6 +74,10 @@ const OrderDetail = ({ navigation, route }: Props) => {
     setIsImageViewVisible(false);
   };
 
+  const onPressTrack = () => {
+    navigation.navigate('TrackTruck', { number });
+  };
+
   return (
     <>
       <Container>
@@ -171,12 +175,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                     label="Утасны дугаар"
                     value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
                   />
-                  <Button
-                    title="Ачаа хянах"
-                    onPress={() =>
-                      navigation.navigate(`/orders/${number}/track`)
-                    }
-                  />
+                  <Button title="Ачаа хянах" onPress={onPressTrack} />
                 </BoxContainer>
               )}
               {mode === 'driver' && data?.order?.myRequest && (

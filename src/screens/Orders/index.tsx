@@ -15,6 +15,7 @@ import {
   useGetOrdersQuery,
 } from '@/gql/queries/getOrders.generated';
 import SingleOrder from '@/containers/SingleOrder';
+import Status from '@/containers/SingleOrder/Status';
 
 const Orders = () => {
   const { mode } = useAppSelector(state => state.general);
@@ -69,7 +70,11 @@ const Orders = () => {
   }: {
     item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
   }) => {
-    return <SingleOrder item={item} />;
+    return (
+      <SingleOrder item={item}>
+        <Status item={item} />
+      </SingleOrder>
+    );
   };
 
   const renderFooter = () => {
