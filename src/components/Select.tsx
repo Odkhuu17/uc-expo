@@ -1,32 +1,30 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import {
-  ArrowDown2,
-  Icon as IconType,
-  TickCircle,
-} from 'iconsax-react-nativejs';
 import React, { useRef } from 'react';
-import { Pressable, TouchableOpacity, ViewStyle } from 'react-native';
+import { Pressable, ViewStyle } from 'react-native';
+import { IconSvgElement } from '@hugeicons/react-native';
+import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
 import ModalBottomSheet from './ModalBottomSheet';
-import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
+import { Box, Text, Theme } from './Theme';
+import SelectOption from './SelectOption';
+import InputLabel from './InputLabel';
+import InputContainer from './InputContainer';
+import InputIcon from './InputIcon';
+import useInputStyle from '@/hooks/useInputStyle';
+import InputError from './InputError';
 
 interface Props<G = any> {
   width?: ViewStyle['width'];
   error?: string;
-  icon?: IconType;
-  options: { value: G; label: string }[];
+  icon?: IconSvgElement;
+  options: { value: G; label: string; image?: number }[];
   setSelectedOption: (value: G) => void;
   selectedOption?: G;
   placeholder: string;
+  label?: string;
+  isRequired?: boolean;
+  size?: keyof Theme['button'];
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    textAlign: 'center',
-    flex: 1,
-    paddingHorizontal: theme.spacing.s,
-  },
-}));
 
 function Select({
   width,
@@ -34,86 +32,64 @@ function Select({
   selectedOption,
   setSelectedOption,
   options,
-  icon: IconComp,
+  icon,
   placeholder,
+  label,
+  isRequired,
+  size = 'm',
 }: Props) {
-  const styles = useStyles();
   const ref = useRef<BottomSheetModal | null>(null);
-  const theme = useTheme();
+  const { getTextVariant, style } = useInputStyle({
+    size,
+    hasLeftIcon: !!icon,
+    hasRightIcon: true,
+  });
 
   return (
-    <>
+    <Box>
+      {label && <InputLabel isRequired={isRequired} label={label} />}
       <Pressable onPress={() => ref.current?.present()}>
-        <Box
-          height={theme.button.m}
-          width={width}
-          borderRadius="xl"
-          borderColor="border"
-          borderWidth={1}
-          backgroundColor="white"
-          flexDirection="row"
-          alignItems="center"
-          overflow="hidden"
-        >
-          {IconComp && (
-            <Box ml="s">
-              <IconComp size={theme.icon.m} color={theme.colors.baseBlue} />
-            </Box>
-          )}
-          <Text
-            style={styles.input}
-            color={selectedOption ? 'black' : 'grey2'}
-            variant="body2"
-          >
-            {selectedOption || placeholder}
-          </Text>
-          <Box mr="s">
-            <ArrowDown2 size={theme.icon.m} />
+        <InputContainer width={width} size={size}>
+          {icon && <InputIcon position="left" icon={icon} />}
+          <Box style={style} flex={1} justifyContent="center">
+            <Text
+              variant={getTextVariant()}
+              fontWeight="normal"
+              color={selectedOption ? 'black' : 'grey3'}
+            >
+              {selectedOption || placeholder}
+            </Text>
           </Box>
-        </Box>
-        {error && (
-          <Text color="error" mt="xs" textAlign="right" px="s" variant="error">
-            {error}
-          </Text>
-        )}
+          <InputIcon position="right" icon={ArrowDown01Icon} />
+        </InputContainer>
+        {error && <InputError error={error} />}
       </Pressable>
       <ModalBottomSheet ref={ref}>
         <BottomSheetScrollView>
-          <Text variant="label" textAlign="center" mb="m">
-            {placeholder}
+          <Text textAlign="center" variant="title">
+            {label || placeholder}
           </Text>
           <Box px="m" gap="s">
-            {options.map(option => (
-              <TouchableOpacity
-                key={option.value}
-                onPress={() => {
-                  ref.current?.dismiss();
-                  setSelectedOption(option.value);
-                }}
-              >
-                <Box
-                  justifyContent="space-between"
-                  flexDirection="row"
-                  alignItems="center"
-                  backgroundColor="white"
-                  borderRadius="xl"
-                  py="s"
-                  px="m"
-                >
-                  <Text key={option.value}>{option.label}</Text>
-                  {option.value === selectedOption && (
-                    <TickCircle
-                      size={theme.icon.m}
-                      color={theme.colors.baseBlue}
-                    />
-                  )}
-                </Box>
-              </TouchableOpacity>
-            ))}
+            {options.map(o => {
+              const onPressOption = () => {
+                ref.current?.dismiss();
+                setSelectedOption(o.value);
+              };
+
+              return (
+                <SelectOption
+                  key={o.value}
+                  image={o.image}
+                  label={o.label}
+                  selected={o.value === selectedOption}
+                  onPress={onPressOption}
+                />
+              );
+            })}
           </Box>
         </BottomSheetScrollView>
       </ModalBottomSheet>
-    </>
+    </Box>
   );
 }
 

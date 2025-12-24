@@ -1,5 +1,4 @@
 import { useTheme } from '@shopify/restyle';
-import { useLocalSearchParams } from 'expo-router';
 import { useFormik } from 'formik';
 import { ArchiveBox, Calendar, Clock, TruckFast } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction, useEffect } from 'react';
@@ -11,17 +10,14 @@ import {
   Button,
   Checkbox,
   CustomKeyboardAvoidingView,
-  CustomMaskInput,
-  DateInput,
-  OrderInput,
-  OrderLocation,
-  ScrollableContent,
+  Input,
+  InputDate,
+  ContentScrollable,
   Select,
-  TextArea,
+  InputTextArea,
 } from '@/components';
 import { Box } from '@/components/Theme';
-import { carTypes2 } from '@/constants';
-import { CreateAddressMutation } from '@/gql/mutations/createAddressMutation.generated';
+import { rentCarTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
 import {
   OrderAudio,
@@ -31,6 +27,7 @@ import {
   OrderVideo,
   OrderVideoButton,
 } from './components';
+import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -125,7 +122,7 @@ const RentStep3 = ({
             <Select
               icon={TruckFast}
               placeholder="Техникийн төрөл"
-              options={carTypes2.map(p => ({
+              options={rentCarTypes.map(p => ({
                 label: p.name,
                 value: p.name,
               }))}
@@ -136,7 +133,7 @@ const RentStep3 = ({
               icon={ArchiveBox}
               placeholder="Даац/Хэмжээ"
               options={
-                carTypes2
+                rentCarTypes
                   .find(c => c.name === values.carType)
                   ?.options?.map(p => ({
                     label: p,

@@ -1,12 +1,17 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import React, { useRef } from 'react';
 import { Pressable, ViewStyle } from 'react-native';
-import { HugeiconsIcon, IconSvgElement } from '@hugeicons/react-native';
+import { IconSvgElement } from '@hugeicons/react-native';
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
 import ModalBottomSheet from './ModalBottomSheet';
-import { Box, makeStyles, Text, Theme, useTheme } from './Theme';
+import { Box, Text, Theme } from './Theme';
 import SelectOption from './SelectOption';
+import InputContainer from './InputContainer';
+import InputLabel from './InputLabel';
+import InputError from './InputError';
+import InputIcon from './InputIcon';
+import useInputStyle from '@/hooks/useInputStyle';
 
 interface Props<G = any> {
   width?: ViewStyle['width'];
@@ -21,14 +26,8 @@ interface Props<G = any> {
   placeholder: string;
   label?: string;
   isRequired?: boolean;
+  size?: keyof Theme['button'];
 }
-
-const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    flex: 1,
-    paddingHorizontal: theme.spacing.s,
-  },
-}));
 
 function Select({
   width,
@@ -40,10 +39,14 @@ function Select({
   placeholder,
   label,
   isRequired,
+  size = 'm',
 }: Props) {
-  const styles = useStyles();
   const ref = useRef<BottomSheetModal | null>(null);
-  const theme = useTheme();
+  const { getTextVariant, style } = useInputStyle({
+    size,
+    hasLeftIcon: !!icon,
+    hasRightIcon: true,
+  });
 
   const onPress = () => {
     ref.current?.present();
@@ -52,55 +55,23 @@ function Select({
   return (
     <>
       <Box>
-        <Box flexDirection="row" gap="xs" alignItems="center">
-          <Text variant="label" mb="xs">
-            {label}
-          </Text>
-          {isRequired && <Text color="error">*</Text>}
-        </Box>
+        {label && <InputLabel isRequired={isRequired} label={label} />}
         <Pressable onPress={onPress}>
-          <Box
-            height={theme.button.m}
-            width={width}
-            borderRadius="s"
-            borderColor="border"
-            borderWidth={1}
-            backgroundColor="white"
-            flexDirection="row"
-            alignItems="center"
-            overflow="hidden"
-          >
-            {icon && (
-              <Box ml="s">
-                <HugeiconsIcon
-                  icon={icon}
-                  size={theme.icon.m}
-                  color={theme.colors.primary}
-                />
-              </Box>
-            )}
-            <Text
-              style={styles.input}
-              color={selectedOption ? 'black' : 'grey3'}
-              variant="body2"
-            >
-              {selectedOption || placeholder}
-            </Text>
-            <Box mr="s">
-              <HugeiconsIcon icon={ArrowDown01Icon} size={theme.icon.m} />
+          <InputContainer width={width} size={size}>
+            {icon && <InputIcon position="left" icon={icon} />}
+            <Box style={style} flex={1}>
+              <Text
+                flex={1}
+                variant={getTextVariant()}
+                fontWeight="normal"
+                color={selectedOption ? 'black' : 'grey3'}
+              >
+                {selectedOption || placeholder}
+              </Text>
             </Box>
-          </Box>
-          {error && (
-            <Text
-              color="error"
-              mt="xs"
-              textAlign="right"
-              px="s"
-              variant="error"
-            >
-              {error}
-            </Text>
-          )}
+            <InputIcon position="right" icon={ArrowDown01Icon} />
+          </InputContainer>
+          {error && <InputError error={error} />}
         </Pressable>
       </Box>
       <ModalBottomSheet ref={ref}>

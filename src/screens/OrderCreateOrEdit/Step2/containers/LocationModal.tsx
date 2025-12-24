@@ -6,7 +6,7 @@ import MapView from 'react-native-maps';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowRight01Icon, Location05Icon } from '@hugeicons/core-free-icons';
 
-import { Button, ModalBottomSheet, Input } from '@/components';
+import { Button, ModalBottomSheet, Input, Loader } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import {
   AddressSearchQuery,
@@ -36,15 +36,14 @@ const LocationModal = ({
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
 
-  const { data: searchData } = useAddressSearchQuery({
+  const { data: searchData, loading: searchLoading } = useAddressSearchQuery({
     variables: {
       query: address1,
       location: {
-        latitude: location?._source?.location.lat || 47.92123,
-        longitude: location?._source?.location.lon || 106.918556,
+        latitude: location?._source?.location?.lat || 47.92123,
+        longitude: location?._source?.location?.lon || 106.918556,
       },
     },
-    skip: address1.length < 2 && !location,
   });
 
   const onChangeSheet = (index: number) => {
@@ -71,7 +70,11 @@ const LocationModal = ({
       </Box>
       <Box p="m">
         {!isRent && (
-          <Button title="Газрын зургаас сонгох" onPress={onChooseFromMap} />
+          <Button
+            variant="outlined"
+            title="Газрын зургаас сонгох"
+            onPress={onChooseFromMap}
+          />
         )}
       </Box>
       <BottomSheetScrollView>
@@ -80,57 +83,63 @@ const LocationModal = ({
           px="m"
           gap="m"
         >
-          {searchData?.searchAddress?.map((address, index) => {
-            const onPressAddress = () => {
-              setLocation(address);
-              ref.current?.dismiss();
-              mapRef.current?.animateToRegion({
-                latitude: address?._source?.location.lat || 47.92123,
-                longitude: address?._source?.location.lon || 106.918556,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-              });
-            };
+          {searchLoading ? (
+            <Loader />
+          ) : (
+            searchData?.searchAddress?.map((address, index) => {
+              const onPressAddress = () => {
+                setLocation(address);
+                ref.current?.dismiss();
+                mapRef.current?.animateToRegion({
+                  latitude: address?._source?.location?.lat || 47.92123,
+                  longitude: address?._source?.location?.lon || 106.918556,
+                  latitudeDelta: 0.05,
+                  longitudeDelta: 0.05,
+                });
+              };
 
-            return (
-              <TouchableOpacity key={index} onPress={onPressAddress}>
-                <Box
-                  flexDirection="row"
-                  alignItems="center"
-                  gap="s"
-                  borderBottomWidth={1}
-                  borderBottomColor="border"
-                  pb="m"
-                >
+              return (
+                <TouchableOpacity key={index} onPress={onPressAddress}>
                   <Box
-                    p="s"
+                    flexDirection="row"
                     alignItems="center"
-                    justifyContent="center"
-                    borderRadius="full"
+                    gap="s"
+                    borderBottomWidth={1}
+                    borderBottomColor="border"
+                    pb="m"
                   >
-                    <HugeiconsIcon icon={Location05Icon} size={theme.icon.s} />
-                  </Box>
-                  <Box flex={1} gap="xs">
-                    <Box flex={1}>
-                      <Text
-                        variant="body1"
-                        fontFamily="Roboto_500Medium"
-                        numberOfLines={1}
-                      >
-                        {address?._source?.nameMn}
-                      </Text>
+                    <Box
+                      p="s"
+                      alignItems="center"
+                      justifyContent="center"
+                      borderRadius="full"
+                    >
+                      <HugeiconsIcon
+                        icon={Location05Icon}
+                        size={theme.icon.s}
+                      />
                     </Box>
-                    <Box flex={1}>
-                      <Text variant="body2" color="grey2" numberOfLines={1}>
-                        {address?._source?.nameFullMn}
-                      </Text>
+                    <Box flex={1} gap="xs">
+                      <Box flex={1}>
+                        <Text variant="title" numberOfLines={1}>
+                          {address?._source?.nameMn}
+                        </Text>
+                      </Box>
+                      <Box flex={1}>
+                        <Text variant="body2" color="grey4" numberOfLines={1}>
+                          {address?._source?.nameFullMn}
+                        </Text>
+                      </Box>
                     </Box>
+                    <HugeiconsIcon
+                      icon={ArrowRight01Icon}
+                      size={theme.icon.m}
+                    />
                   </Box>
-                  <HugeiconsIcon icon={ArrowRight01Icon} size={theme.icon.m} />
-                </Box>
-              </TouchableOpacity>
-            );
-          })}
+                </TouchableOpacity>
+              );
+            })
+          )}
         </Box>
       </BottomSheetScrollView>
     </ModalBottomSheet>

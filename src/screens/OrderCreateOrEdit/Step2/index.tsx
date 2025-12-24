@@ -1,5 +1,4 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { LinearGradient } from 'react-native-linear-gradient';
 import React, {
   Dispatch,
   SetStateAction,
@@ -9,7 +8,6 @@ import React, {
 } from 'react';
 // import { useInfiniteHits } from 'react-instantsearch';
 import MapView, { Marker, Polyline, Region } from 'react-native-maps';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import { BottomContainer, Button } from '@/components';
@@ -31,8 +29,6 @@ import { OrderLocation } from '../components';
 
 interface Props {
   isRent?: boolean;
-  selectedCarTypes: string[];
-  setSelectedCarTypes: Dispatch<SetStateAction<string[]>>;
   setStep: Dispatch<SetStateAction<number>>;
   origin: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
   setOrigin: Dispatch<
@@ -73,8 +69,6 @@ const useStyles = makeStyles(theme => ({
 
 const Step2 = ({
   isRent,
-  selectedCarTypes,
-  setSelectedCarTypes,
   setStep,
   selectedLocation,
   setSelectedLocation,
@@ -87,7 +81,6 @@ const Step2 = ({
   createdOrigin,
   createdDestination,
 }: Props) => {
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const navigation = useNavigation<INavigation>();
   const styles = useStyles();
@@ -95,6 +88,11 @@ const Step2 = ({
   const destinationModalRef = useRef<BottomSheetModal | null>(null);
   const mapRef = useRef<MapView | null>(null);
   const [showChooseFromMap, setShowChooseFromMap] = useState(false);
+  const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>(
+    isRent
+      ? rentCarTypes.map(ct => ct.name)
+      : deliveryCarTypes.map(ct => ct.name),
+  );
 
   const arcCoordinates = createArc(
     {
@@ -203,6 +201,8 @@ const Step2 = ({
   // const { items, isLastPage, showMore } = useInfiniteHits({
   //   escapeHTML: false,
   // });
+
+  console.log(items, 'kejfgwef');
 
   return (
     <>

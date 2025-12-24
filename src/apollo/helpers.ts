@@ -19,7 +19,7 @@ export const refreshAccessToken = async (): Promise<string> => {
       `${Config.API_URL}/oauth/token`,
       {
         grant_type: 'client_credentials',
-        scope: 'public backoffice',
+        scope: 'public',
       },
       {
         headers: {

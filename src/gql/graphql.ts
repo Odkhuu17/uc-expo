@@ -456,9 +456,9 @@ export type Mutation = {
   __typename?: 'Mutation';
   acceptDeliveryRequest?: Maybe<DeliveryRequest>;
   approveVerification?: Maybe<Verification>;
+  attachOrderAudio?: Maybe<Order>;
   attachOrderImage?: Maybe<Order>;
   attachOrderVideo?: Maybe<Order>;
-  attachOrderVoice?: Maybe<Order>;
   authCheckLogin: Scalars['JSON']['output'];
   authRegister?: Maybe<User>;
   checkPayment?: Maybe<Scalars['JSON']['output']>;
@@ -487,7 +487,9 @@ export type Mutation = {
   destroyMark?: Maybe<Mark>;
   destroyModel?: Maybe<Model>;
   destroyOrder?: Maybe<Order>;
+  destroyOrderAudio?: Maybe<Order>;
   destroyOrderImage?: Maybe<Order>;
+  destroyOrderVideo?: Maybe<Order>;
   destroyPaymentMethod?: Maybe<PaymentMethod>;
   destroySendEmail?: Maybe<SendEmail>;
   destroySubscription?: Maybe<Subscription>;
@@ -533,6 +535,11 @@ export type MutationApproveVerificationArgs = {
 };
 
 
+export type MutationAttachOrderAudioArgs = {
+  input: AttachOrderAudioInput;
+};
+
+
 export type MutationAttachOrderImageArgs = {
   input: AttachOrderImageInput;
 };
@@ -540,11 +547,6 @@ export type MutationAttachOrderImageArgs = {
 
 export type MutationAttachOrderVideoArgs = {
   input: AttachOrderVideoInput;
-};
-
-
-export type MutationAttachOrderVoiceArgs = {
-  input: AttachOrderVoiceInput;
 };
 
 
@@ -688,8 +690,18 @@ export type MutationDestroyOrderArgs = {
 };
 
 
+export type MutationDestroyOrderAudioArgs = {
+  input: DestroyOrderAudioInput;
+};
+
+
 export type MutationDestroyOrderImageArgs = {
   input: DestroyOrderImageInput;
+};
+
+
+export type MutationDestroyOrderVideoArgs = {
+  input: DestroyOrderVideoInput;
 };
 
 
@@ -2138,6 +2150,12 @@ export type ApproveVerificationInput = {
   status: Scalars['String']['input'];
 };
 
+export type AttachOrderAudioInput = {
+  audio: Scalars['Upload']['input'];
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['String']['input'];
+};
+
 export type AttachOrderImageInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   images: Array<Scalars['Upload']['input']>;
@@ -2148,12 +2166,6 @@ export type AttachOrderVideoInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   number: Scalars['String']['input'];
   video: Scalars['Upload']['input'];
-};
-
-export type AttachOrderVoiceInput = {
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  number: Scalars['String']['input'];
-  voice: Scalars['Upload']['input'];
 };
 
 export type AuthCheckLoginInput = {
@@ -2424,6 +2436,11 @@ export type DestroyModelInput = {
   id: Scalars['ID']['input'];
 };
 
+export type DestroyOrderAudioInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['String']['input'];
+};
+
 export type DestroyOrderImageInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   imageId: Scalars['ID']['input'];
@@ -2433,6 +2450,11 @@ export type DestroyOrderImageInput = {
 export type DestroyOrderInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+export type DestroyOrderVideoInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  number: Scalars['String']['input'];
 };
 
 export type DestroyPaymentMethodInput = {

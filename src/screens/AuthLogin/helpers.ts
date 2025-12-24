@@ -16,7 +16,7 @@ export const login = async (username: string, password: string) => {
       grant_type: 'password',
       username: username,
       password: password,
-      scope: 'public backoffice',
+      scope: 'public',
     },
     { headers: { Authorization: `Basic ${authHeader}` } },
   );

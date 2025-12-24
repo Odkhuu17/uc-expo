@@ -23,6 +23,7 @@ import TrucksMy from '@/screens/TrucksMy';
 import TruckAddOrEdit from '@/screens/TruckAddOrEdit';
 import TruckSubscription from '@/screens/TruckSubscription';
 import TrackTruck from '@/screens/TrackTruck';
+import useLinkDevice from '@/hooks/useLinkDevice';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -69,6 +70,8 @@ const Stack = createStackNavigator<TAppRoutes>();
 const AppNavigator = () => {
   const theme = useTheme();
   const { isAuthenticated } = useAppSelector(state => state.auth);
+
+  useLinkDevice();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

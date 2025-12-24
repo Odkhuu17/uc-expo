@@ -50,6 +50,13 @@ query GetOrderDetail($number: String) {
     audio
     video
     images
+    imageObjects {
+      id
+      url
+      fileName
+      recordId
+      recordType
+    }
     user {
       id
       firstName

@@ -76,8 +76,8 @@ const AuthLogin = ({ navigation }: Props) => {
   };
 
   return (
-    <CustomKeyboardAvoidingView>
-      <Container bg="light-car">
+    <Container bg="light-car">
+      <CustomKeyboardAvoidingView>
         <HeaderLogo
           hasBack
           variant="logo-dark"
@@ -134,8 +134,8 @@ const AuthLogin = ({ navigation }: Props) => {
             </Box>
           </Box>
         </ContentScrollable>
-      </Container>
-    </CustomKeyboardAvoidingView>
+      </CustomKeyboardAvoidingView>
+    </Container>
   );
 };
 

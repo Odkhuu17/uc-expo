@@ -23,3 +23,6 @@ export { default as Marquee } from './Marquee';
 export { default as Checkbox } from './Checkbox';
 export { default as SelectGrouped } from './SelectGrouped';
 export { default as InputImage } from './InputImage';
+export { default as Select } from './Select';
+export { default as InputTextArea } from './InputTextArea';
+export { default as InputDate } from './InputDate';

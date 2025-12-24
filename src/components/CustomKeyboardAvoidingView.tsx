@@ -3,7 +3,6 @@ import { ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
-  noWrapper?: boolean;
 }
 
 const CustomKeyboardAvoidingView = ({ children }: Props) => {

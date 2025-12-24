@@ -1,20 +1,12 @@
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { useMemo } from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
-import { IconSvgElement } from '@hugeicons/react-native';
+import { TextInput, TextInputProps, TextStyle, ViewStyle } from 'react-native';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 import { Box, Theme, useTheme } from './Theme';
-import InputContainer from './InputContainer';
+import useInputStyle from '@/hooks/useInputStyle';
 import InputLabel from './InputLabel';
 import InputError from './InputError';
-import InputIcon from './InputIcon';
-import useInputStyle from '@/hooks/useInputStyle';
+import InputContainer from './InputContainer';
 
 interface Props extends TextInputProps {
   keyboardAvoiding?: boolean;
@@ -22,24 +14,23 @@ interface Props extends TextInputProps {
   error?: string;
   label?: string;
   isRequired?: boolean;
-  icon?: IconSvgElement;
   size?: keyof Theme['button'];
+  height: number;
 }
 
-const Input = ({
+const InputTextArea = ({
   width,
   error,
-  icon,
   label,
   isRequired,
   keyboardAvoiding,
   size = 'm',
+  height = 100,
   ...textInputProps
 }: Props) => {
   const theme = useTheme();
-  const { getTextVariant, style: hookStyle } = useInputStyle({
+  const { getTextVariant } = useInputStyle({
     size,
-    hasLeftIcon: !!icon,
   });
 
   const style = useMemo(
@@ -47,8 +38,6 @@ const Input = ({
       {
         ...theme.textVariants[getTextVariant()],
       } as TextStyle,
-      [css.input],
-      ...hookStyle,
     ],
     [],
   );
@@ -56,18 +45,19 @@ const Input = ({
   return (
     <Box>
       {label && <InputLabel isRequired={isRequired} label={label} />}
-      <InputContainer width={width} size={size}>
-        {icon && <InputIcon position="left" icon={icon} />}
+      <InputContainer width={width} height={height}>
         {keyboardAvoiding ? (
           <BottomSheetTextInput
             {...textInputProps}
             style={style}
+            multiline
             placeholderTextColor={theme.colors.grey3}
           />
         ) : (
           <TextInput
             {...textInputProps}
             style={style}
+            multiline
             placeholderTextColor={theme.colors.grey3}
           />
         )}
@@ -77,11 +67,4 @@ const Input = ({
   );
 };
 
-const css = StyleSheet.create({
-  input: {
-    flex: 1,
-    fontWeight: 'normal',
-  },
-});
-
-export default Input;
+export default InputTextArea;

@@ -7,20 +7,20 @@ import * as yup from 'yup';
 
 import { Container, Loader, ModalMsg, HeaderNormal } from '@/components';
 import { Box } from '@/components/Theme';
-import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
-import { getImageUrl, isRentOrder } from '@/utils/helpers';
+import { isRentOrder } from '@/utils/helpers';
 import searchClient from '@/utils/searchkit';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
 import RentStep3 from './Step3/RentStep3';
 import { INavigationProps } from '@/navigations';
-import { AddressSearchQuery } from '@/gql/queries/addressSearch.generated';
 import { AddressCreateMutation } from '@/gql/mutations/addressCreate.generated';
 import { useOrderCreateMutation } from '@/gql/mutations/orderCreate.generated';
 import { useOrderUpdateMutation } from '@/gql/mutations/orderUpdate.generated';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import { useGetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
+import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
+import { ImageObject } from '@/gql/graphql';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -67,20 +67,20 @@ interface Props {
 }
 
 const OrderCreate = ({ navigation, route }: Props) => {
-  const [orderId, setOrderId] = useState<string | null>(null);
   const { number } = route.params;
+  const [orderNumber, setOrderNumber] = useState<string | null>(number || null);
   const [step, setStep] = useState(number ? 3 : 1);
   const [successModal, setSuccessModal] = useState(false);
   const [isRent, setIsRent] = useState(false);
-  const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>([]);
+  const [imageObjects, setImageObjects] = useState<ImageObject[]>([]);
   const [selectedLocation, setSelectedOption] = useState<
     'origin' | 'destination'
   >('origin');
   const [origin, setOrigin] = useState<
-    NonNullable<AddressSearchQuery['searchAddress']>[0] | null
+    NonNullable<SearchAddressQuery['searchAddress']>[0] | null
   >(null);
   const [destination, setDestination] = useState<
-    NonNullable<AddressSearchQuery['searchAddress']>[0] | null
+    NonNullable<SearchAddressQuery['searchAddress']>[0] | null
   >(null);
   const [createdOrigin, setCreatedOrigin] = useState<NonNullable<
     AddressCreateMutation['createAddress']
@@ -98,7 +98,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
     skip: !number,
   });
 
-  const formik = useFormik({
+  const deliveryFormik = useFormik({
     initialValues: {
       packageType: '',
       packageWeight: '',
@@ -116,9 +116,9 @@ const OrderCreate = ({ navigation, route }: Props) => {
     },
     validationSchema: deliverySchema,
     onSubmit: async () => {
-      const values = formik.values;
+      const values = deliveryFormik.values;
 
-      if (number) {
+      if (orderNumber) {
         await updateOrder({
           variables: {
             input: {
@@ -142,19 +142,12 @@ const OrderCreate = ({ navigation, route }: Props) => {
             },
           },
         });
-      } else {
-        await createOrder({
-          variables: {
-            taxonId: '1',
-          },
-        });
       }
-
       setSuccessModal(true);
     },
   });
 
-  const formik2 = useFormik({
+  const rentFormik = useFormik({
     initialValues: {
       carWeight: '',
       startDate: '',
@@ -169,8 +162,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
     },
     validationSchema: rentSchema,
     onSubmit: async () => {
-      const values = formik2.values;
-      if (number) {
+      const values = rentFormik.values;
+      if (orderNumber) {
         await updateOrder({
           variables: {
             input: {
@@ -191,24 +184,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
             },
           },
         });
-      } else {
-        await createOrder({
-          variables: {
-            originId: createdOrigin?.id,
-            carType: values.carType,
-            carWeight: values.carWeight,
-            travelAt: dayjs(`${values.startDate}`),
-            vatIncluded: values.vatIncluded,
-            price: values.priceNegotiable ? undefined : Number(values.price),
-            data: {
-              rentDay: values.rentDay,
-              motHour: values.motHour,
-              additionalInfo: values.additionalInfo,
-              additionalAddress: values.additionalAddress,
-            },
-            published: true,
-          },
-        });
       }
       setSuccessModal(true);
     },
@@ -216,10 +191,10 @@ const OrderCreate = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     initOrder();
-  }, [orderId, step, taxonsData]);
+  }, [orderNumber, step, taxonsData]);
 
   const initOrder = async () => {
-    if (!orderId && step === 3 && taxonsData) {
+    if (!orderNumber && step === 3 && taxonsData) {
       const taxon = isRent
         ? taxonsData.taxons?.edges.find(t => t?.node?.code === 'rent')
         : taxonsData.taxons?.edges.find(t => t?.node?.code === 'delivery');
@@ -230,16 +205,13 @@ const OrderCreate = ({ navigation, route }: Props) => {
         },
       });
 
-      setOrderId(data?.createOrder?.id || null);
+      setOrderNumber(data?.createOrder?.number || null);
     }
   };
 
   useEffect(() => {
     if (isRent) {
       setSelectedOption('origin');
-      setSelectedCarTypes(rentCarTypes.map(car => car.name));
-    } else {
-      setSelectedCarTypes(deliveryCarTypes.map(car => car.name));
     }
   }, [isRent]);
 
@@ -250,9 +222,10 @@ const OrderCreate = ({ navigation, route }: Props) => {
       setIsRent(isRentO);
       setCreatedOrigin(data?.order?.origin || null);
       setCreatedDestination(data?.order?.destination || null);
+      setImageObjects(data?.order?.imageObjects || []);
 
       if (isRentO) {
-        formik2.setValues({
+        rentFormik.setValues({
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',
           startDate: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
@@ -265,7 +238,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
           additionalAddress: data?.order?.data?.additional_address || '',
         });
       } else {
-        formik.setValues({
+        deliveryFormik.setValues({
           packageType: data?.order?.packageType || '',
           packageWeight: data?.order?.packageWeight || '',
           travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
@@ -301,74 +274,32 @@ const OrderCreate = ({ navigation, route }: Props) => {
             setCreatedDestination={setCreatedDestination}
             selectedLocation={selectedLocation}
             setSelectedLocation={setSelectedOption}
+            setStep={setStep}
+            isRent={isRent}
             origin={origin}
             setOrigin={setOrigin}
             destination={destination}
             setDestination={setDestination}
+          />
+        </AnimatedBox>
+      );
+    } else {
+      return (
+        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
+          <DeliveryStep3
+            orderNumber={orderNumber!}
+            setSelectedLocation={setSelectedOption}
+            createdOrigin={createdOrigin}
+            createdDestination={createdDestination}
+            formik={deliveryFormik}
             setStep={setStep}
-            isRent={isRent}
-            selectedCarTypes={selectedCarTypes}
-            setSelectedCarTypes={setSelectedCarTypes}
+            number={number}
+            setImageObjects={setImageObjects}
+            imageObjects={imageObjects}
           />
         </AnimatedBox>
       );
     }
-    // else if (step === 2) {
-    //   return (
-    //     <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
-    //       <Step2
-    //         createdOrigin={createdOrigin}
-    //         createdDestination={createdDestination}
-    //         setCreatedOrigin={setCreatedOrigin}
-    //         setCreatedDestination={setCreatedDestination}
-    //         selectedLocation={selectedLocation}
-    //         setSelectedLocation={setSelectedOption}
-    //         origin={origin}
-    //         setOrigin={setOrigin}
-    //         destination={destination}
-    //         setDestination={setDestination}
-    //         setStep={setStep}
-    //         isRent={isRent}
-    //         selectedCarTypes={selectedCarTypes}
-    //         setSelectedCarTypes={setSelectedCarTypes}
-    //       />
-    //     </AnimatedBox>
-    //   );
-    // } else {
-    //   return (
-    //     <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-    //       {!isRent ? (
-    //         <DeliveryStep3
-    //           setSelectedLocation={setSelectedOption}
-    //           createdOrigin={createdOrigin}
-    //           createdDestination={createdDestination}
-    //           audio={audio}
-    //           images={images}
-    //           video={video}
-    //           setAudio={setAudio}
-    //           setImages={setImages}
-    //           setVideo={setVideo}
-    //           formik={formik}
-    //           setStep={setStep}
-    //         />
-    //       ) : (
-    //         <RentStep3
-    //           setSelectedLocation={setSelectedOption}
-    //           createdOrigin={createdOrigin}
-    //           createdDestination={createdDestination}
-    //           audio={audio}
-    //           images={images}
-    //           video={video}
-    //           setAudio={setAudio}
-    //           setImages={setImages}
-    //           setVideo={setVideo}
-    //           formik={formik2}
-    //           setStep={setStep}
-    //         />
-    //       )}
-    //     </AnimatedBox>
-    //   );
-    // }
   };
 
   const onPressBack = () => {
