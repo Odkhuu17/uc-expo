@@ -12,7 +12,7 @@ import MapView, { Marker, Polyline, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
-import { Button } from '@/components';
+import { BottomContainer, Button } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
 import { CarTypes, ChooseFromMap, MapPin } from './components';
@@ -271,48 +271,32 @@ const Step2 = ({
             </Box>
             {isRent && <MapPin />}
             <Box bottom={0} position="absolute" left={0} right={0}>
-              <LinearGradient
-                colors={[]}
-                style={[
-                  styles.bottomView,
-                  { paddingBottom: theme.spacing.m + insets.bottom },
-                ]}
-              >
-                <Button
-                  loading={createLoading}
-                  title="Захиалгыг үргэжлүүлэх"
-                  onPress={onSubmit}
-                />
-              </LinearGradient>
-              <Box
-                position="absolute"
-                bottom={
-                  insets.bottom +
-                  theme.spacing.m +
-                  theme.button.m +
-                  theme.spacing.m
-                }
-                left={theme.spacing.xl}
-                right={theme.spacing.xl}
-              >
-                <OrderLocation
-                  isRent={isRent}
-                  origin={
-                    createdOrigin
-                      ? createdOrigin.address1
-                      : origin?._source?.nameFullMn
-                  }
-                  destination={
-                    createdDestination
-                      ? createdDestination.address1
-                      : destination?._source?.nameFullMn
-                  }
-                  selected={selectedLocation}
-                  onPressOrigin={onPressOrigin}
-                  onPressDestination={onPressDestination}
-                  loading={searchLoading}
-                />
-              </Box>
+              <BottomContainer>
+                <Box gap="m">
+                  <OrderLocation
+                    isRent={isRent}
+                    origin={
+                      createdOrigin
+                        ? createdOrigin.address1
+                        : origin?._source?.nameFullMn
+                    }
+                    destination={
+                      createdDestination
+                        ? createdDestination.address1
+                        : destination?._source?.nameFullMn
+                    }
+                    selected={selectedLocation}
+                    onPressOrigin={onPressOrigin}
+                    onPressDestination={onPressDestination}
+                    loading={searchLoading}
+                  />
+                  <Button
+                    loading={createLoading}
+                    title="Үргэлжүүлэх"
+                    onPress={onSubmit}
+                  />
+                </Box>
+              </BottomContainer>
             </Box>
           </Box>
         </>

@@ -93,11 +93,10 @@ const AppNavigator = () => {
             component={TruckSubscription}
           />
           <Stack.Screen name="TrackTruck" component={TrackTruck} />
-
-          {/* <Stack.Screen
+          <Stack.Screen
             name="OrderCreateOrEdit"
             component={OrderCreateOrEdit}
-          /> */}
+          />
         </Stack.Group>
       )}
       <Stack.Group

@@ -41,7 +41,7 @@ const OrdersMy = ({ navigation }: Props) => {
   };
 
   const onPressCreateOrder = () => {
-    navigation.navigate('OrderCreate');
+    navigation.navigate('OrderCreateOrEdit', { number: undefined });
   };
 
   const orders =

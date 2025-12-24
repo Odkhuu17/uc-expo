@@ -3,6 +3,7 @@ import { Location05Icon } from '@hugeicons/core-free-icons';
 
 import { Box, useTheme } from '@/components/Theme';
 import SingleLocation from './SingleLocation';
+import { BoxContainer } from '@/components';
 
 interface Props {
   isRent?: boolean;
@@ -26,14 +27,7 @@ const OrderLocation = ({
   const theme = useTheme();
 
   return (
-    <Box
-      borderWidth={2}
-      backgroundColor="white"
-      borderColor="primary"
-      px="m"
-      py="m"
-      borderRadius="m"
-    >
+    <BoxContainer borderWidth={2} borderColor="primary">
       <Box flexDirection="row" alignItems="center" gap="s">
         <Box flex={1}>
           <SingleLocation
@@ -72,7 +66,7 @@ const OrderLocation = ({
           <HugeiconsIcon icon={Location05Icon} size={theme.icon.m} />
         </Box>
       </Box>
-    </Box>
+    </BoxContainer>
   );
 };
 

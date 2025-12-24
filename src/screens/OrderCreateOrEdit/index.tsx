@@ -8,7 +8,6 @@ import * as yup from 'yup';
 import { Container, Loader, ModalMsg, HeaderNormal } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
-import { audioToFile, imagesToFiles, videoToFile } from '@/utils/fileHelpers';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import searchClient from '@/utils/searchkit';
 import Step1 from './Step1';
@@ -21,6 +20,7 @@ import { AddressCreateMutation } from '@/gql/mutations/addressCreate.generated';
 import { useOrderCreateMutation } from '@/gql/mutations/orderCreate.generated';
 import { useOrderUpdateMutation } from '@/gql/mutations/orderUpdate.generated';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
+import { useGetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -67,6 +67,7 @@ interface Props {
 }
 
 const OrderCreate = ({ navigation, route }: Props) => {
+  const [orderId, setOrderId] = useState<string | null>(null);
   const { number } = route.params;
   const [step, setStep] = useState(number ? 3 : 1);
   const [successModal, setSuccessModal] = useState(false);
@@ -87,10 +88,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const [createdDestination, setCreatedDestination] = useState<NonNullable<
     AddressCreateMutation['createAddress']
   > | null>(null);
-
-  const [audio, setAudio] = useState('');
-  const [images, setImages] = useState<string[]>([]);
-  const [video, setVideo] = useState('');
+  const { data: taxonsData } = useGetTaxonsQuery();
 
   const [createOrder] = useOrderCreateMutation();
   const [updateOrder] = useOrderUpdateMutation();
@@ -171,10 +169,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
     },
     validationSchema: rentSchema,
     onSubmit: async () => {
-      const imageFiles = images.length > 0 ? imagesToFiles(images) : [];
-      const videoFile = video ? videoToFile(video) : null;
-      const audioFile = audio ? audioToFile(audio) : null;
-
       const values = formik2.values;
       if (number) {
         await updateOrder({
@@ -193,9 +187,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
                 additionalInfo: values.additionalInfo,
                 additionalAddress: values.additionalAddress,
               },
-              images: imageFiles.length > 0 ? imageFiles : undefined,
-              video: videoFile,
-              audio: audioFile,
               published: true,
             },
           },
@@ -215,9 +206,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
               additionalInfo: values.additionalInfo,
               additionalAddress: values.additionalAddress,
             },
-            images: imageFiles.length > 0 ? imageFiles : undefined,
-            video: videoFile,
-            audio: audioFile,
             published: true,
           },
         });
@@ -226,20 +214,24 @@ const OrderCreate = ({ navigation, route }: Props) => {
     },
   });
 
-  const resetState = () => {
-    setStep(1);
-    setIsRent(false);
-    setSelectedCarTypes([]);
-    setSelectedOption('origin');
-    setOrigin(null);
-    setDestination(null);
-    setCreatedOrigin(null);
-    setCreatedDestination(null);
-    setAudio('');
-    setImages([]);
-    setVideo('');
-    formik.resetForm();
-    formik2.resetForm();
+  useEffect(() => {
+    initOrder();
+  }, [orderId, step, taxonsData]);
+
+  const initOrder = async () => {
+    if (!orderId && step === 3 && taxonsData) {
+      const taxon = isRent
+        ? taxonsData.taxons?.edges.find(t => t?.node?.code === 'rent')
+        : taxonsData.taxons?.edges.find(t => t?.node?.code === 'delivery');
+
+      const { data } = await createOrder({
+        variables: {
+          taxonId: taxon?.node?.id || '',
+        },
+      });
+
+      setOrderId(data?.createOrder?.id || null);
+    }
   };
 
   useEffect(() => {
@@ -258,13 +250,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
       setIsRent(isRentO);
       setCreatedOrigin(data?.order?.origin || null);
       setCreatedDestination(data?.order?.destination || null);
-      setAudio(data?.order?.audio ? getImageUrl(data?.order?.audio) : '');
-      setImages(
-        data?.order?.images && data.order.images.length > 0
-          ? data.order.images.map(i => getImageUrl(i))
-          : [],
-      );
-      setVideo(data?.order?.video ? getImageUrl(data?.order?.video) : '');
 
       if (isRentO) {
         formik2.setValues({
@@ -327,41 +312,63 @@ const OrderCreate = ({ navigation, route }: Props) => {
           />
         </AnimatedBox>
       );
-    } else {
-      return (
-        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-          {!isRent ? (
-            <DeliveryStep3
-              setSelectedLocation={setSelectedOption}
-              createdOrigin={createdOrigin}
-              createdDestination={createdDestination}
-              audio={audio}
-              images={images}
-              video={video}
-              setAudio={setAudio}
-              setImages={setImages}
-              setVideo={setVideo}
-              formik={formik}
-              setStep={setStep}
-            />
-          ) : (
-            <RentStep3
-              setSelectedLocation={setSelectedOption}
-              createdOrigin={createdOrigin}
-              createdDestination={createdDestination}
-              audio={audio}
-              images={images}
-              video={video}
-              setAudio={setAudio}
-              setImages={setImages}
-              setVideo={setVideo}
-              formik={formik2}
-              setStep={setStep}
-            />
-          )}
-        </AnimatedBox>
-      );
     }
+    // else if (step === 2) {
+    //   return (
+    //     <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
+    //       <Step2
+    //         createdOrigin={createdOrigin}
+    //         createdDestination={createdDestination}
+    //         setCreatedOrigin={setCreatedOrigin}
+    //         setCreatedDestination={setCreatedDestination}
+    //         selectedLocation={selectedLocation}
+    //         setSelectedLocation={setSelectedOption}
+    //         origin={origin}
+    //         setOrigin={setOrigin}
+    //         destination={destination}
+    //         setDestination={setDestination}
+    //         setStep={setStep}
+    //         isRent={isRent}
+    //         selectedCarTypes={selectedCarTypes}
+    //         setSelectedCarTypes={setSelectedCarTypes}
+    //       />
+    //     </AnimatedBox>
+    //   );
+    // } else {
+    //   return (
+    //     <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
+    //       {!isRent ? (
+    //         <DeliveryStep3
+    //           setSelectedLocation={setSelectedOption}
+    //           createdOrigin={createdOrigin}
+    //           createdDestination={createdDestination}
+    //           audio={audio}
+    //           images={images}
+    //           video={video}
+    //           setAudio={setAudio}
+    //           setImages={setImages}
+    //           setVideo={setVideo}
+    //           formik={formik}
+    //           setStep={setStep}
+    //         />
+    //       ) : (
+    //         <RentStep3
+    //           setSelectedLocation={setSelectedOption}
+    //           createdOrigin={createdOrigin}
+    //           createdDestination={createdDestination}
+    //           audio={audio}
+    //           images={images}
+    //           video={video}
+    //           setAudio={setAudio}
+    //           setImages={setImages}
+    //           setVideo={setVideo}
+    //           formik={formik2}
+    //           setStep={setStep}
+    //         />
+    //       )}
+    //     </AnimatedBox>
+    //   );
+    // }
   };
 
   const onPressBack = () => {

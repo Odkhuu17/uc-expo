@@ -1,27 +1,15 @@
-import { LinearGradient } from 'react-native-linear-gradient';
 import { Dispatch, SetStateAction } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import { Button, ContentScrollable, FitImage } from '@/components';
-import { Box, Text, makeStyles, useTheme } from '@/components/Theme';
+import { Box, Text } from '@/components/Theme';
 
 interface Props {
   setIsRent: Dispatch<SetStateAction<boolean>>;
   setStep: Dispatch<SetStateAction<number>>;
 }
 
-const useStyles = makeStyles(theme => ({
-  titleContainer: {
-    paddingHorizontal: theme.spacing.xl2,
-    paddingVertical: theme.spacing.s,
-    borderRadius: theme.borderRadii.l,
-  },
-}));
-
 const Step1 = ({ setIsRent, setStep }: Props) => {
-  const theme = useTheme();
-  const styles = useStyles();
-
   const onPress1 = () => {
     setIsRent(false);
     setStep(2);
@@ -36,15 +24,7 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
     <ContentScrollable edges={['bottom']}>
       <Box flex={1} alignItems="center" justifyContent="center">
         <Box gap="xl3" alignItems="center">
-          <LinearGradient colors={[]} style={styles.titleContainer}>
-            <Text
-              textAlign="center"
-              color="white"
-              fontFamily="Roboto_500Medium"
-            >
-              Ачааны төрөл сонгох
-            </Text>
-          </LinearGradient>
+          <Text variant="title">Техникийн төрөл сонгох</Text>
           <Box gap="xl">
             <TouchableOpacity onPress={onPress1}>
               <Box alignItems="center">

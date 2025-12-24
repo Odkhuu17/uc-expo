@@ -2,15 +2,16 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import { ArrowLeft2, Location } from 'iconsax-react-nativejs';
+import { HugeiconsIcon } from '@hugeicons/react-native';
+import { ArrowLeft01Icon, Location04Icon } from '@hugeicons/core-free-icons';
 
 import { Button, Marquee } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
+import MapPin from './MapPin';
 import {
   SearchAddressQuery,
   useSearchAddressLazyQuery,
-} from '@/gql/query/searchAddressQuery.generated';
-import MapPin from './MapPin';
+} from '@/gql/queries/searchAddressQuery.generated';
 
 interface Props {
   title: string;
@@ -92,7 +93,7 @@ const ChooseFromMap = ({
                 borderBottomWidth={1}
                 borderColor="border"
               >
-                <ArrowLeft2 size={theme.icon.m} />
+                <HugeiconsIcon icon={ArrowLeft01Icon} />
                 <Text fontFamily="Roboto_500Medium">{title}</Text>
               </Box>
             </TouchableOpacity>
@@ -116,7 +117,11 @@ const ChooseFromMap = ({
                     <ActivityIndicator />
                   </Box>
                 ) : (
-                  <Location size={theme.icon.l} color={theme.colors.baseBlue} />
+                  <HugeiconsIcon
+                    size={theme.icon.l}
+                    icon={Location04Icon}
+                    color={theme.colors.primary}
+                  />
                 )}
                 <Box flex={1} gap="xs">
                   <Marquee duration={5000}>

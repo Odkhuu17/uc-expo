@@ -18,7 +18,7 @@ const Empty = ({ title, description }: Props) => {
       <Text variant="body1" fontWeight={600}>
         {title}
       </Text>
-      <Text variant="body2" color="grey2">
+      <Text variant="body2" color="grey3">
         {description}
       </Text>
     </BoxContainer>

@@ -1,6 +1,5 @@
-import { Image } from 'expo-image';
 import { Dispatch, SetStateAction } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -34,7 +33,7 @@ const CarTypes = ({
     translateX.value = withSpring(
       translateX.value === 0
         ? -CAR_IMAGE_SIZE - theme.spacing.s - theme.spacing.m + theme.spacing.xs
-        : 0
+        : 0,
     );
   };
 
@@ -58,9 +57,9 @@ const CarTypes = ({
         py="m"
         pl="s"
         pr="m"
-        backgroundColor="lightBlue"
+        backgroundColor="secondary"
         borderWidth={1}
-        borderColor="baseBlue"
+        borderColor="primary"
         borderTopRightRadius="l"
         borderBottomRightRadius="l"
         flexDirection="row"
@@ -81,20 +80,20 @@ const CarTypes = ({
                     p="xs"
                     borderRadius="full"
                     borderWidth={2}
-                    borderColor="baseBlue"
+                    borderColor="primary"
                     width={CAR_IMAGE_SIZE}
                     height={CAR_IMAGE_SIZE}
                     backgroundColor="white"
                   >
                     <Image
                       source={car.image}
-                      contentFit="contain"
+                      resizeMode="contain"
                       style={css.carImage}
                     />
                   </Box>
                   <Box
                     px="xs"
-                    backgroundColor="baseBlue"
+                    backgroundColor="primary"
                     borderRadius="m"
                     justifyContent="center"
                     style={css.carName}
@@ -116,7 +115,7 @@ const CarTypes = ({
           height={TOGGLE_BUTTON_WIDTH}
         >
           <Box
-            backgroundColor="baseBlue"
+            backgroundColor="primary"
             borderRadius="m"
             position="absolute"
             top={0}
@@ -139,7 +138,8 @@ const CarTypes = ({
 
 const css = StyleSheet.create({
   carImage: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   carName: {
     height: 20,

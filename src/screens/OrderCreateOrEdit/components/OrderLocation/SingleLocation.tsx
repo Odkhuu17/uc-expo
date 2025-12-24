@@ -1,8 +1,9 @@
-import { Edit2 } from 'iconsax-react-nativejs';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import { HugeiconsIcon } from '@hugeicons/react-native';
+import { PencilEdit02Icon } from '@hugeicons/core-free-icons';
 
 import { Box, Text, useTheme } from '@/components/Theme';
-import Marquee from '../Marquee';
+import { Marquee } from '@/components';
 
 interface Props {
   selected: boolean;
@@ -34,22 +35,18 @@ const SingleLocation = ({
             <ActivityIndicator />
           </Box>
         ) : (
-          <Edit2
+          <HugeiconsIcon
+            icon={PencilEdit02Icon}
             size={theme.icon.l}
-            color={selected ? theme.colors['baseBlue'] : theme.colors['black']}
-            variant={selected ? 'Bold' : 'Outline'}
+            color={selected ? theme.colors.primary : theme.colors.black}
           />
         )}
         <Box flex={1} gap="xs">
-          <Text
-            color={selected ? 'baseBlue' : 'black'}
-            variant="body2"
-            fontFamily="Roboto_500Medium"
-          >
+          <Text color={selected ? 'primary' : 'black'} variant="label">
             {title}
           </Text>
           <Marquee duration={5000}>
-            <Text paddingRight="xl" variant="body2" color="grey2">
+            <Text paddingRight="xl" variant="body2" color="grey4">
               {location || ''}
             </Text>
           </Marquee>
