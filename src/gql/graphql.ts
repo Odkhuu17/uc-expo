@@ -460,6 +460,7 @@ export type Mutation = {
   attachOrderImage?: Maybe<Order>;
   attachOrderVideo?: Maybe<Order>;
   authCheckLogin: Scalars['JSON']['output'];
+  authCheckToken: Scalars['Boolean']['output'];
   authRegister?: Maybe<User>;
   checkPayment?: Maybe<Scalars['JSON']['output']>;
   closeOrder?: Maybe<Order>;
@@ -552,6 +553,11 @@ export type MutationAttachOrderVideoArgs = {
 
 export type MutationAuthCheckLoginArgs = {
   input: AuthCheckLoginInput;
+};
+
+
+export type MutationAuthCheckTokenArgs = {
+  input: AuthCheckTokenInput;
 };
 
 
@@ -936,25 +942,31 @@ export type OrderEdge = {
 };
 
 export type OrderFilter = {
+  approved?: InputMaybe<BoolFilter>;
   carType?: InputMaybe<StringFilter>;
   carWeight?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
+  destination?: InputMaybe<AddressFilter>;
   id?: InputMaybe<IdFilter>;
   number?: InputMaybe<StringFilter>;
+  origin?: InputMaybe<AddressFilter>;
   packageDimensions?: InputMaybe<StringFilter>;
   packageType?: InputMaybe<StringFilter>;
   packageWeight?: InputMaybe<StringFilter>;
   price?: InputMaybe<IntFilter>;
+  published?: InputMaybe<BoolFilter>;
   receiverMobile?: InputMaybe<StringFilter>;
   receiverName?: InputMaybe<StringFilter>;
   senderMobile?: InputMaybe<StringFilter>;
   senderName?: InputMaybe<StringFilter>;
   status?: InputMaybe<StringFilter>;
+  taxon?: InputMaybe<TaxonFilter>;
   title?: InputMaybe<StringFilter>;
   travelAt?: InputMaybe<DateFilter>;
   travelDistance?: InputMaybe<StringFilter>;
   travelDuration?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateFilter>;
+  user?: InputMaybe<UserFilter>;
 };
 
 export type PageInfo = {
@@ -2172,6 +2184,12 @@ export type AuthCheckLoginInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   login: Scalars['String']['input'];
   sendToken?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type AuthCheckTokenInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  login: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export type AuthRegisterInput = {

@@ -73,6 +73,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const [successModal, setSuccessModal] = useState(false);
   const [isRent, setIsRent] = useState(false);
   const [imageObjects, setImageObjects] = useState<ImageObject[]>([]);
+  const [video, setVideo] = useState<string | null>(null);
+  const [audio, setAudio] = useState<string | null>(null);
   const [selectedLocation, setSelectedOption] = useState<
     'origin' | 'destination'
   >('origin');
@@ -102,8 +104,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
     initialValues: {
       packageType: '',
       packageWeight: '',
-      travelDay: '',
-      travelHour: '',
+      travelDay: dayjs().format('YYYY/MM/DD'),
+      travelHour: dayjs().format('HH:mm'),
       vatIncluded: false,
       priceNegotiable: false,
       price: '',
@@ -223,6 +225,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
       setCreatedOrigin(data?.order?.origin || null);
       setCreatedDestination(data?.order?.destination || null);
       setImageObjects(data?.order?.imageObjects || []);
+      setVideo(data?.order?.video || null);
 
       if (isRentO) {
         rentFormik.setValues({
@@ -296,6 +299,10 @@ const OrderCreate = ({ navigation, route }: Props) => {
             number={number}
             setImageObjects={setImageObjects}
             imageObjects={imageObjects}
+            video={video}
+            setVideo={setVideo}
+            audio={audio}
+            setAudio={setAudio}
           />
         </AnimatedBox>
       );

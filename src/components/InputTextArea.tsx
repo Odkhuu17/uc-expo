@@ -36,7 +36,9 @@ const InputTextArea = ({
   const style = useMemo(
     () => [
       {
+        padding: theme.spacing.s,
         ...theme.textVariants[getTextVariant()],
+        fontWeight: 'normal',
       } as TextStyle,
     ],
     [],

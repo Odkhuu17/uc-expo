@@ -26,3 +26,4 @@ export { default as InputImage } from './InputImage';
 export { default as Select } from './Select';
 export { default as InputTextArea } from './InputTextArea';
 export { default as InputDate } from './InputDate';
+export { default as InputMask } from './InputMask';

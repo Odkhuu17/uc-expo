@@ -1,7 +1,9 @@
 import { Pressable, ViewStyle } from 'react-native';
 import { IconSvgElement } from '@hugeicons/react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 
@@ -12,6 +14,7 @@ import InputIcon from './InputIcon';
 import useInputStyle from '@/hooks/useInputStyle';
 import ModalBottomSheet from './ModalBottomSheet';
 import Button from './Button';
+import BottomContainer from './BottomContainer';
 
 interface Props {
   width?: ViewStyle['width'];
@@ -22,7 +25,8 @@ interface Props {
   size?: keyof Theme['button'];
   value?: string;
   placeholder?: string;
-  onChange?: (date: string) => void;
+  onChange: (date: string) => void;
+  mode?: 'date' | 'time';
 }
 
 const InputDate = ({
@@ -33,14 +37,15 @@ const InputDate = ({
   icon,
   value,
   placeholder,
-  onChange: onChangeDate,
+  onChange,
+  mode = 'date',
 }: Props) => {
   const { getTextVariant, style } = useInputStyle({
     size,
     hasLeftIcon: !!icon,
   });
   const ref = useRef<BottomSheetModal | null>(null);
-  const snapPoints = useMemo(() => ['100%'], []);
+  const snapPoints = useMemo(() => [], []);
 
   const onOpen = () => {
     ref.current?.present();
@@ -50,11 +55,35 @@ const InputDate = ({
     ref.current?.dismiss();
   };
 
-  const onChange = (_event: any, selectedDate?: Date) => {
-    if (selectedDate && onChangeDate) {
-      onChangeDate(dayjs(selectedDate).format('YYYY-MM-DD'));
+  const onChangeDate = (event: DateTimePickerEvent) => {
+    const ts = event?.nativeEvent?.timestamp;
+    if (mode === 'date') {
+      onChange(dayjs(ts).format('YYYY/MM/DD'));
+    } else {
+      onChange(dayjs(ts).format('HH:mm'));
     }
   };
+
+  const pickerValue = (() => {
+    if (mode === 'date') {
+      return value ? dayjs(value).toDate() : dayjs().toDate();
+    }
+    // mode === 'time'
+    if (value) {
+      const [h, m] = value.split(':');
+      const hours = Number(h);
+      const minutes = Number(m);
+      if (!Number.isNaN(hours) && !Number.isNaN(minutes)) {
+        return dayjs()
+          .hour(hours)
+          .minute(minutes)
+          .second(0)
+          .millisecond(0)
+          .toDate();
+      }
+    }
+    return dayjs().toDate();
+  })();
 
   return (
     <>
@@ -69,22 +98,30 @@ const InputDate = ({
                 fontWeight="normal"
                 color={value ? 'black' : 'grey3'}
               >
-                {dayjs(value).format('YYYY/MM/DD') || placeholder}
+                {value
+                  ? mode === 'time'
+                    ? dayjs(pickerValue).format('HH:mm')
+                    : dayjs(value).format('YYYY/MM/DD')
+                  : placeholder}
               </Text>
             </Box>
           </InputContainer>
         </Pressable>
       </Box>
-      <ModalBottomSheet ref={ref}>
-        <Box backgroundColor="white" alignItems="center">
-          <DateTimePicker
-            minimumDate={dayjs().toDate()}
-            value={dayjs(value).toDate()}
-            display="spinner"
-            onChange={onChange}
-          />
-          <Button width="100%" title="Хаах" onPress={onClose} />
-        </Box>
+      <ModalBottomSheet ref={ref} snapPoints={snapPoints} enableDynamicSizing>
+        <BottomSheetView>
+          <Box backgroundColor="white" alignItems="center">
+            <DateTimePicker
+              value={pickerValue}
+              display="spinner"
+              onChange={onChangeDate}
+              mode={mode}
+            />
+          </Box>
+          <BottomContainer>
+            <Button title="Хаах" onPress={onClose} />
+          </BottomContainer>
+        </BottomSheetView>
       </ModalBottomSheet>
     </>
   );

@@ -1,11 +1,11 @@
 import { useTheme } from '@shopify/restyle';
 import { useFormik } from 'formik';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { Masks } from 'react-native-mask-input';
 import { TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CalendarDownload01Icon,
+  Clock01Icon,
   ContainerTruck01Icon,
   Package01Icon,
   PackageIcon,
@@ -21,6 +21,8 @@ import {
   ContentScrollable,
   Select,
   InputDate,
+  InputMask,
+  InputTextArea,
 } from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { deliveryCarTypes, packageTypes } from '@/constants/transportTypes';
@@ -30,6 +32,8 @@ import { OrderLocation } from '../components';
 import { ImageObject } from '@/gql/graphql';
 import InputImage from './containers/InputImage';
 import Images from './containers/Images';
+import InputVideo from './containers/InputVideo';
+import InputAudio from './containers/InputAudio';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -37,12 +41,12 @@ interface Props {
   createdDestination?: NonNullable<
     CreateAddressMutation['createAddress']
   > | null;
-  audio: string;
+  audio: string | null;
   imageObjects: ImageObject[];
-  video: string;
-  setAudio: Dispatch<SetStateAction<string>>;
+  video: string | null;
+  setAudio: Dispatch<SetStateAction<string | null>>;
   setImageObjects: Dispatch<SetStateAction<ImageObject[]>>;
-  setVideo: Dispatch<SetStateAction<string>>;
+  setVideo: Dispatch<SetStateAction<string | null>>;
   formik: ReturnType<typeof useFormik<any>>;
   setStep: Dispatch<SetStateAction<number>>;
   number?: string;
@@ -120,6 +124,22 @@ const DeliveryStep3 = ({
             </Box>
           </BoxContainer>
           <BoxContainer gap="m">
+            <InputVideo
+              label="Бичлэг"
+              video={video}
+              setVideo={setVideo}
+              number={number || orderNumber}
+            />
+          </BoxContainer>
+          <BoxContainer gap="m">
+            <InputAudio
+              label="Дуу"
+              audio={audio}
+              setAudio={setAudio}
+              number={number || orderNumber}
+            />
+          </BoxContainer>
+          <BoxContainer gap="m">
             <Select
               label="Ачааны төрөл"
               icon={PackageIcon}
@@ -143,6 +163,7 @@ const DeliveryStep3 = ({
               options={deliveryCarTypes.map(p => ({
                 label: p.name,
                 value: p.name,
+                image: p.image,
               }))}
               selectedOption={values.carType}
               setSelectedOption={handleChange('carType')}
@@ -171,36 +192,34 @@ const DeliveryStep3 = ({
               value={values.travelDay}
               placeholder="Ачих өдөр"
               onBlur={handleBlur('travelDay')}
-              onChangeText={handleChange('travelDay')}
+              onChange={handleChange('travelDay')}
               returnKeyType="next"
               onSubmitEditing={() => onSubmitEditing(1)}
-              ref={(el: TextInput | null) => (refs.current[1] = el)}
               error={
                 touched.travelDay && errors.travelDay
                   ? errors.travelDay
                   : undefined
               }
             />
-            {/*<DateInput
-              icon={Clock}
+            <InputDate
+              icon={Clock01Icon}
               label="Ачих цаг"
               keyboardType="number-pad"
               value={values.travelHour}
-              placeholder="HH:mm"
+              mode="time"
+              placeholder="Ачих цаг"
               onBlur={handleBlur('travelHour')}
-              onChangeText={handleChange('travelHour')}
+              onChange={handleChange('travelHour')}
               onSubmitEditing={() => onSubmitEditing(2)}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[2] = el)}
               error={
                 touched.travelHour && errors.travelHour
                   ? errors.travelHour
                   : undefined
               }
-              mask={[/[0-2]/, /\d/, ':', /[0-5]/, /\d/]}
-            /> */}
+            />
           </BoxContainer>
-          {/* <BoxContainer gap="m">
+          <BoxContainer gap="m">
             <Box flexDirection="row" justifyContent="space-between">
               <Checkbox
                 label="НӨАТ"
@@ -214,7 +233,8 @@ const DeliveryStep3 = ({
               />
             </Box>
             {!values.priceNegotiable && (
-              <CustomMaskInput
+              <InputMask
+                label="Ачуулах үнэ"
                 placeholder="Ачуулах үнэ"
                 keyboardType="number-pad"
                 value={values.price}
@@ -223,13 +243,14 @@ const DeliveryStep3 = ({
                 returnKeyType="next"
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
                 ref={(el: TextInput | null) => (refs.current[3] = el)}
-                error={touched.price && errors.price ? errors.price : undefined}
                 mask={moneyMask}
+                error={touched.price && errors.price ? errors.price : undefined}
               />
             )}
           </BoxContainer>
           <BoxContainer gap="m">
-            <TextArea
+            <InputTextArea
+              label="Нэмэлт мэдээлэл"
               placeholder="Ачааны нэмэлт мэдээлэл болон тоо ширхэгээ бичнэ үү!"
               value={values.additionalInfo}
               onBlur={handleBlur('additionalInfo')}
@@ -245,11 +266,9 @@ const DeliveryStep3 = ({
             />
           </BoxContainer>
           <BoxContainer gap="m">
-            <Text variant="body2" fontFamily="Roboto_500Medium">
-              Илгээгчийн мэдээлэл
-            </Text>
             <Input
-              placeholder="Овог нэр"
+              label="Илгээгчийн нэр"
+              placeholder="Илгээгчийн нэр"
               value={values.senderName}
               onBlur={handleBlur('senderName')}
               onChangeText={handleChange('senderName')}
@@ -263,6 +282,7 @@ const DeliveryStep3 = ({
               }
             />
             <Input
+              label="Илгээгчийн утасны дугаар"
               placeholder="Утасны дугаар"
               keyboardType="number-pad"
               value={values.senderMobile}
@@ -279,11 +299,9 @@ const DeliveryStep3 = ({
             />
           </BoxContainer>
           <BoxContainer gap="m">
-            <Text variant="body2" fontFamily="Roboto_500Medium">
-              Хүлээн авагчийн мэдээлэл
-            </Text>
             <Input
-              placeholder="Овог нэр"
+              label="Хүлээн авагчийн нэр"
+              placeholder="Хүлээн авагчийн нэр"
               value={values.receiverName}
               onBlur={handleBlur('receiverName')}
               onChangeText={handleChange('receiverName')}
@@ -297,6 +315,7 @@ const DeliveryStep3 = ({
               }
             />
             <Input
+              label="Хүлээн авагчийн утасны дугаар"
               placeholder="Утасны дугаар"
               keyboardType="number-pad"
               value={values.receiverMobile}
@@ -309,7 +328,7 @@ const DeliveryStep3 = ({
                   : undefined
               }
             />
-          </BoxContainer> */}
+          </BoxContainer>
         </Box>
       </ContentScrollable>
       <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>

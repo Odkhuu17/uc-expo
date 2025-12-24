@@ -36,6 +36,7 @@ const SingleImage = ({ number, imageObject, setImageObjects }: Props) => {
       />
       <Box position="absolute" top={theme.spacing.s} right={theme.spacing.s}>
         <ButtonIcon
+          variant="contained"
           icon={Delete03Icon}
           loading={loading}
           onPress={onDeleteImage}

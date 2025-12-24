@@ -14,7 +14,6 @@ import { BottomContainer, Button } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
 import { CarTypes, ChooseFromMap, MapPin } from './components';
-import LocationModal from './containers/LocationModal';
 import { createArc } from './helpers';
 import {
   AddressCreateMutation,
@@ -26,6 +25,7 @@ import {
 } from '@/gql/queries/addressSearch.generated';
 import { INavigation } from '@/navigations';
 import { OrderLocation } from '../components';
+import LocationModal from './containers/LocationModal';
 
 interface Props {
   isRent?: boolean;
@@ -201,8 +201,6 @@ const Step2 = ({
   // const { items, isLastPage, showMore } = useInfiniteHits({
   //   escapeHTML: false,
   // });
-
-  console.log(items, 'kejfgwef');
 
   return (
     <>

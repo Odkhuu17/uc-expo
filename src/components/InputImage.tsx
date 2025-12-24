@@ -6,6 +6,7 @@ import { Delete03Icon, PlusSignIcon } from '@hugeicons/core-free-icons';
 import { BoxContainer, ButtonIcon } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import useImagePick from '@/hooks/useImagePick';
+import InputLabel from './InputLabel';
 
 interface Props {
   label: string;
@@ -31,12 +32,7 @@ const InputImage = ({
 
   return (
     <Box>
-      <Box flexDirection="row" gap="xs" alignItems="center">
-        <Text variant="label" mb="xs">
-          {label}
-        </Text>
-        {isRequired && <Text color="error">*</Text>}
-      </Box>
+      <InputLabel label={label} isRequired={isRequired} />
       <BoxContainer
         borderWidth={2}
         borderStyle="dashed"
