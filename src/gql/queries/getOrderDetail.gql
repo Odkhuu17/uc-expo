@@ -9,6 +9,7 @@ query GetOrderDetail($number: String) {
     my
     requested
     subscribed
+    taxonId
     acceptedDeliveryRequest {
       id
       price

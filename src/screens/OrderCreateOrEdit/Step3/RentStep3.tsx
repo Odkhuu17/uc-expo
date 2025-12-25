@@ -1,9 +1,14 @@
 import { useTheme } from '@shopify/restyle';
 import { useFormik } from 'formik';
-import { ArchiveBox, Calendar, Clock, TruckFast } from 'iconsax-react-nativejs';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { Masks } from 'react-native-mask-input';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  CalendarSetting01Icon,
+  ContainerTruck01Icon,
+  TimeSetting01Icon,
+  WeightIcon,
+  WorkHistoryIcon,
+} from '@hugeicons/core-free-icons';
 
 import {
   BoxContainer,
@@ -15,19 +20,20 @@ import {
   ContentScrollable,
   Select,
   InputTextArea,
+  InputMask,
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
-import {
-  OrderAudio,
-  OrderAudioPlayer,
-  OrderImageButton,
-  OrderImages,
-  OrderVideo,
-  OrderVideoButton,
-} from './components';
 import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
+import { OrderLocation } from '../components';
+import InputImage from './containers/InputImage';
+import Images from './containers/Images';
+import InputVideo from './containers/InputVideo';
+import InputAudio from './containers/InputAudio';
+import { ImageObject } from '@/gql/graphql';
+import InputLabel from '@/components/InputLabel';
+import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -35,14 +41,17 @@ interface Props {
   createdDestination?: NonNullable<
     CreateAddressMutation['createAddress']
   > | null;
-  audio: string;
-  images: string[];
-  video: string;
-  setAudio: Dispatch<SetStateAction<string>>;
-  setImages: Dispatch<SetStateAction<string[]>>;
-  setVideo: Dispatch<SetStateAction<string>>;
+  audio: string | null;
+  imageObjects: ImageObject[];
+  video: string | null;
+  setAudio: Dispatch<SetStateAction<string | null>>;
+  setImageObjects: Dispatch<SetStateAction<ImageObject[]>>;
+  setVideo: Dispatch<SetStateAction<string | null>>;
   formik: ReturnType<typeof useFormik<any>>;
   setStep: Dispatch<SetStateAction<number>>;
+  number?: string | null;
+  orderNumber: string;
+  taxonsData?: GetTaxonsQuery['taxons'];
 }
 
 const RentStep3 = ({
@@ -50,17 +59,19 @@ const RentStep3 = ({
   createdOrigin,
   createdDestination,
   audio,
-  images,
+  imageObjects,
   video,
   formik,
   setStep,
   setAudio,
-  setImages,
+  setImageObjects,
   setVideo,
+  number,
+  orderNumber,
+  taxonsData,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const { number } = useLocalSearchParams();
 
   const {
     handleSubmit,
@@ -78,59 +89,73 @@ const RentStep3 = ({
     setSelectedLocation('origin');
   };
 
-  const onPressDestination = () => {
-    setStep(2);
-    setSelectedLocation('destination');
-  };
-
-  useEffect(() => {
+  const onChangeCarType = (value: string) => {
+    setFieldValue('carType', value);
     setFieldValue('carWeight', '');
-  }, [createdDestination]);
+    if (taxonsData) {
+      const selectedTaxon = taxonsData?.edges?.find(
+        taxon => taxon?.node?.name === value,
+      );
+      if (selectedTaxon) {
+        setFieldValue('taxonId', selectedTaxon?.node?.id || '');
+      }
+    }
+  };
 
   return (
     <CustomKeyboardAvoidingView>
-      <ScrollableContent edges={[]}>
+      <ContentScrollable edges={[]}>
         <Box gap="s">
           <OrderLocation
             isRent
             origin={createdOrigin?.address1}
             destination={createdDestination?.address1}
             onPressOrigin={onPressOrigin}
-            onPressDestination={onPressDestination}
           />
-          <BoxContainer
-            flexDirection="row"
-            justifyContent="space-between"
-            gap="s"
-          >
-            <Box flex={1}>
-              <OrderAudio setAudio={setAudio} audio={audio} />
-            </Box>
-            <Box flex={1}>
-              <OrderImageButton setImages={setImages} />
-            </Box>
-            <Box flex={1}>
-              <OrderVideoButton setVideo={setVideo} />
+          <BoxContainer gap="m">
+            <InputLabel label="Зураг" />
+            <Box flexDirection="row" alignItems="center">
+              <InputImage
+                number={number || orderNumber}
+                setImageObject={setImageObjects}
+              />
+              <Images
+                number={number || orderNumber}
+                setImageObjects={setImageObjects}
+                imageObjects={imageObjects}
+              />
             </Box>
           </BoxContainer>
-          {audio && <OrderAudioPlayer audio={audio} setAudio={setAudio} />}
-          {video && <OrderVideo video={video} setVideo={setVideo} />}
-          {images.length > 0 && (
-            <OrderImages images={images} setImages={setImages} />
-          )}
+          <BoxContainer gap="m">
+            <InputVideo
+              label="Бичлэг"
+              video={video}
+              setVideo={setVideo}
+              number={number || orderNumber}
+            />
+          </BoxContainer>
+          <BoxContainer gap="m">
+            <InputAudio
+              label="Дуу"
+              audio={audio}
+              setAudio={setAudio}
+              number={number || orderNumber}
+            />
+          </BoxContainer>
           <BoxContainer gap="m">
             <Select
-              icon={TruckFast}
+              icon={ContainerTruck01Icon}
               placeholder="Техникийн төрөл"
               options={rentCarTypes.map(p => ({
                 label: p.name,
                 value: p.name,
+                image: p.image,
               }))}
               selectedOption={values.carType}
-              setSelectedOption={handleChange('carType')}
+              setSelectedOption={value => onChangeCarType(value)}
             />
             <Select
-              icon={ArchiveBox}
+              icon={WeightIcon}
               placeholder="Даац/Хэмжээ"
               options={
                 rentCarTypes
@@ -148,12 +173,12 @@ const RentStep3 = ({
                   : undefined
               }
             />
-            <DateInput
-              icon={Calendar}
+            <InputDate
+              icon={CalendarSetting01Icon}
               label="Ажил эхлэх өдөр"
               keyboardType="number-pad"
               value={values.startDate}
-              placeholder="YYYY/MM/DD"
+              placeholder="YАжил эхлэх өдөр"
               onBlur={handleBlur('startDate')}
               onChangeText={handleChange('startDate')}
               error={
@@ -161,10 +186,9 @@ const RentStep3 = ({
                   ? errors.startDate
                   : undefined
               }
-              mask={Masks.DATE_YYYYMMDD}
             />
-            <OrderInput
-              icon={Calendar}
+            <Input
+              icon={WorkHistoryIcon}
               label="Ажиллах хоног"
               keyboardType="number-pad"
               value={values.rentDay}
@@ -174,8 +198,8 @@ const RentStep3 = ({
                 touched.rentDay && errors.rentDay ? errors.rentDay : undefined
               }
             />
-            <OrderInput
-              icon={Clock}
+            <Input
+              icon={TimeSetting01Icon}
               label="Ажиллах цаг"
               keyboardType="number-pad"
               value={values.motHour}
@@ -200,19 +224,20 @@ const RentStep3 = ({
               />
             </Box>
             {!values.priceNegotiable && (
-              <CustomMaskInput
+              <InputMask
                 placeholder="Үнэ"
                 keyboardType="number-pad"
                 value={values.price}
                 onBlur={handleBlur('price')}
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
-                error={touched.price && errors.price ? errors.price : undefined}
                 mask={moneyMask}
+                error={touched.price && errors.price ? errors.price : undefined}
               />
             )}
           </BoxContainer>
           <BoxContainer gap="m">
-            <TextArea
+            <InputTextArea
+              label="Дэлгэрэнгүй хаяг"
               placeholder="Дэлгэрэнгүй хаяг"
               value={values.additionalAddress}
               onBlur={handleBlur('additionalAddress')}
@@ -223,7 +248,8 @@ const RentStep3 = ({
                   : undefined
               }
             />
-            <TextArea
+            <InputTextArea
+              label="Нэмэлт мэдээлэл"
               placeholder="Нэмэлт мэдээлэл"
               value={values.additionalInfo}
               onBlur={handleBlur('additionalInfo')}
@@ -236,7 +262,7 @@ const RentStep3 = ({
             />
           </BoxContainer>
         </Box>
-      </ScrollableContent>
+      </ContentScrollable>
       <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
         <Button
           title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}

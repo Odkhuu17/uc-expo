@@ -11,7 +11,7 @@ interface Props {
   origin?: string;
   destination?: string;
   onPressOrigin: () => void;
-  onPressDestination: () => void;
+  onPressDestination?: () => void;
   loading?: boolean;
 }
 

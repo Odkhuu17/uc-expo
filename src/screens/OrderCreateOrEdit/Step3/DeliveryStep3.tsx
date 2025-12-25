@@ -7,7 +7,6 @@ import {
   CalendarDownload01Icon,
   Clock01Icon,
   ContainerTruck01Icon,
-  Package01Icon,
   PackageIcon,
   WeightIcon,
 } from '@hugeicons/core-free-icons';
@@ -34,6 +33,7 @@ import InputImage from './containers/InputImage';
 import Images from './containers/Images';
 import InputVideo from './containers/InputVideo';
 import InputAudio from './containers/InputAudio';
+import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -51,6 +51,7 @@ interface Props {
   setStep: Dispatch<SetStateAction<number>>;
   number?: string;
   orderNumber: string;
+  taxonsData?: GetTaxonsQuery['taxons'];
 }
 
 const DeliveryStep3 = ({
@@ -67,6 +68,7 @@ const DeliveryStep3 = ({
   setVideo,
   number,
   orderNumber,
+  taxonsData,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -91,6 +93,19 @@ const DeliveryStep3 = ({
   const onPressDestination = () => {
     setStep(2);
     setSelectedLocation('destination');
+  };
+
+  const onChangeCarType = (value: string) => {
+    setFieldValue('carType', value);
+    setFieldValue('carWeight', '');
+    if (taxonsData) {
+      const selectedTaxon = taxonsData?.edges?.find(
+        taxon => taxon?.node?.name === value,
+      );
+      if (selectedTaxon) {
+        setFieldValue('taxonId', selectedTaxon?.node?.id || '');
+      }
+    }
   };
 
   const onSubmitEditing = (index: number) => {
@@ -166,7 +181,7 @@ const DeliveryStep3 = ({
                 image: p.image,
               }))}
               selectedOption={values.carType}
-              setSelectedOption={handleChange('carType')}
+              setSelectedOption={onChangeCarType}
             />
             <Input
               icon={WeightIcon}

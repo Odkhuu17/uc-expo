@@ -92,7 +92,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
   > | null>(null);
   const { data: taxonsData } = useGetTaxonsQuery();
 
-  const [createOrder] = useOrderCreateMutation();
+  const [createOrder, { data: createOrderData }] = useOrderCreateMutation();
   const [updateOrder] = useOrderUpdateMutation();
 
   const { data, loading: getOrderLoading } = useGetOrderDetailQuery({
@@ -115,6 +115,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
       senderName: '',
       senderMobile: '',
       carType: '',
+      taxonId: '',
     },
     validationSchema: deliverySchema,
     onSubmit: async () => {
@@ -124,7 +125,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
         await updateOrder({
           variables: {
             input: {
-              id: data?.order?.id!,
+              id: createOrderData?.createOrder?.id || data?.order?.id!,
+              taxonId: values.taxonId,
               originId: createdOrigin?.id,
               destinationId: createdDestination?.id,
               packageType: values.packageType,
@@ -161,6 +163,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
       additionalInfo: '',
       additionalAddress: '',
       carType: '',
+      taxonId: '',
     },
     validationSchema: rentSchema,
     onSubmit: async () => {
@@ -169,7 +172,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
         await updateOrder({
           variables: {
             input: {
-              id: data?.order?.id!,
+              taxonId: values.taxonId,
+              id: createOrderData?.createOrder?.id || data?.order?.id!,
               originId: createdOrigin?.id,
               carType: values.carType,
               carWeight: values.carWeight,
@@ -229,6 +233,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
 
       if (isRentO) {
         rentFormik.setValues({
+          taxonId: data?.order?.taxonId || '',
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',
           startDate: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
@@ -242,6 +247,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
         });
       } else {
         deliveryFormik.setValues({
+          taxonId: data?.order?.taxonId || '',
           packageType: data?.order?.packageType || '',
           packageWeight: data?.order?.packageWeight || '',
           travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
@@ -289,21 +295,41 @@ const OrderCreate = ({ navigation, route }: Props) => {
     } else {
       return (
         <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-          <DeliveryStep3
-            orderNumber={orderNumber!}
-            setSelectedLocation={setSelectedOption}
-            createdOrigin={createdOrigin}
-            createdDestination={createdDestination}
-            formik={deliveryFormik}
-            setStep={setStep}
-            number={number}
-            setImageObjects={setImageObjects}
-            imageObjects={imageObjects}
-            video={video}
-            setVideo={setVideo}
-            audio={audio}
-            setAudio={setAudio}
-          />
+          {isRent ? (
+            <RentStep3
+              orderNumber={orderNumber!}
+              setSelectedLocation={setSelectedOption}
+              createdOrigin={createdOrigin}
+              createdDestination={createdDestination}
+              formik={deliveryFormik}
+              setStep={setStep}
+              number={number}
+              setImageObjects={setImageObjects}
+              imageObjects={imageObjects}
+              video={video}
+              setVideo={setVideo}
+              audio={audio}
+              setAudio={setAudio}
+              taxonsData={taxonsData?.taxons}
+            />
+          ) : (
+            <DeliveryStep3
+              orderNumber={orderNumber!}
+              setSelectedLocation={setSelectedOption}
+              createdOrigin={createdOrigin}
+              createdDestination={createdDestination}
+              formik={deliveryFormik}
+              setStep={setStep}
+              number={number}
+              setImageObjects={setImageObjects}
+              imageObjects={imageObjects}
+              video={video}
+              setVideo={setVideo}
+              audio={audio}
+              setAudio={setAudio}
+              taxonsData={taxonsData?.taxons}
+            />
+          )}
         </AnimatedBox>
       );
     }
