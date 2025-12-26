@@ -1,6 +1,0 @@
-mutation DestroyOrderAudio($number: String!) {
-  destroyOrderAudio(input: { number: $number}) {
-    id
-    audio
-  }
-}

@@ -1,5 +1,0 @@
-mutation orderDestroy($id: ID!) {
-  destroyOrder(input: { id: $id }) {
-    id
-  }
-}

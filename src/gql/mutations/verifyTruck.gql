@@ -1,7 +1,0 @@
-mutation VerifyTruck($passport: Upload!, $truckId: ID) {
-  verifyTruck(input: { passport: $passport, truckId: $truckId }) {
-    id
-    status
-    field5
-  }
-}

@@ -1,7 +1,0 @@
-mutation AttachOrderVideo($number: String!, $video: Upload!) {
-  attachOrderVideo(input: { number: $number, video: $video }) {
-    id
-    number
-    video
-  }
-}
