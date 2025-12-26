@@ -13,7 +13,6 @@ import { Label, BoxContainer, ModalMsg } from '@/components';
 import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
 import { deliveryCarTypes, rentCarTypes } from '@/constants/transportTypes';
 import { INavigation } from '@/navigations';
-import Status from './Status';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
@@ -51,13 +50,20 @@ const SingleOrder = ({ item, children }: Props) => {
   };
 
   const onNavigateToDetail = () => {
-    //TUR LOGIC
-    // if (!user?.subscribed && mode === 'driver') {
-    //   setMsgModal(true);
-    // } else {
-    //   navigation.navigate('OrderDetail', { number: item?.number! });
-    // }
-    navigation.navigate('OrderDetail', { number: item?.number! });
+    if (mode === 'shipper') {
+      if (item?.my) {
+        return navigation.navigate('OrderDetail', { number: item?.number! });
+      } else {
+        navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: 'Та бусдын захиалгыг харах боломжгүй байна.',
+        });
+      }
+    } else if (item?.subscribed) {
+      navigation.navigate('OrderDetail', { number: item?.number! });
+    } else {
+      setMsgModal(true);
+    }
   };
 
   const handleCloseMsgModal = () => {
@@ -66,7 +72,7 @@ const SingleOrder = ({ item, children }: Props) => {
 
   const handleConfirmMsgModal = () => {
     setMsgModal(false);
-    navigation.navigate('Subscription');
+    navigation.navigate('TrucksMy');
   };
 
   return (

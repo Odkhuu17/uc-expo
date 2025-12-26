@@ -125,7 +125,7 @@ const ChooseFromMap = ({
                 )}
                 <Box flex={1} gap="xs">
                   <Marquee duration={5000}>
-                    <Text paddingRight="xl" variant="body2" color="grey2">
+                    <Text paddingRight="xl" variant="body2" color="grey4">
                       {localLocation?._source?.nameFullMn || ''}
                     </Text>
                   </Marquee>

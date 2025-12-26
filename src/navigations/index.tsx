@@ -23,7 +23,8 @@ import TrucksMy from '@/screens/TrucksMy';
 import TruckAddOrEdit from '@/screens/TruckAddOrEdit';
 import TruckSubscription from '@/screens/TruckSubscription';
 import TrackTruck from '@/screens/TrackTruck';
-import useLinkDevice from '@/hooks/useLinkDevice';
+import OrderRequests from '@/screens/OrderRequests';
+import DriverVerify from '@/screens/DriverVerify';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -42,6 +43,9 @@ export type TAppRoutes = {
   OrderCreateOrEdit: {
     number?: string;
   };
+  OrderRequests: {
+    number: string;
+  };
   Profile: undefined;
   ProfileUpdate: undefined;
   Contact: undefined;
@@ -56,6 +60,7 @@ export type TAppRoutes = {
   TrackTruck: {
     number: string;
   };
+  DriverVerify: undefined;
 };
 
 export interface INavigationProps<RouteName extends keyof TAppRoutes> {
@@ -70,8 +75,6 @@ const Stack = createStackNavigator<TAppRoutes>();
 const AppNavigator = () => {
   const theme = useTheme();
   const { isAuthenticated } = useAppSelector(state => state.auth);
-
-  useLinkDevice();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -100,6 +103,8 @@ const AppNavigator = () => {
             name="OrderCreateOrEdit"
             component={OrderCreateOrEdit}
           />
+          <Stack.Screen name="OrderRequests" component={OrderRequests} />
+          <Stack.Screen name="DriverVerify" component={DriverVerify} />
         </Stack.Group>
       )}
       <Stack.Group

@@ -192,8 +192,6 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('packageWeight')}
               onChangeText={handleChange('packageWeight')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[0] = el)}
-              onSubmitEditing={() => onSubmitEditing(0)}
               error={
                 touched.packageWeight && errors.packageWeight
                   ? errors.packageWeight
@@ -203,13 +201,11 @@ const DeliveryStep3 = ({
             <InputDate
               icon={CalendarDownload01Icon}
               label="Ачих өдөр"
-              keyboardType="number-pad"
               value={values.travelDay}
               placeholder="Ачих өдөр"
               onBlur={handleBlur('travelDay')}
               onChange={handleChange('travelDay')}
               returnKeyType="next"
-              onSubmitEditing={() => onSubmitEditing(1)}
               error={
                 touched.travelDay && errors.travelDay
                   ? errors.travelDay
@@ -225,7 +221,6 @@ const DeliveryStep3 = ({
               placeholder="Ачих цаг"
               onBlur={handleBlur('travelHour')}
               onChange={handleChange('travelHour')}
-              onSubmitEditing={() => onSubmitEditing(2)}
               returnKeyType="next"
               error={
                 touched.travelHour && errors.travelHour
@@ -254,10 +249,10 @@ const DeliveryStep3 = ({
                 keyboardType="number-pad"
                 value={values.price}
                 onBlur={handleBlur('price')}
-                onSubmitEditing={() => onSubmitEditing(3)}
+                onSubmitEditing={() => onSubmitEditing(1)}
                 returnKeyType="next"
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
-                ref={(el: TextInput | null) => (refs.current[3] = el)}
+                ref={(el: TextInput | null) => (refs.current[1] = el)}
                 mask={moneyMask}
                 error={touched.price && errors.price ? errors.price : undefined}
               />
@@ -271,8 +266,8 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('additionalInfo')}
               onChangeText={handleChange('additionalInfo')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[4] = el)}
-              onSubmitEditing={() => onSubmitEditing(4)}
+              ref={(el: TextInput | null) => (refs.current[2] = el)}
+              onSubmitEditing={() => onSubmitEditing(2)}
               error={
                 touched.additionalInfo && errors.additionalInfo
                   ? errors.additionalInfo
@@ -288,8 +283,8 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('senderName')}
               onChangeText={handleChange('senderName')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[5] = el)}
-              onSubmitEditing={() => onSubmitEditing(5)}
+              ref={(el: TextInput | null) => (refs.current[3] = el)}
+              onSubmitEditing={() => onSubmitEditing(3)}
               error={
                 touched.senderName && errors.senderName
                   ? errors.senderName
@@ -304,11 +299,24 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('senderMobile')}
               onChangeText={handleChange('senderMobile')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[6] = el)}
-              onSubmitEditing={() => onSubmitEditing(6)}
+              ref={(el: TextInput | null) => (refs.current[4] = el)}
+              onSubmitEditing={() => onSubmitEditing(4)}
               error={
                 touched.senderMobile && errors.senderMobile
                   ? errors.senderMobile
+                  : undefined
+              }
+            />
+            <InputTextArea
+              label="Очих авах хаягийн дэлгэрэнгүй"
+              placeholder="Очих авах хаягийн дэлгэрэнгүй"
+              value={values.additionalAddressOrigin}
+              onBlur={handleBlur('additionalAddressOrigin')}
+              onChangeText={handleChange('additionalAddressOrigin')}
+              error={
+                touched.additionalAddressOrigin &&
+                errors.additionalAddressOrigin
+                  ? errors.additionalAddressOrigin
                   : undefined
               }
             />
@@ -321,8 +329,8 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('receiverName')}
               onChangeText={handleChange('receiverName')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[7] = el)}
-              onSubmitEditing={() => onSubmitEditing(7)}
+              ref={(el: TextInput | null) => (refs.current[5] = el)}
+              onSubmitEditing={() => onSubmitEditing(5)}
               error={
                 touched.receiverName && errors.receiverName
                   ? errors.receiverName
@@ -336,10 +344,25 @@ const DeliveryStep3 = ({
               value={values.receiverMobile}
               onBlur={handleBlur('receiverMobile')}
               onChangeText={handleChange('receiverMobile')}
-              ref={(el: TextInput | null) => (refs.current[8] = el)}
+              ref={(el: TextInput | null) => (refs.current[6] = el)}
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
               error={
                 touched.receiverMobile && errors.receiverMobile
                   ? errors.receiverMobile
+                  : undefined
+              }
+            />
+            <InputTextArea
+              label="Хүргэх хаягийн дэлгэрэнгүй"
+              placeholder="Хүргэх хаягийн дэлгэрэнгүй"
+              value={values.additionalAddressDestination}
+              onBlur={handleBlur('additionalAddressDestination')}
+              onChangeText={handleChange('additionalAddressDestination')}
+              error={
+                touched.additionalAddressDestination &&
+                errors.additionalAddressDestination
+                  ? errors.additionalAddressDestination
                   : undefined
               }
             />

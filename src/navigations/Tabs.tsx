@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator();
 const Tabs = () => {
   const theme = useTheme();
   const { mode } = useAppSelector(state => state.general);
+  const { user } = useAppSelector(state => state.auth);
 
   return (
     <Tab.Navigator
@@ -28,42 +29,56 @@ const Tabs = () => {
         tabBarInactiveTintColor: theme.colors.grey4,
       }}
     >
-      <Tab.Screen
-        name="Orders"
-        component={Orders}
-        options={{
-          tabBarLabel: 'Захиалгууд',
-          tabBarIcon: ({ color, size }) => (
-            <HugeiconsIcon icon={PackageSearchIcon} color={color} size={size} />
-          ),
-        }}
-      />
-      {mode === 'shipper' ? (
+      {user?.verified && (
         <Tab.Screen
-          name="My orders"
-          component={OrdersMy}
+          name="Orders"
+          component={Orders}
           options={{
-            tabBarLabel: 'Миний захиалгууд',
-            tabBarIcon: ({ color, size }) => (
-              <HugeiconsIcon icon={PackageSentIcon} color={color} size={size} />
-            ),
-          }}
-        />
-      ) : (
-        <Tab.Screen
-          name="My delivery requests"
-          component={DeliveryRequestsMy}
-          options={{
-            tabBarLabel: 'Миний хүсэлтүүд',
+            tabBarLabel: 'Захиалгууд',
             tabBarIcon: ({ color, size }) => (
               <HugeiconsIcon
-                icon={PackageReceive01Icon}
+                icon={PackageSearchIcon}
                 color={color}
                 size={size}
               />
             ),
           }}
         />
+      )}
+      {user?.verified && (
+        <>
+          {mode === 'shipper' ? (
+            <Tab.Screen
+              name="My orders"
+              component={OrdersMy}
+              options={{
+                tabBarLabel: 'Миний захиалгууд',
+                tabBarIcon: ({ color, size }) => (
+                  <HugeiconsIcon
+                    icon={PackageSentIcon}
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
+          ) : (
+            <Tab.Screen
+              name="My delivery requests"
+              component={DeliveryRequestsMy}
+              options={{
+                tabBarLabel: 'Миний хүсэлтүүд',
+                tabBarIcon: ({ color, size }) => (
+                  <HugeiconsIcon
+                    icon={PackageReceive01Icon}
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
+          )}
+        </>
       )}
       <Tab.Screen
         name="Profile"

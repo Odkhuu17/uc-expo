@@ -1,6 +1,6 @@
 import { useTheme } from '@shopify/restyle';
 import { useFormik } from 'formik';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CalendarSetting01Icon,
@@ -9,6 +9,7 @@ import {
   WeightIcon,
   WorkHistoryIcon,
 } from '@hugeicons/core-free-icons';
+import { TextInput } from 'react-native';
 
 import {
   BoxContainer,
@@ -24,7 +25,7 @@ import {
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes } from '@/constants/transportTypes';
-import { moneyMask } from '@/utils/helpers';
+import { isRentOrder, moneyMask } from '@/utils/helpers';
 import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
 import { OrderLocation } from '../components';
 import InputImage from './containers/InputImage';
@@ -72,6 +73,7 @@ const RentStep3 = ({
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
+  const refs = useRef<(TextInput | null)[]>([]);
 
   const {
     handleSubmit,
@@ -101,6 +103,14 @@ const RentStep3 = ({
       }
     }
   };
+
+  const onSubmitEditing = (index: number) => {
+    if (refs.current[index + 1]) {
+      refs.current[index + 1]?.focus();
+    }
+  };
+
+  console.log(errors, isRentOrder(values.carType));
 
   return (
     <CustomKeyboardAvoidingView>
@@ -176,11 +186,10 @@ const RentStep3 = ({
             <InputDate
               icon={CalendarSetting01Icon}
               label="Ажил эхлэх өдөр"
-              keyboardType="number-pad"
               value={values.startDate}
-              placeholder="YАжил эхлэх өдөр"
+              placeholder="Ажил эхлэх өдөр"
               onBlur={handleBlur('startDate')}
-              onChangeText={handleChange('startDate')}
+              onChange={handleChange('startDate')}
               error={
                 touched.startDate && errors.startDate
                   ? errors.startDate
@@ -192,6 +201,8 @@ const RentStep3 = ({
               label="Ажиллах хоног"
               keyboardType="number-pad"
               value={values.rentDay}
+              ref={(el: TextInput | null) => (refs.current[0] = el)}
+              onSubmitEditing={() => onSubmitEditing(0)}
               onBlur={handleBlur('rentDay')}
               onChangeText={handleChange('rentDay')}
               error={
@@ -202,6 +213,8 @@ const RentStep3 = ({
               icon={TimeSetting01Icon}
               label="Ажиллах цаг"
               keyboardType="number-pad"
+              ref={(el: TextInput | null) => (refs.current[1] = el)}
+              onSubmitEditing={() => onSubmitEditing(1)}
               value={values.motHour}
               onBlur={handleBlur('motHour')}
               onChangeText={handleChange('motHour')}
@@ -230,6 +243,8 @@ const RentStep3 = ({
                 value={values.price}
                 onBlur={handleBlur('price')}
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
+                ref={(el: TextInput | null) => (refs.current[2] = el)}
+                onSubmitEditing={() => onSubmitEditing(2)}
                 mask={moneyMask}
                 error={touched.price && errors.price ? errors.price : undefined}
               />
@@ -242,6 +257,8 @@ const RentStep3 = ({
               value={values.additionalAddress}
               onBlur={handleBlur('additionalAddress')}
               onChangeText={handleChange('additionalAddress')}
+              ref={(el: TextInput | null) => (refs.current[3] = el)}
+              onSubmitEditing={() => onSubmitEditing(3)}
               error={
                 touched.additionalAddress && errors.additionalAddress
                   ? errors.additionalAddress
@@ -254,6 +271,8 @@ const RentStep3 = ({
               value={values.additionalInfo}
               onBlur={handleBlur('additionalInfo')}
               onChangeText={handleChange('additionalInfo')}
+              returnKeyType="done"
+              onSubmitEditing={handleSubmit}
               error={
                 touched.additionalInfo && errors.additionalInfo
                   ? errors.additionalInfo

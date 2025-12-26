@@ -24,6 +24,7 @@ query getOrders(
         receiverMobile
         travelAt
         images
+        subscribed
         origin {
           id
           name

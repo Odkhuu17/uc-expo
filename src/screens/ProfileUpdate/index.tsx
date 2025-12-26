@@ -40,34 +40,27 @@ const ProfileUpdate = ({ navigation }: Props) => {
   const theme = useTheme();
   const { onPickImage } = useImagePick({ setImage: setAvatar });
 
-  const {
-    handleSubmit,
-    values,
-    errors,
-    touched,
-    handleBlur,
-    handleChange,
-    setFieldValue,
-  } = useFormik({
-    initialValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      registerNum: user?.registerNum || '',
-    },
-    validationSchema: schema,
-    onSubmit: async () => {
-      await updateUser({
-        variables: {
-          avatar: avatar ? imageToFile(avatar) : undefined,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          registerNum: values.registerNum,
-          id: user?.id!,
-        },
-      });
-      setSuccessModal(true);
-    },
-  });
+  const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
+    useFormik({
+      initialValues: {
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+        registerNum: user?.registerNum || '',
+      },
+      validationSchema: schema,
+      onSubmit: async () => {
+        await updateUser({
+          variables: {
+            avatar: avatar ? imageToFile(avatar) : undefined,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            registerNum: values.registerNum,
+            id: user?.id!,
+          },
+        });
+        setSuccessModal(true);
+      },
+    });
 
   const handleCloseSuccessModal = () => {
     navigation.goBack();
@@ -121,6 +114,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
               <Input
                 label="Овог"
                 placeholder="Овог"
+                editable={!user?.verified}
                 value={values.firstName}
                 onChangeText={handleChange('firstName')}
                 onBlur={handleBlur('firstName')}
@@ -133,6 +127,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
               <Input
                 label="Нэр"
                 placeholder="Нэр"
+                editable={!user?.verified}
                 value={values.lastName}
                 onChangeText={handleChange('lastName')}
                 onBlur={handleBlur('lastName')}
@@ -145,6 +140,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
               <Input
                 label="Регистрийн дугаар"
                 placeholder="Регистрийн дугаар"
+                editable={!user?.verified}
                 value={values.registerNum}
                 onChangeText={handleChange('registerNum')}
                 onBlur={handleBlur('registerNum')}

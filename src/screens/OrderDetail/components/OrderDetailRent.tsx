@@ -5,6 +5,7 @@ import { Text } from '@/components/Theme';
 import { moneyFormat } from '@/utils/helpers';
 import { SingleRow, Title } from '../components';
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
+import SingleCallRow from './SingleCallRow';
 
 interface Props {
   order: GetOrderDetailQuery['order'];
@@ -30,7 +31,7 @@ const OrderDetailRent = ({ order }: Props) => {
         <SingleRow label="Хаягийн нэр:" value={order?.origin?.address1} />
         <SingleRow
           label="Хаягийн дэлгэрэнгүй:"
-          value={order?.origin?.address2}
+          value={order?.data?.additional_address}
         />
       </BoxContainer>
       <BoxContainer gap="s">
@@ -46,8 +47,12 @@ const OrderDetailRent = ({ order }: Props) => {
           label="Ажил эхлэх өдөр:"
           value={order?.travelAt && dayjs(order?.travelAt).format('YYYY-MM-DD')}
         />
-        <SingleRow label="Түрээслэх хоног:" value={order?.data?.rentDay} />
-        <SingleRow label="Ажиллах хоног:" value={order?.data?.motHour} />
+        <SingleRow label="Ажиллах хоног:" value={order?.data?.rent_day} />
+        <SingleRow label="Ажиллах цаг:" value={order?.data?.mot_hour} />
+        <SingleRow
+          label="Захиалгын дэлгэрэнгүй:"
+          value={order?.data?.additional_info}
+        />
       </BoxContainer>
       {order?.data?.additionalInfo && (
         <BoxContainer gap="s">
@@ -61,6 +66,11 @@ const OrderDetailRent = ({ order }: Props) => {
           <Text variant="body2">{order?.data?.additionalAddress}</Text>
         </BoxContainer>
       )}
+      <BoxContainer gap="s">
+        <Title title="Захиалагчийн мэдээлэл" />
+        <SingleRow label="Нэр:" value={order?.user?.firstName} />
+        <SingleCallRow label="Утас:" value={order?.user?.mobile} />
+      </BoxContainer>
     </>
   );
 };

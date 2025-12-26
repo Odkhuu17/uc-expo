@@ -1,9 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
+
 import { Button } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
 import { INavigation } from '@/navigations';
 import { useAppSelector } from '@/redux/hooks';
-import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
@@ -14,7 +15,9 @@ const Status = ({ item }: Props) => {
   const { mode } = useAppSelector(state => state.general);
   const navigation = useNavigation<INavigation>();
 
-  const onPressEdit = () => {};
+  const onPressEdit = () => {
+    navigation.navigate('OrderCreateOrEdit', { number: item?.number });
+  };
 
   return (
     <Box

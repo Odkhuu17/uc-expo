@@ -37,6 +37,7 @@ const InputTextArea = ({
     () => [
       {
         padding: theme.spacing.s,
+        height: '100%',
         ...theme.textVariants[getTextVariant()],
         fontWeight: 'normal',
       } as TextStyle,

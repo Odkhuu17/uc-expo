@@ -45,8 +45,8 @@ const SelectOption = ({ onPress, image, label, selected }: Props) => {
 
 const css = StyleSheet.create({
   img: {
-    height: 40,
-    width: 40,
+    height: 60,
+    width: 60,
   },
 });
 

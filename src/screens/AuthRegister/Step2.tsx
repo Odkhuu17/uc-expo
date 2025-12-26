@@ -10,7 +10,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { TextInput } from 'react-native';
 
-import { Button, MsgModal } from '@/components';
+import { Button, ModalMsg } from '@/components';
 import Input from '@/components/Input';
 import { useAppSelector } from '@/redux/hooks';
 import { INavigation } from '@/navigations';
@@ -123,7 +123,7 @@ const Step2 = ({ phoneNumber }: Props) => {
           }
         />
         <Input
-          label="Регистр эсвэл иргэний үнэмлэхний дугаар"
+          label="Регистр дугаар"
           placeholder="Регистр эсвэл иргэний үнэмлэхний дугаар"
           isRequired
           width={270}
@@ -205,7 +205,7 @@ const Step2 = ({ phoneNumber }: Props) => {
           onPress={handleSubmit}
         />
       </Box>
-      <MsgModal
+      <ModalMsg
         type="success"
         msg="Та амжилттай бүртгүүллээ"
         handleClose={handleCloseSuccessModal}

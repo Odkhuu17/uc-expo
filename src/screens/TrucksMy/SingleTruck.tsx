@@ -82,7 +82,7 @@ const SingleTruck = ({ item, refetch }: Props) => {
   const isRent = isRentOrder(item?.taxon?.name);
 
   const onPressExtendSubscription = () => {
-    navigation.navigate(`/profile/trucks/${item?.id}/membership`);
+    navigation.navigate('TruckSubscription', { truckId: item?.id });
   };
 
   return (
@@ -119,7 +119,7 @@ const SingleTruck = ({ item, refetch }: Props) => {
         {item?.verifications?.edges?.[0]?.node?.status === 'pending' && (
           <Progress sec={15} onFinish={refetch} />
         )}
-        {item?.verifications?.edges?.[0]?.node?.field5 && (
+        {!item?.verified && item?.verifications?.edges?.[0]?.node?.field5 && (
           <Warning
             type="error"
             description={item?.verifications?.edges?.[0]?.node?.field5}

@@ -59,11 +59,11 @@ const OrderDetail = ({ navigation, route }: Props) => {
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
 
   const onPressEdit = () => {
-    navigation.navigate(`/orders/${number}/edit`);
+    navigation.navigate('OrderCreateOrEdit', { number });
   };
 
   const onPressRequests = () => {
-    navigation.navigate(`/orders/${number}/requests`);
+    navigation.navigate('OrderRequests', { number });
   };
 
   const onShowImageView = () => {
@@ -192,6 +192,11 @@ const OrderDetail = ({ navigation, route }: Props) => {
                     )}
                   />
                   <SingleRow
+                    backgroundColor={
+                      data?.order?.myRequest?.status === 'pending'
+                        ? 'pending'
+                        : 'success'
+                    }
                     label="Төлөв:"
                     value={
                       data?.order?.myRequest?.status === 'pending'

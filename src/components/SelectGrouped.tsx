@@ -59,7 +59,7 @@ function Select({
         <Pressable onPress={onPress}>
           <InputContainer width={width} size={size}>
             {icon && <InputIcon position="left" icon={icon} />}
-            <Box style={style} flex={1}>
+            <Box style={style} flex={1} alignItems="center" flexDirection="row">
               <Text
                 flex={1}
                 variant={getTextVariant()}

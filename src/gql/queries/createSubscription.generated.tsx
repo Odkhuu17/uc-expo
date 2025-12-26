@@ -11,7 +11,7 @@ export type CreateSubscriptionMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, payments: Array<{ __typename?: 'Payment', id: string }> } };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, payments: Array<{ __typename?: 'Payment', id: string, source?: any }> } };
 
 
 export const CreateSubscriptionDocument = gql`
@@ -22,6 +22,7 @@ export const CreateSubscriptionDocument = gql`
     id
     payments {
       id
+      source
     }
   }
 }

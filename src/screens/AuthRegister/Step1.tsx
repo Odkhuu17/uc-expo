@@ -32,11 +32,17 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
       authCheckLogin({
         variables: {
           login: values.login,
-          sendToken: true,
+          sendToken: false,
         },
-      }).then(({ data }) => {
+      }).then(async ({ data }) => {
         if (!data?.exists.exists) {
           setPhoneNumber(values.login);
+          await authCheckLogin({
+            variables: {
+              login: values.login,
+              sendToken: true,
+            },
+          });
           setStep(2);
         } else {
           navigation.navigate('MsgModal', {

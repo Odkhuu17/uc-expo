@@ -35,6 +35,7 @@ const ProfileScreen = ({ navigation }: Props) => {
       fetchPolicy: 'no-cache',
     },
   );
+
   const dispatch = useAppDispatch();
   const [hasPendingUserVerification, setHasPendingUserVerification] =
     useState(false);
@@ -75,7 +76,7 @@ const ProfileScreen = ({ navigation }: Props) => {
   };
 
   const onPressVerification = () => {
-    navigation.navigate('/profile/user/verify');
+    navigation.navigate('DriverVerify');
   };
 
   const onLogout = () => {
@@ -126,7 +127,7 @@ const ProfileScreen = ({ navigation }: Props) => {
                   <>
                     {userData?.me?.verifications?.edges?.[0]?.node?.status ===
                     'pending' ? (
-                      <Progress sec={30} onFinish={getUser} />
+                      <Progress sec={15} onFinish={getUser} />
                     ) : (
                       <Warning description="Таны бүртгэл баталгаажаагүй байна! Та бүртгэлээ баталгаажуулсны дараа манай системийг ашиглах боломжтой." />
                     )}

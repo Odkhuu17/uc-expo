@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { Container, Loader, ModalMsg, HeaderNormal } from '@/components';
 import { Box } from '@/components/Theme';
 import { isRentOrder } from '@/utils/helpers';
-import searchClient from '@/utils/searchkit';
+// import searchClient from '@/utils/searchkit';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
@@ -37,11 +37,15 @@ const deliverySchema = yup.object().shape({
     otherwise: schema => schema,
   }),
   carType: yup.string().required('Энэ талбар хоосон байна!'),
-  additionalInfo: yup.string(),
+  additionalInfo: yup.string().required('Энэ талбар хоосон байна!'),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
   receiverMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
   senderName: yup.string(),
   senderMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
+  additionalAddressOrigin: yup.string().required('Энэ талбар хоосон байна!'),
+  additionalAddressDestination: yup
+    .string()
+    .required('Энэ талбар хоосон байна!'),
 });
 
 const rentSchema = yup.object().shape({
@@ -58,7 +62,7 @@ const rentSchema = yup.object().shape({
     otherwise: schema => schema,
   }),
   additionalInfo: yup.string().required('Энэ талбар хоосон байна!'),
-  additionalAddress: yup.string(),
+  additionalAddress: yup.string().required('Энэ талбар хоосон байна!'),
 });
 
 interface Props {
@@ -109,6 +113,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
       vatIncluded: false,
       priceNegotiable: false,
       price: '',
+      additionalAddressOrigin: '',
+      additionalAddressDestination: '',
       additionalInfo: '',
       receiverName: '',
       receiverMobile: '',
@@ -137,6 +143,9 @@ const OrderCreate = ({ navigation, route }: Props) => {
               price: values.priceNegotiable ? undefined : Number(values.price),
               data: {
                 additionalInfo: values.additionalInfo,
+                additionalAddressOrigin: values.additionalAddressOrigin,
+                additionalAddressDestination:
+                  values.additionalAddressDestination,
               },
               receiverName: values.receiverName,
               receiverMobile: values.receiverMobile,
@@ -168,6 +177,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
     validationSchema: rentSchema,
     onSubmit: async () => {
       const values = rentFormik.values;
+      console.log('wfklwhfkwef');
+
       if (orderNumber) {
         await updateOrder({
           variables: {
@@ -255,12 +266,16 @@ const OrderCreate = ({ navigation, route }: Props) => {
           vatIncluded: data?.order?.vatIncluded || false,
           priceNegotiable: data?.order?.price ? false : true,
           price: String(data?.order?.price || ''),
-          additionalInfo: data?.order?.data?.additionalInfo || '',
+          additionalInfo: data?.order?.data?.additional_info || '',
           receiverName: data?.order?.receiverName || '',
           receiverMobile: data?.order?.receiverMobile || '',
           senderName: data?.order?.senderName || '',
           senderMobile: data?.order?.senderMobile || '',
           carType: data?.order?.carType || '',
+          additionalAddressOrigin:
+            data?.order?.data?.additional_address_origin || '',
+          additionalAddressDestination:
+            data?.order?.data?.additional_address_destination || '',
         });
       }
     }
@@ -301,7 +316,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
               setSelectedLocation={setSelectedOption}
               createdOrigin={createdOrigin}
               createdDestination={createdDestination}
-              formik={deliveryFormik}
+              formik={rentFormik}
               setStep={setStep}
               number={number}
               setImageObjects={setImageObjects}

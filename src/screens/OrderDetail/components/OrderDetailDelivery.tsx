@@ -6,12 +6,14 @@ import { moneyFormat } from '@/utils/helpers';
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import SingleRow from './SingleRow';
 import Title from './Title';
+import SingleCallRow from './SingleCallRow';
 
 interface Props {
   order: GetOrderDetailQuery['order'];
 }
 
 const OrderDetailDelivery = ({ order }: Props) => {
+  console.log(order, 'order---delivery');
   return (
     <>
       <BoxContainer gap="s">
@@ -31,7 +33,7 @@ const OrderDetailDelivery = ({ order }: Props) => {
         <SingleRow label="Хаягийн нэр:" value={order?.origin?.address1} />
         <SingleRow
           label="Хаягийн дэлгэрэнгүй:"
-          value={order?.origin?.address2}
+          value={order?.data?.additional_address_origin}
         />
       </BoxContainer>
       <BoxContainer gap="s">
@@ -57,7 +59,7 @@ const OrderDetailDelivery = ({ order }: Props) => {
         <SingleRow label="Хаягийн нэр:" value={order?.destination?.address1} />
         <SingleRow
           label="Хаягийн дэлгэрэнгүй:"
-          value={order?.destination?.address2}
+          value={order?.data?.additional_address_destination}
         />
       </BoxContainer>
       <BoxContainer gap="s">
@@ -89,12 +91,12 @@ const OrderDetailDelivery = ({ order }: Props) => {
       <BoxContainer gap="s">
         <Title title="Илгээгчийн мэдээлэл" />
         <SingleRow label="Овог нэр:" value={order?.senderName} />
-        <SingleRow label="Утас:" value={order?.senderMobile} />
+        <SingleCallRow label="Утас:" value={order?.senderMobile} />
       </BoxContainer>
       <BoxContainer gap="s">
         <Title title="Хүлээн авагчийн мэдээлэл" />
         <SingleRow label="Овог нэр:" value={order?.receiverName} />
-        <SingleRow label="Утас:" value={order?.receiverMobile} />
+        <SingleCallRow label="Утас:" value={order?.receiverMobile} />
       </BoxContainer>
     </>
   );
