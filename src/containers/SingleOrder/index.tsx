@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { ReactNode, useState } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
-import ImageView from 'react-native-image-viewing';
 import { useNavigation } from '@react-navigation/native';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Location05Icon, PackageIcon } from '@hugeicons/core-free-icons';
@@ -36,18 +35,12 @@ const useStyles = makeStyles(theme => ({
 const SingleOrder = ({ item, children }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
-  const [isImageViewVisible, setIsImageViewVisible] = useState(false);
   const navigation = useNavigation<INavigation>();
   const { mode } = useAppSelector(state => state.general);
-  const { user } = useAppSelector(state => state.auth);
   const [msgModal, setMsgModal] = useState(false);
 
   const hasImages = item?.images && item?.images.length > 0;
   const isRent = isRentOrder(item?.carType);
-
-  const onPressImage = () => {
-    setIsImageViewVisible(true);
-  };
 
   const onNavigateToDetail = () => {
     if (mode === 'shipper') {
@@ -119,15 +112,13 @@ const SingleOrder = ({ item, children }: Props) => {
               justifyContent="center"
             >
               {hasImages ? (
-                <TouchableOpacity onPress={onPressImage}>
-                  <Image
-                    source={{
-                      uri: getImageUrl(item.images![0]),
-                    }}
-                    resizeMode="cover"
-                    style={styles.image}
-                  />
-                </TouchableOpacity>
+                <Image
+                  source={{
+                    uri: getImageUrl(item.images![0]),
+                  }}
+                  resizeMode="cover"
+                  style={styles.image}
+                />
               ) : (
                 <HugeiconsIcon
                   icon={PackageIcon}
@@ -217,14 +208,6 @@ const SingleOrder = ({ item, children }: Props) => {
           {children}
         </BoxContainer>
       </TouchableOpacity>
-      {hasImages && (
-        <ImageView
-          images={item?.images?.map(img => ({ uri: getImageUrl(img) })) || []}
-          imageIndex={0}
-          visible={isImageViewVisible}
-          onRequestClose={() => setIsImageViewVisible(false)}
-        />
-      )}
       <ModalMsg
         type="error"
         visible={msgModal}

@@ -241,6 +241,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
       setCreatedDestination(data?.order?.destination || null);
       setImageObjects(data?.order?.imageObjects || []);
       setVideo(data?.order?.video || null);
+      setAudio(data?.order?.audio || null);
 
       if (isRentO) {
         rentFormik.setValues({

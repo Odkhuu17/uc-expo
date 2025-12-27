@@ -42,7 +42,7 @@ const Video = ({ video }: Props) => {
     <Box flex={1} alignItems="center" flexDirection="row">
       <Box flexDirection="row" alignItems="center" gap="s">
         <ButtonIcon icon={PlayIcon} onPress={onPlay} />
-        <Text>
+        <Text variant='body2' color="grey4">
           {durationSeconds != null
             ? dayjs(durationSeconds * 1000).format('mm:ss')
             : ''}

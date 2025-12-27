@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     borderWidth: 3,
     borderColor: theme.colors.white,
-    marginTop: -20,
+    marginTop: -10,
   },
 }));
 
@@ -41,7 +41,7 @@ const CreateOrderTabButton = ({ onPress }: { onPress: () => void }) => {
       <Pressable
         accessibilityRole="button"
         onPress={onPress}
-        style={({ pressed }) => [styles.middleTab]}
+        style={styles.middleTab}
       >
         <HugeiconsIcon
           icon={PlusSignIcon}
@@ -77,11 +77,6 @@ const Tabs = () => {
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.grey4,
-        tabBarStyle: {
-          height: theme.button.l + theme.spacing.s,
-          paddingBottom: theme.spacing.s,
-          paddingTop: theme.spacing.xs,
-        },
       }}
     >
       {user?.verified && (
@@ -105,7 +100,6 @@ const Tabs = () => {
             name="CreateOrder"
             component={CreateOrderPlaceholder}
             options={{
-              tabBarLabel: '',
               tabBarShowLabel: false,
               tabBarButton: () => (
                 <CreateOrderTabButton onPress={goToCreateOrder} />
