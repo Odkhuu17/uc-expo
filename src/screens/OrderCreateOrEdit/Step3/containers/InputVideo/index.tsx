@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Delete03Icon, PlusSignIcon } from '@hugeicons/core-free-icons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -10,6 +10,7 @@ import InputLabel from '@/components/InputLabel';
 import { useAttachOrderVideoMutation } from '@/gql/mutations/attachOrderVideo.generated';
 import { videoToFile } from '@/utils/fileHelpers';
 import { useDestroyOrderVideoMutation } from '@/gql/mutations/destroyOrderVideo.generated';
+import Video from './Video';
 
 interface Props {
   number: string;
@@ -42,12 +43,13 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
       quality: 0.5,
     });
     if (result.assets && result.assets.length > 0) {
-      attachOrderVideo({
+      const { data } = await attachOrderVideo({
         variables: {
           number,
           video: videoToFile(result.assets[0].uri || ''),
         },
       });
+      setVideo(data?.attachOrderVideo?.video || null);
     }
   };
 
@@ -82,11 +84,7 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
         {video ? (
           <Box width="100%" height="100%">
             <Box overflow="hidden" borderRadius="s" width="100%" height="100%">
-              <Image
-                source={{ uri: video }}
-                style={css.img}
-                resizeMode="contain"
-              />
+              <Video video={video} />
             </Box>
             {destroying ? (
               <Box
@@ -97,7 +95,7 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
                 left={0}
                 alignItems="center"
                 justifyContent="center"
-                backgroundColor='backdrop'
+                backgroundColor="backdrop"
               >
                 <Loader color={theme.colors.white} />
               </Box>
@@ -133,12 +131,5 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
     </Box>
   );
 };
-
-const css = StyleSheet.create({
-  img: {
-    width: '100%',
-    height: '100%',
-  },
-});
 
 export default InputVideo;
