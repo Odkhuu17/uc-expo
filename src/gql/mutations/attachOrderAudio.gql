@@ -1,0 +1,7 @@
+mutation AttachOrderAudio($number: String!, $audio: Upload!) {
+  attachOrderAudio(input: { number: $number, audio: $audio }) {
+    id
+    number
+    audio
+  }
+}

@@ -1,0 +1,96 @@
+mutation OrderUpdate($input: updateOrderInput!) {
+  updateOrder(input: $input) {
+    id
+    number
+    title
+    description
+    status
+    published
+    my
+    requested
+    subscribed
+    packageType
+    packageWeight
+    packageDimensions
+    price
+    vatIncluded
+    carType
+    carWeight
+    senderName
+    senderMobile
+    receiverName
+    receiverMobile
+    travelAt
+    travelDistance
+    travelDuration
+    data
+    audio
+    video
+    images
+    imageObjects {
+      id
+      url
+      fileName
+      recordId
+      recordType
+    }
+    user {
+      id
+      firstName
+      lastName
+      nickName
+      mobile
+      email
+    }
+    origin {
+      id
+      name
+      address1
+      address2
+      latitude
+      longitude
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
+      }
+    }
+    destination {
+      id
+      name
+      address1
+      address2
+      latitude
+      longitude
+      country {
+        id
+        name
+      }
+      state {
+        id
+        name
+      }
+      district {
+        id
+        name
+      }
+      quarter {
+        id
+        name
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}

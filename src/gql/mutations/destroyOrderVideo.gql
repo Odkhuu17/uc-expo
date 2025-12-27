@@ -1,0 +1,6 @@
+mutation DestroyOrderVideo($number: String!) {
+  destroyOrderVideo(input: { number: $number }) {
+    id
+    video
+  }
+}

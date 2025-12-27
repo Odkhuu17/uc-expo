@@ -1,0 +1,68 @@
+query GetOrderRequests(
+  $number: String
+  $first: Int
+  $after: String
+  $before: String
+  $last: Int
+  $offset: Int
+  $filter: DeliveryRequestFilter
+  $sort: SortFilter = { field: "created_at", direction: desc }
+) {
+  order(number: $number) {
+    id
+    number
+    title
+    status
+    carType
+    deliveryRequests(
+      first: $first
+      after: $after
+      before: $before
+      last: $last
+      offset: $offset
+      filter: $filter
+      sort: $sort
+    ) {
+      edges {
+        cursor
+        node {
+          id
+          price
+          status
+          travelAt
+          active
+          user {
+            id
+            firstName
+            lastName
+            nickName
+            mobile
+            email
+          }
+          order {
+            id
+            number
+            title
+            status
+          }
+          createdAt
+          updatedAt
+        }
+      }
+      nodes {
+        id
+        price
+        status
+        travelAt
+        active
+      }
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+}

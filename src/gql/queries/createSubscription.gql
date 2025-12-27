@@ -1,0 +1,19 @@
+mutation CreateSubscription(
+  $truckId: ID!
+  $subscriptionPlanId: ID!
+  $userId: ID!
+) {
+  createSubscription(
+    input: {
+      truckId: $truckId
+      subscriptionPlanId: $subscriptionPlanId
+      userId: $userId
+    }
+  ) {
+    id
+    payments {
+      id
+      source
+    }
+  }
+}
