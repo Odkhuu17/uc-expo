@@ -30,6 +30,7 @@ export type Address = BaseModelInterface & {
   districtId?: Maybe<Scalars['ID']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   firstName?: Maybe<Scalars['String']['output']>;
+  fullName?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
   latitude?: Maybe<Scalars['String']['output']>;
@@ -1790,8 +1791,10 @@ export type TaxonEdge = {
 };
 
 export type TaxonFilter = {
+  code?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
+  name?: InputMaybe<StringFilter>;
   parentId?: InputMaybe<IdFilter>;
   updatedAt?: InputMaybe<DateFilter>;
 };

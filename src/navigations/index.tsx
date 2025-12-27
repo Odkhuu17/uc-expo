@@ -39,7 +39,6 @@ export type TAppRoutes = {
   OrderDetail: {
     number: string;
   };
-  OrdersMy: undefined;
   OrderCreateOrEdit: {
     number?: string;
   };

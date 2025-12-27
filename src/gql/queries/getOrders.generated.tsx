@@ -1,6 +1,7 @@
 import type * as Types from '../graphql';
 
 import { gql } from '@apollo/client';
+import { OrderFragmentFragmentDoc } from '../fragments/order.generated';
 import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
@@ -20,74 +21,7 @@ export const GetOrdersDocument = gql`
   orders(first: $first, after: $after, filter: $filter, sort: $sort) {
     edges {
       node {
-        id
-        number
-        title
-        status
-        published
-        my
-        requested
-        packageType
-        price
-        carType
-        carWeight
-        senderName
-        senderMobile
-        receiverName
-        receiverMobile
-        travelAt
-        images
-        subscribed
-        origin {
-          id
-          name
-          address1
-          address2
-          latitude
-          longitude
-          country {
-            id
-            name
-          }
-          state {
-            id
-            name
-          }
-          district {
-            id
-            name
-          }
-          quarter {
-            id
-            name
-          }
-        }
-        destination {
-          id
-          name
-          address1
-          address2
-          latitude
-          longitude
-          country {
-            id
-            name
-          }
-          state {
-            id
-            name
-          }
-          district {
-            id
-            name
-          }
-          quarter {
-            id
-            name
-          }
-        }
-        createdAt
-        updatedAt
+        ...OrderFragment
       }
       cursor
     }
@@ -100,7 +34,7 @@ export const GetOrdersDocument = gql`
     totalCount
   }
 }
-    `;
+    ${OrderFragmentFragmentDoc}`;
 
 /**
  * __useGetOrdersQuery__

@@ -1,27 +1,14 @@
 import { useState } from 'react';
 
-import {
-  Container,
-  CustomFlatList,
-  Empty,
-  Loader,
-  HeaderNormal,
-  Button,
-  BottomContainer,
-} from '@/components';
+import { CustomFlatList, Empty, Loader } from '@/components';
 import SingleOrder from '@/containers/SingleOrder';
 import {
   GetOrdersMyQuery,
   useGetOrdersMyQuery,
 } from '@/gql/queries/getOrdersMy.generated';
-import { INavigationProps } from '@/navigations';
 import Status from '@/containers/SingleOrder/Status';
 
-interface Props {
-  navigation: INavigationProps<'OrdersMy'>['navigation'];
-}
-
-const OrdersMy = ({ navigation }: Props) => {
+const MyOrders = () => {
   const [isRefetching, setIsRefetching] = useState(false);
 
   const { data, loading, fetchMore, refetch } = useGetOrdersMyQuery({
@@ -38,10 +25,6 @@ const OrdersMy = ({ navigation }: Props) => {
     } finally {
       setIsRefetching(false);
     }
-  };
-
-  const onPressCreateOrder = () => {
-    navigation.navigate('OrderCreateOrEdit', { number: undefined });
   };
 
   const orders =
@@ -100,28 +83,22 @@ const OrdersMy = ({ navigation }: Props) => {
   };
 
   return (
-    <Container>
-      <HeaderNormal title="Миний захиалгууд" />
-      <CustomFlatList
-        data={orders}
-        loading={loading}
-        refreshing={isRefetching}
-        onRefresh={onRefresh}
-        renderItem={renderItem}
-        ListEmptyComponent={
-          <Empty
-            title="Захиалга олдсонгүй"
-            description="Одоогоор захиалга үүсээгүй байна."
-          />
-        }
-        onEndReached={onLoadMore}
-        ListFooterComponent={renderFooter}
-      />
-      <BottomContainer noInsets>
-        <Button title="Захиалга үүсгэх" onPress={onPressCreateOrder} />
-      </BottomContainer>
-    </Container>
+    <CustomFlatList
+      data={orders}
+      loading={loading}
+      refreshing={isRefetching}
+      onRefresh={onRefresh}
+      renderItem={renderItem}
+      ListEmptyComponent={
+        <Empty
+          title="Захиалга олдсонгүй"
+          description="Одоогоор захиалга үүсээгүй байна."
+        />
+      }
+      onEndReached={onLoadMore}
+      ListFooterComponent={renderFooter}
+    />
   );
 };
 
-export default OrdersMy;
+export default MyOrders;

@@ -5,13 +5,14 @@ import { Alert } from 'react-native';
 interface Props {
   setImage: Dispatch<SetStateAction<string | null>>;
   onlyCamera?: boolean;
+  cameraType?: 'front' | 'back';
 }
 
-const useImagePick = ({ setImage, onlyCamera }: Props) => {
+const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
   const onLaunchCamera = async () => {
     const result = await launchCamera({
       mediaType: 'photo',
-      cameraType: 'front',
+      cameraType,
       quality: 0.5,
     });
     if (result.assets && result.assets.length > 0) {

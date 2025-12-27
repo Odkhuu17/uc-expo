@@ -7,74 +7,7 @@ query getOrders(
   orders(first: $first, after: $after, filter: $filter, sort: $sort) {
     edges {
       node {
-        id
-        number
-        title
-        status
-        published
-        my
-        requested
-        packageType
-        price
-        carType
-        carWeight
-        senderName
-        senderMobile
-        receiverName
-        receiverMobile
-        travelAt
-        images
-        subscribed
-        origin {
-          id
-          name
-          address1
-          address2
-          latitude
-          longitude
-          country {
-            id
-            name
-          }
-          state {
-            id
-            name
-          }
-          district {
-            id
-            name
-          }
-          quarter {
-            id
-            name
-          }
-        }
-        destination {
-          id
-          name
-          address1
-          address2
-          latitude
-          longitude
-          country {
-            id
-            name
-          }
-          state {
-            id
-            name
-          }
-          district {
-            id
-            name
-          }
-          quarter {
-            id
-            name
-          }
-        }
-        createdAt
-        updatedAt
+        ...OrderFragment
       }
       cursor
     }
