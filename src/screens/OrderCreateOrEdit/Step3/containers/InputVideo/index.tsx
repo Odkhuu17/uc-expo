@@ -53,6 +53,11 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
     }
   };
 
+  const onDestroyVideo = async () => {
+    await destroyOrderVideo({ variables: { number } });
+    setVideo(null);
+  };
+
   const onPickImage = async () => {
     Alert.alert('Бичлэг оруулах', 'Бичлэг оруулах төрлөө сонгоно уу!', [
       {
@@ -67,10 +72,6 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
     ]);
   };
 
-  const onDeleteVideo = () => {
-    setVideo(null);
-  };
-
   return (
     <Box>
       <InputLabel label={label} isRequired={isRequired} />
@@ -78,36 +79,23 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
         borderWidth={2}
         borderStyle="dashed"
         borderRadius="m"
-        height={100}
+        height={80}
         p={undefined}
+        overflow="hidden"
       >
-        {video ? (
-          <Box width="100%" height="100%">
-            <Box overflow="hidden" borderRadius="s" width="100%" height="100%">
-              <Video video={video} />
-            </Box>
-            {destroying ? (
-              <Box
-                position="absolute"
-                top={0}
-                right={0}
-                bottom={0}
-                left={0}
-                alignItems="center"
-                justifyContent="center"
-                backgroundColor="backdrop"
-              >
-                <Loader color={theme.colors.white} />
-              </Box>
-            ) : (
-              <Box
-                position="absolute"
-                top={theme.spacing.m}
-                right={theme.spacing.m}
-              >
-                <ButtonIcon icon={Delete03Icon} onPress={onDeleteVideo} />
-              </Box>
-            )}
+        {loading || destroying ? (
+          <Box
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+            backgroundColor="backdrop"
+          >
+            <Loader color={theme.colors.white} />
+          </Box>
+        ) : video ? (
+          <Box flex={1} flexDirection="row" alignItems="center" px="m">
+            <Video video={video} />
+            <ButtonIcon icon={Delete03Icon} onPress={onDestroyVideo} />
           </Box>
         ) : (
           <TouchableOpacity onPress={onPickImage}>
@@ -119,11 +107,7 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
               gap="s"
               p="m"
             >
-              {loading ? (
-                <Loader />
-              ) : (
-                <HugeiconsIcon icon={PlusSignIcon} size={theme.icon.m} />
-              )}
+              <HugeiconsIcon icon={PlusSignIcon} size={theme.icon.m} />
             </Box>
           </TouchableOpacity>
         )}
