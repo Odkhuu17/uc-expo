@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from '@shopify/restyle';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-// import { OneSignal, LogLevel } from 'react-native-onesignal';
+import { OneSignal, LogLevel } from 'react-native-onesignal';
 
 import { theme } from '@/components/Theme';
 import ApolloProvider from '@/apollo/Provider';
@@ -14,21 +14,21 @@ import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
 
 const App = () => {
-  // useEffect(() => {
-  //   try {
-  //     // Enable verbose logging for debugging (remove in production)
-  //     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-  //     // Initialize with your OneSignal App ID
-  //     OneSignal.initialize('468ef767-c53a-4cdb-a593-2993cee373d1');
-  //     // Use this method to prompt for push notifications.
-  //     // We recommend removing this method after testing and instead use In-App Messages to prompt for notification permission.
-  //     OneSignal.Notifications.requestPermission(false);
+  useEffect(() => {
+    try {
+      // Enable verbose logging for debugging (remove in production)
+      OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+      // Initialize with your OneSignal App ID
+      OneSignal.initialize('468ef767-c53a-4cdb-a593-2993cee373d1');
+      // Use this method to prompt for push notifications.
+      // We recommend removing this method after testing and instead use In-App Messages to prompt for notification permission.
+      OneSignal.Notifications.requestPermission(false);
 
-  //     console.log('OneSignal initialized successfully');
-  //   } catch (error) {
-  //     console.error('OneSignal initialization error:', error);
-  //   }
-  // }, []);
+      console.log('OneSignal initialized successfully');
+    } catch (error) {
+      console.error('OneSignal initialization error:', error);
+    }
+  }, []);
 
   return (
     <GestureHandlerRootView>
