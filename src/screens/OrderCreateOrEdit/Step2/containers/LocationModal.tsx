@@ -2,7 +2,7 @@ import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MapView from 'react-native-maps';
+import MapView, { Region } from 'react-native-maps';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowRight01Icon, Location05Icon } from '@hugeicons/core-free-icons';
 
@@ -19,6 +19,7 @@ interface Props {
     SetStateAction<NonNullable<AddressSearchQuery['searchAddress']>[0] | null>
   >;
   location: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
+  origin?: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
   mapRef: RefObject<MapView | null>;
   setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
   isRent?: boolean;
@@ -28,6 +29,7 @@ const LocationModal = ({
   ref,
   setLocation,
   location,
+  origin,
   mapRef,
   setShowChooseFromMap,
   isRent,
@@ -90,9 +92,56 @@ const LocationModal = ({
               const onPressAddress = () => {
                 setLocation(address);
                 ref.current?.dismiss();
-                mapRef.current?.animateToRegion({
+
+                const selectedCoordinate = {
                   latitude: address?._source?.location?.lat || 47.92123,
                   longitude: address?._source?.location?.lon || 106.918556,
+                };
+
+                const originCoordinate = origin
+                  ? {
+                      latitude: origin?._source?.location?.lat || 47.92123,
+                      longitude: origin?._source?.location?.lon || 106.918556,
+                    }
+                  : null;
+
+                if (originCoordinate) {
+                  const minLat = Math.min(
+                    selectedCoordinate.latitude,
+                    originCoordinate.latitude,
+                  );
+                  const maxLat = Math.max(
+                    selectedCoordinate.latitude,
+                    originCoordinate.latitude,
+                  );
+                  const minLon = Math.min(
+                    selectedCoordinate.longitude,
+                    originCoordinate.longitude,
+                  );
+                  const maxLon = Math.max(
+                    selectedCoordinate.longitude,
+                    originCoordinate.longitude,
+                  );
+
+                  const latitudeDelta = Math.max((maxLat - minLat) * 1.8, 0.05);
+                  const longitudeDelta = Math.max(
+                    (maxLon - minLon) * 1.8,
+                    0.05,
+                  );
+
+                  const region: Region = {
+                    latitude: (minLat + maxLat) / 2,
+                    longitude: (minLon + maxLon) / 2,
+                    latitudeDelta,
+                    longitudeDelta,
+                  };
+
+                  mapRef.current?.animateToRegion(region, 350);
+                  return;
+                }
+
+                mapRef.current?.animateToRegion({
+                  ...selectedCoordinate,
                   latitudeDelta: 0.05,
                   longitudeDelta: 0.05,
                 });

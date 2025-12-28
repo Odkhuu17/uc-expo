@@ -307,12 +307,14 @@ const Step2 = ({
         ref={originModalRef}
         setLocation={setOrigin}
         location={origin}
+        origin={destination}
         mapRef={mapRef}
         setShowChooseFromMap={setShowChooseFromMap}
         isRent={isRent}
       />
       <LocationModal
         ref={destinationModalRef}
+        origin={origin}
         setLocation={setDestination}
         location={destination}
         mapRef={mapRef}
