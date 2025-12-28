@@ -95,19 +95,7 @@ const Tabs = () => {
               ),
             }}
           />
-
-          <Tab.Screen
-            name="CreateOrder"
-            component={CreateOrderPlaceholder}
-            options={{
-              tabBarShowLabel: false,
-              tabBarButton: () => (
-                <CreateOrderTabButton onPress={goToCreateOrder} />
-              ),
-            }}
-          />
-
-          {mode === 'driver' && (
+          {mode === 'driver' ? (
             <Tab.Screen
               name="My delivery requests"
               component={DeliveryRequestsMy}
@@ -119,6 +107,17 @@ const Tabs = () => {
                     color={color}
                     size={size}
                   />
+                ),
+              }}
+            />
+          ) : (
+            <Tab.Screen
+              name="CreateOrder"
+              component={CreateOrderPlaceholder}
+              options={{
+                tabBarShowLabel: false,
+                tabBarButton: () => (
+                  <CreateOrderTabButton onPress={goToCreateOrder} />
                 ),
               }}
             />

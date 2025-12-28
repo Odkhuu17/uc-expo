@@ -9,9 +9,8 @@ import React, {
 // import { useInfiniteHits } from 'react-instantsearch';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import MapViewDirections from 'react-native-maps-directions';
 
-import { BottomContainer, Button, MapPin } from '@/components';
+import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
 import { CarTypes, ChooseFromMap } from './components';
@@ -207,7 +206,7 @@ const Step2 = ({
             onRegionChangeComplete={onRegionChangeComplete}
           >
             {!isRent && origin && destination && (
-              <MapViewDirections
+              <MapDirections
                 origin={{
                   latitude: origin?._source?.location?.lat || 0,
                   longitude: origin?._source?.location?.lon || 0,
@@ -216,9 +215,6 @@ const Step2 = ({
                   latitude: destination?._source?.location?.lat || 0,
                   longitude: destination?._source?.location?.lon || 0,
                 }}
-                strokeWidth={4}
-                strokeColor={theme.colors.primary}
-                apikey="AIzaSyB2B3VowVK7QRUuqwNpLFR8nXGDjDY9a7I"
               />
             )}
             {!isRent && origin && (

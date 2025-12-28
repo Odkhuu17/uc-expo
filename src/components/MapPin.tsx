@@ -24,7 +24,7 @@ const MapPin = ({ title }: Props) => {
           height={25}
           backgroundColor="primary"
           borderRadius="m"
-          px="m"
+          px="s"
           justifyContent="center"
         >
           <Text variant="body3" color="white">

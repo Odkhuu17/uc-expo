@@ -1,10 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 
-import { Container, Content, HeaderNormal, MapPin } from '@/components';
+import {
+  Container,
+  Content,
+  HeaderNormal,
+  MapDirections,
+  MapPin,
+} from '@/components';
 import { isRentOrder } from '@/utils/helpers';
 import { useGetTrackTruckQuery } from '@/gql/queries/trackTruck.generated';
 import { INavigationProps } from '@/navigations';
+import { rentCarTypes } from '@/constants/transportTypes';
+import { Box, useTheme } from '@/components/Theme';
 
 interface Props {
   route: INavigationProps<'TrackTruck'>['route'];
@@ -12,6 +21,7 @@ interface Props {
 
 const TrackTruck = ({ route }: Props) => {
   const { number } = route.params;
+  const theme = useTheme();
 
   const { data } = useGetTrackTruckQuery({
     variables: {
@@ -20,8 +30,10 @@ const TrackTruck = ({ route }: Props) => {
   });
 
   const isRent = isRentOrder(data?.order?.carType);
-
-  console.log(data);
+  const currentTrack =
+    data?.order?.acceptedDeliveryRequest?.truck?.currentTrack;
+  const destination = data?.order?.destination;
+  const origin = data?.order?.origin;
 
   return (
     <Container>
@@ -38,26 +50,63 @@ const TrackTruck = ({ route }: Props) => {
         >
           <Marker
             coordinate={{
-              latitude:
-                Number(
-                  data?.order?.acceptedDeliveryRequest?.truck?.currentTrack
-                    ?.latitude,
-                ) || 0,
-              longitude:
-                Number(
-                  data?.order?.acceptedDeliveryRequest?.truck?.currentTrack
-                    ?.longitude,
-                ) || 0,
+              latitude: Number(currentTrack?.latitude) || 0,
+              longitude: Number(currentTrack?.longitude) || 0,
             }}
-          ></Marker>
-          {!isRent && data?.order?.origin && (
+          >
+            <Box
+              width={50}
+              height={50}
+              borderRadius="full"
+              overflow="hidden"
+              backgroundColor="white"
+              borderWidth={2}
+              borderColor="primary"
+            >
+              <Image
+                source={
+                  isRent
+                    ? rentCarTypes?.find(i => i.name === data?.order?.carType)
+                        ?.image
+                    : undefined
+                }
+                resizeMode="contain"
+                style={css.img}
+              />
+            </Box>
+          </Marker>
+          {isRent && currentTrack && origin && (
+            <MapDirections
+              origin={{
+                latitude: Number(currentTrack?.latitude) || 0,
+                longitude: Number(currentTrack?.longitude) || 0,
+              }}
+              destination={{
+                latitude: Number(origin?.latitude) || 0,
+                longitude: Number(origin?.longitude) || 0,
+              }}
+            />
+          )}
+          {currentTrack && destination && !isRent && (
+            <MapDirections
+              origin={{
+                latitude: Number(currentTrack?.latitude) || 0,
+                longitude: Number(currentTrack?.longitude) || 0,
+              }}
+              destination={{
+                latitude: Number(destination?.latitude) || 0,
+                longitude: Number(destination?.longitude) || 0,
+              }}
+            />
+          )}
+          {data?.order?.origin && (
             <Marker
               coordinate={{
                 latitude: Number(data?.order?.origin?.latitude) || 0,
                 longitude: Number(data?.order?.origin?.longitude) || 0,
               }}
             >
-              <MapPin title="Очиж авах хаяг" />
+              <MapPin title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'} />
             </Marker>
           )}
           {!isRent && data?.order?.destination && (
@@ -79,6 +128,10 @@ const TrackTruck = ({ route }: Props) => {
 const css = StyleSheet.create({
   map: {
     flex: 1,
+  },
+  img: {
+    width: '100%',
+    height: '100%',
   },
 });
 

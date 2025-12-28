@@ -34,7 +34,7 @@ const useFeedLocation = () => {
   const sendLocation = async () => {
     try {
       const location = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 60000,
       });
 

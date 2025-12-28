@@ -42,8 +42,6 @@ const SinglePlan = ({ node, truckId }: Props) => {
     });
   };
 
-  console.log(data);
-
   return (
     <>
       <TouchableOpacity onPress={onPress}>

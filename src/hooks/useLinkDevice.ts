@@ -27,6 +27,7 @@ const useLinkDevice = () => {
       linkDevice({
         variables: {
           token,
+          subscribed: true,
           deviceType: getDeviceType() || 'UNKNOWN',
           deviceModel: getModel() || 'UNKNOWN',
           deviceOs: getSystemName() || Platform.OS,
