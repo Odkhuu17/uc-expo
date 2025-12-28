@@ -15,7 +15,9 @@ const useLinkDevice = () => {
   const [linkDevice] = useLinkDeviceMutation();
 
   useEffect(() => {
-    init();
+    if (user) {
+      init();
+    }
   }, [user]);
 
   const init = async () => {
