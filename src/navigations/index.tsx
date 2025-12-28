@@ -25,6 +25,9 @@ import TruckSubscription from '@/screens/TruckSubscription';
 import TrackTruck from '@/screens/TrackTruck';
 import OrderRequests from '@/screens/OrderRequests';
 import DriverVerify from '@/screens/DriverVerify';
+import useFeedLocation from '@/hooks/useFeedLocation';
+import useLinkDevice from '@/hooks/useLinkDevice';
+import useUpdateUser from '@/hooks/useUpdateUser';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -74,6 +77,10 @@ const Stack = createStackNavigator<TAppRoutes>();
 const AppNavigator = () => {
   const theme = useTheme();
   const { isAuthenticated } = useAppSelector(state => state.auth);
+
+  useFeedLocation();
+  useLinkDevice();
+  useUpdateUser();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

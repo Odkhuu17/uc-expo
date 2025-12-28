@@ -27,3 +27,4 @@ export { default as Select } from './Select';
 export { default as InputTextArea } from './InputTextArea';
 export { default as InputDate } from './InputDate';
 export { default as InputMask } from './InputMask';
+export { default as MapPin } from './MapPin';

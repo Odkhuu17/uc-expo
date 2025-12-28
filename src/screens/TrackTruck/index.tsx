@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-import { Container, Content, HeaderNormal } from '@/components';
+import { Container, Content, HeaderNormal, MapPin } from '@/components';
 import { isRentOrder } from '@/utils/helpers';
 import { useGetTrackTruckQuery } from '@/gql/queries/trackTruck.generated';
 import { INavigationProps } from '@/navigations';
-import MapPin from './MapPin';
 
 interface Props {
   route: INavigationProps<'TrackTruck'>['route'];
@@ -21,6 +20,8 @@ const TrackTruck = ({ route }: Props) => {
   });
 
   const isRent = isRentOrder(data?.order?.carType);
+
+  console.log(data);
 
   return (
     <Container>
@@ -48,7 +49,7 @@ const TrackTruck = ({ route }: Props) => {
                     ?.longitude,
                 ) || 0,
             }}
-          />
+          ></Marker>
           {!isRent && data?.order?.origin && (
             <Marker
               coordinate={{
@@ -56,7 +57,7 @@ const TrackTruck = ({ route }: Props) => {
                 longitude: Number(data?.order?.origin?.longitude) || 0,
               }}
             >
-              <MapPin />
+              <MapPin title="Очиж авах хаяг" />
             </Marker>
           )}
           {!isRent && data?.order?.destination && (
@@ -66,7 +67,7 @@ const TrackTruck = ({ route }: Props) => {
                 longitude: Number(data?.order?.destination?.longitude) || 0,
               }}
             >
-              <MapPin />
+              <MapPin title="Хүргэх хаяг" />
             </Marker>
           )}
         </MapView>

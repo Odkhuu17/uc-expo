@@ -5,9 +5,8 @@ import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowLeft01Icon, Location04Icon } from '@hugeicons/core-free-icons';
 
-import { Button, Marquee } from '@/components';
+import { Button, MapPin, Marquee } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
-import MapPin from './MapPin';
 import {
   SearchAddressQuery,
   useSearchAddressLazyQuery,
@@ -58,8 +57,8 @@ const ChooseFromMap = ({
       <MapView
         style={css.map}
         initialRegion={{
-          latitude: location?._source?.location.lat || 47.92123,
-          longitude: location?._source?.location.lon || 106.918556,
+          latitude: location?._source?.location?.lat || 47.92123,
+          longitude: location?._source?.location?.lon || 106.918556,
           latitudeDelta: 0.03,
           longitudeDelta: 0.03,
         }}

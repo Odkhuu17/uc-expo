@@ -1,0 +1,9 @@
+query GetFeedTrucks {
+  me {
+    id
+    trucks {
+      id
+      subscribed
+    }
+  }
+}

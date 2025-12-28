@@ -7,14 +7,14 @@ import React, {
   useState,
 } from 'react';
 // import { useInfiniteHits } from 'react-instantsearch';
-import MapView, { Marker, Polyline, Region } from 'react-native-maps';
+import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import MapViewDirections from 'react-native-maps-directions';
 
-import { BottomContainer, Button } from '@/components';
+import { BottomContainer, Button, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
-import { CarTypes, ChooseFromMap, MapPin } from './components';
-import { createArc } from './helpers';
+import { CarTypes, ChooseFromMap } from './components';
 import {
   AddressCreateMutation,
   useAddressCreateMutation,
@@ -94,17 +94,6 @@ const Step2 = ({
       : deliveryCarTypes.map(ct => ct.name),
   );
 
-  const arcCoordinates = createArc(
-    {
-      latitude: origin?._source?.location.lat || 0,
-      longitude: origin?._source?.location.lon || 0,
-    },
-    {
-      latitude: destination?._source?.location.lat || 0,
-      longitude: destination?._source?.location.lon || 0,
-    },
-  );
-
   const [createAddress, { loading: createLoading }] =
     useAddressCreateMutation();
 
@@ -166,8 +155,8 @@ const Step2 = ({
       variables: {
         address1: origin?._source?.nameFullMn || '',
         location: {
-          latitude: origin?._source?.location.lat || 0,
-          longitude: origin?._source?.location.lon || 0,
+          latitude: origin?._source?.location?.lat || 0,
+          longitude: origin?._source?.location?.lon || 0,
         },
         sdq: [originStateId, originDistrictId, originQuarterId],
       },
@@ -177,8 +166,8 @@ const Step2 = ({
       variables: {
         address1: destination?._source?.nameFullMn || '',
         location: {
-          latitude: destination?._source?.location.lat || 0,
-          longitude: destination?._source?.location.lon || 0,
+          latitude: destination?._source?.location?.lat || 0,
+          longitude: destination?._source?.location?.lon || 0,
         },
         sdq: [destinationStateId, destinationDistrictId, destinationQuarterId],
       },
@@ -218,30 +207,38 @@ const Step2 = ({
             onRegionChangeComplete={onRegionChangeComplete}
           >
             {!isRent && origin && destination && (
-              <Polyline
-                coordinates={arcCoordinates}
+              <MapViewDirections
+                origin={{
+                  latitude: origin?._source?.location?.lat || 0,
+                  longitude: origin?._source?.location?.lon || 0,
+                }}
+                destination={{
+                  latitude: destination?._source?.location?.lat || 0,
+                  longitude: destination?._source?.location?.lon || 0,
+                }}
+                strokeWidth={4}
                 strokeColor={theme.colors.primary}
-                strokeWidth={3}
+                apikey="AIzaSyB2B3VowVK7QRUuqwNpLFR8nXGDjDY9a7I"
               />
             )}
             {!isRent && origin && (
               <Marker
                 coordinate={{
-                  latitude: origin?._source?.location.lat || 0,
-                  longitude: origin?._source?.location.lon || 0,
+                  latitude: origin?._source?.location?.lat || 0,
+                  longitude: origin?._source?.location?.lon || 0,
                 }}
               >
-                <MapPin isMarker />
+                <MapPin title="Очиж авах хаяг" />
               </Marker>
             )}
             {!isRent && destination && (
               <Marker
                 coordinate={{
-                  latitude: destination?._source?.location.lat || 0,
-                  longitude: destination?._source?.location.lon || 0,
+                  latitude: destination?._source?.location?.lat || 0,
+                  longitude: destination?._source?.location?.lon || 0,
                 }}
               >
-                <MapPin isMarker />
+                <MapPin title="Хүргэх хаяг" />
               </Marker>
             )}
           </MapView>
@@ -267,7 +264,7 @@ const Step2 = ({
                 }
               />
             </Box>
-            {isRent && <MapPin />}
+            {isRent && <MapPin title="Ажиллах байршил" />}
             <Box bottom={0} position="absolute" left={0} right={0}>
               <BottomContainer>
                 <Box gap="m">
