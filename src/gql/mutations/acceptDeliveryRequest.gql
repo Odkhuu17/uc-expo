@@ -1,0 +1,25 @@
+mutation acceptDeliveryRequest($id: ID!, $clientMutationId: String) {
+  acceptDeliveryRequest(
+    input: { id: $id, clientMutationId: $clientMutationId }
+  ) {
+    id
+    price
+    status
+    travelAt
+    active
+    order {
+      id
+      number
+      title
+    }
+    user {
+      id
+      firstName
+      lastName
+      mobile
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}

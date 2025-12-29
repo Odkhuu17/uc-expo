@@ -34,6 +34,18 @@ const useClient = () => {
         `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
       ).toString('base64');
 
+      if (!credentials) {
+        return console.log('welihweweh');
+        // const data = await refreshAccessToken();
+
+        // return {
+        //   headers: {
+        //     ...prevContext.headers,
+        //     authorization: `Bearer ${data}`,
+        //   },
+        // };
+      }
+
       return {
         headers: {
           ...prevContext.headers,

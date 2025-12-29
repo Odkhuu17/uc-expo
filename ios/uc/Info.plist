@@ -24,6 +24,30 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>qpaywallet</string>
+		<string>khanbank</string>
+		<string>statebankmongolia</string>
+		<string>xacbank</string>
+		<string>tdbbank</string>
+		<string>socialpay-payment</string>
+		<string>most</string>
+		<string>nibank</string>
+		<string>ckbank</string>
+		<string>capitronbank</string>
+		<string>bogdbank</string>
+		<string>transbank</string>
+		<string>mbank</string>
+		<string>ard</string>
+		<string>toki</string>
+		<string>arig</string>
+		<string>Monpay</string>
+		<string>hipay</string>
+		<string>tdbwallet</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,6 +59,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app uses your location while you use the app.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -55,39 +81,12 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>tel</string>
-		<string>mailto</string>
-		<string>qpaywallet</string>
-		<string>khanbank</string>
-		<string>statebankmongolia</string>
-		<string>xacbank</string>
-		<string>tdbbank</string>
-		<string>socialpay-payment</string>
-		<string>most</string>
-		<string>nibank</string>
-		<string>ckbank</string>
-		<string>capitronbank</string>
- 		<string>bogdbank</string>
-		<string>transbank</string>
-		<string>mbank</string>
-		<string>ard</string>
-		<string>toki</string>
-		<string>arig</string>
-		<string>Monpay</string>
-		<string>hipay</string>
-		<string>tdbwallet</string>
-	</array>
 </dict>
 </plist>

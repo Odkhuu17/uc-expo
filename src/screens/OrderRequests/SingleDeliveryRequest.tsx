@@ -16,8 +16,8 @@ import {
 import { Box, Text, useTheme } from '@/components/Theme';
 import { moneyFormat } from '@/utils/helpers';
 import { INavigation } from '@/navigations';
-import { useCloseOrderMutation } from '@/gql/mutations/closeOrder.generated';
 import type { GetOrderRequestsQuery } from '@/gql/queries/orderRequests.generated';
+import { useAcceptDeliveryRequestMutation } from '@/gql/mutations/acceptDeliveryRequest.generated';
 
 type DeliveryRequestNode = NonNullable<
   NonNullable<
@@ -41,7 +41,8 @@ interface Props {
 }
 
 const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
-  const [closeOrder, { loading }] = useCloseOrderMutation();
+  const [acceptDeliveryRequest, { loading }] =
+    useAcceptDeliveryRequestMutation();
   const ref = useRef<BottomSheetModal | null>(null);
   const snapPoints = useMemo(() => [], []);
   const insets = useSafeAreaInsets();
@@ -68,10 +69,9 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
     validationSchema: schema,
     onSubmit: async () => {
       if (values?.mobile === item?.user?.mobile) {
-        await closeOrder({
+        await acceptDeliveryRequest({
           variables: {
-            number: number,
-            mobile: values.mobile,
+            id: item?.id,
           },
         }).finally(() => {
           ref?.current?.dismiss();

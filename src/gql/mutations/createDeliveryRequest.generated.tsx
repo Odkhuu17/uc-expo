@@ -13,7 +13,7 @@ export type CreateDeliveryRequestMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateDeliveryRequestMutation = { __typename?: 'Mutation', createDeliveryRequest?: { __typename?: 'DeliveryRequest', id: string, price: string, status: string, travelAt: any, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, email?: string } } };
+export type CreateDeliveryRequestMutation = { __typename?: 'Mutation', createDeliveryRequest?: { __typename?: 'DeliveryRequest', id: string, price: string, status: string, travelAt?: any, active: boolean, createdAt: any, updatedAt: any, order: { __typename?: 'Order', id: string, number?: string, title?: string }, user: { __typename?: 'User', id: string, firstName?: string, lastName?: string, mobile?: string, email?: string } } };
 
 
 export const CreateDeliveryRequestDocument = gql`

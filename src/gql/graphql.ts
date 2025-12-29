@@ -208,7 +208,7 @@ export type DeliveryRequest = BaseModelInterface & {
   orderId: Scalars['ID']['output'];
   price: Scalars['String']['output'];
   status: Scalars['String']['output'];
-  travelAt: Scalars['ISO8601DateTime']['output'];
+  travelAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   truck?: Maybe<Truck>;
   truckId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
@@ -456,6 +456,7 @@ export type ModelFilter = {
 export type Mutation = {
   __typename?: 'Mutation';
   acceptDeliveryRequest?: Maybe<DeliveryRequest>;
+  addSubscription?: Maybe<Subscription>;
   approveVerification?: Maybe<Verification>;
   attachOrderAudio?: Maybe<Order>;
   attachOrderImage?: Maybe<Order>;
@@ -529,6 +530,11 @@ export type Mutation = {
 
 export type MutationAcceptDeliveryRequestArgs = {
   input: AcceptDeliveryRequestInput;
+};
+
+
+export type MutationAddSubscriptionArgs = {
+  input: AddSubscriptionInput;
 };
 
 
@@ -1655,6 +1661,8 @@ export type Subscription = BaseModelInterface & {
   __typename?: 'Subscription';
   active: Scalars['Boolean']['output'];
   autoRenew: Scalars['Boolean']['output'];
+  capturedBy?: Maybe<User>;
+  comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['ISO8601DateTime']['output'];
   endAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -1684,6 +1692,9 @@ export type SubscriptionEdge = {
 };
 
 export type SubscriptionFilter = {
+  capturedBy?: InputMaybe<UserFilter>;
+  capturedById?: InputMaybe<IdFilter>;
+  comment?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
   paymentStatus?: InputMaybe<IntFilter>;
@@ -1961,6 +1972,7 @@ export type User = BaseModelInterface & {
   id: Scalars['ID']['output'];
   isAdmin: Scalars['Boolean']['output'];
   lastName?: Maybe<Scalars['String']['output']>;
+  lastTrackedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   mobile?: Maybe<Scalars['String']['output']>;
   nickName?: Maybe<Scalars['String']['output']>;
   orders: OrderConnection;
@@ -1973,6 +1985,7 @@ export type User = BaseModelInterface & {
   subscribedTaxons: Array<Scalars['String']['output']>;
   subscribedUntil?: Maybe<Scalars['ISO8601DateTime']['output']>;
   subscriptions: SubscriptionConnection;
+  tracks: TruckTrackConnection;
   trucks: Array<Truck>;
   updatedAt: Scalars['ISO8601DateTime']['output'];
   userAddresses: UserAddressConnection;
@@ -2019,6 +2032,17 @@ export type UserSubscriptionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<SubscriptionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
+};
+
+
+export type UserTracksArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<TruckTrackFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2156,6 +2180,13 @@ export type VerificationFilter = {
 export type AcceptDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+};
+
+export type AddSubscriptionInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  comment: Scalars['String']['input'];
+  subscriptionPlanId: Scalars['ID']['input'];
+  truckId: Scalars['String']['input'];
 };
 
 export type ApproveVerificationInput = {
