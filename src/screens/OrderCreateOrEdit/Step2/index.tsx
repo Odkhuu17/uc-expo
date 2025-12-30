@@ -113,6 +113,59 @@ const Step2 = ({
     }
   }, [searchData]);
 
+  useEffect(() => {
+    if (origin && destination) {
+      const originCoordinate = {
+        latitude: origin?._source?.location?.lat || 47.92123,
+        longitude: origin?._source?.location?.lon || 106.918556,
+      };
+
+      const destinationCoordinate = {
+        latitude: destination?._source?.location?.lat || 47.92123,
+        longitude: destination?._source?.location?.lon || 106.918556,
+      };
+
+      const minLat = Math.min(
+        destinationCoordinate?.latitude,
+        originCoordinate.latitude,
+      );
+      const maxLat = Math.max(
+        destinationCoordinate.latitude,
+        originCoordinate.latitude,
+      );
+      const minLon = Math.min(
+        destinationCoordinate.longitude,
+        originCoordinate.longitude,
+      );
+      const maxLon = Math.max(
+        destinationCoordinate.longitude,
+        originCoordinate.longitude,
+      );
+
+      const latitudeDelta = Math.max((maxLat - minLat) * 1.8, 0.05);
+      const longitudeDelta = Math.max((maxLon - minLon) * 1.8, 0.05);
+
+      const region: Region = {
+        latitude: (minLat + maxLat) / 2,
+        longitude: (minLon + maxLon) / 2,
+        latitudeDelta,
+        longitudeDelta,
+      };
+      mapRef?.current?.animateToRegion(region, 350);
+    } else if (origin) {
+      const originCoordinate = {
+        latitude: origin?._source?.location?.lat || 47.92123,
+        longitude: origin?._source?.location?.lon || 106.918556,
+      };
+
+      mapRef?.current?.animateToRegion({
+        ...originCoordinate,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    }
+  }, [origin, destination, mapRef, showChooseFromMap]);
+
   const onRegionChangeComplete = async (region: Region) => {
     if (isRent) {
       const { data } = await refetch({
@@ -307,17 +360,13 @@ const Step2 = ({
         ref={originModalRef}
         setLocation={setOrigin}
         location={origin}
-        origin={destination}
-        mapRef={mapRef}
         setShowChooseFromMap={setShowChooseFromMap}
         isRent={isRent}
       />
       <LocationModal
         ref={destinationModalRef}
-        origin={origin}
         setLocation={setDestination}
         location={destination}
-        mapRef={mapRef}
         setShowChooseFromMap={setShowChooseFromMap}
         isRent={isRent}
       />

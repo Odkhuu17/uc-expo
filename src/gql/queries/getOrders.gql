@@ -1,7 +1,7 @@
 query getOrders(
   $first: Int
   $after: String
-  $filter: OrderFilter
+  $filter: OrderFilter = { published: { eq: true } }
   $sort: SortFilter = { field: "created_at", direction: desc }
 ) {
   orders(first: $first, after: $after, filter: $filter, sort: $sort) {

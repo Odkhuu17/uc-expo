@@ -12,13 +12,11 @@ interface Props {
     latitude: number;
     longitude: number;
   };
-  color: keyof Theme['colors'];
+  color?: keyof Theme['colors'];
 }
 
 const MapDirections = ({ origin, destination, color = 'primary' }: Props) => {
   const theme = useTheme();
-
-  console.log(Config.GOOGLE_MAPS_API_KEY, 'APIKEY');
 
   return (
     <MapViewDirections

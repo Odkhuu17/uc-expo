@@ -8,6 +8,7 @@ const defaultOptions = {} as const;
 export type GetOrdersMyQueryVariables = Types.Exact<{
   ordersFirst?: Types.InputMaybe<Types.Scalars['Int']['input']>;
   after?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  filter?: Types.InputMaybe<Types.OrderFilter>;
   sort?: Types.InputMaybe<Types.SortFilter>;
 }>;
 
@@ -16,7 +17,7 @@ export type GetOrdersMyQuery = { __typename?: 'Query', me?: { __typename?: 'User
 
 
 export const GetOrdersMyDocument = gql`
-    query GetOrdersMy($ordersFirst: Int, $after: String, $sort: SortFilter = {field: "created_at", direction: desc}) {
+    query GetOrdersMy($ordersFirst: Int, $after: String, $filter: OrderFilter = {published: {eq: true}}, $sort: SortFilter = {field: "created_at", direction: desc}) {
   me {
     id
     orders(first: $ordersFirst, after: $after, sort: $sort) {
@@ -52,6 +53,7 @@ export const GetOrdersMyDocument = gql`
  *   variables: {
  *      ordersFirst: // value for 'ordersFirst'
  *      after: // value for 'after'
+ *      filter: // value for 'filter'
  *      sort: // value for 'sort'
  *   },
  * });

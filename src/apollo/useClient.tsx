@@ -34,18 +34,6 @@ const useClient = () => {
         `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
       ).toString('base64');
 
-      if (!credentials) {
-        return console.log('welihweweh');
-        // const data = await refreshAccessToken();
-
-        // return {
-        //   headers: {
-        //     ...prevContext.headers,
-        //     authorization: `Bearer ${data}`,
-        //   },
-        // };
-      }
-
       return {
         headers: {
           ...prevContext.headers,
@@ -65,8 +53,6 @@ const useClient = () => {
           });
         });
       } else if (CombinedProtocolErrors.is(error)) {
-        console.log('uregferugeiewm');
-
         error.errors.forEach(({ message, extensions }) =>
           navigation.navigate('MsgModal', {
             type: 'error',
@@ -74,6 +60,11 @@ const useClient = () => {
           }),
         );
       } else if (ServerError.is(error) && error.statusCode !== 401) {
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: error.message,
+        });
+      } else {
         return navigation.navigate('MsgModal', {
           type: 'error',
           msg: error.message,
@@ -86,7 +77,6 @@ const useClient = () => {
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {
-              console.log('refreshed token:', newToken);
               // Update the operation context with the new token
               operation.setContext(({ headers = {} }) => ({
                 headers: {
@@ -105,7 +95,6 @@ const useClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(async refreshError => {
-              console.log('123123123');
               // If refresh fails, clear tokens and redirect to login
               await Keychain.resetGenericPassword({
                 service: constants.keyChainAuthServiceKey,

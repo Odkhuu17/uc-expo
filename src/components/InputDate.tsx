@@ -1,4 +1,4 @@
-import { Pressable, ViewStyle } from 'react-native';
+import { Keyboard, Pressable, ViewStyle } from 'react-native';
 import { IconSvgElement } from '@hugeicons/react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -48,10 +48,14 @@ const InputDate = ({
   const snapPoints = useMemo(() => [], []);
 
   const onOpen = () => {
+    Keyboard.dismiss();
     ref.current?.present();
   };
 
   const onClose = () => {
+    if (!value) {
+      onChange(dayjs().format('YYYY/MM/DD'));
+    }
     ref.current?.dismiss();
   };
 

@@ -34,7 +34,7 @@ interface Props {
 const AuthLogin = ({ navigation }: Props) => {
   const [getMe] = useGetMeLazyQuery();
   const dispatch = useAppDispatch();
-  const passwordInputRef = useRef<TextInput>(null);
+  const passwordInputRef = useRef<TextInput | null>(null);
 
   const { handleSubmit, values, errors, handleChange, isSubmitting } =
     useFormik({
@@ -72,7 +72,7 @@ const AuthLogin = ({ navigation }: Props) => {
   };
 
   const handleSubmitEditUsername = () => {
-    passwordInputRef.current?.focus();
+    passwordInputRef?.current?.focus();
   };
 
   return (

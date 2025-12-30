@@ -163,7 +163,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const rentFormik = useFormik({
     initialValues: {
       carWeight: '',
-      startDate: '',
+      startDate: dayjs().format('YYYY/MM/DD'),
       rentDay: '',
       motHour: '',
       vatIncluded: false,
@@ -177,7 +177,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
     validationSchema: rentSchema,
     onSubmit: async () => {
       const values = rentFormik.values;
-      console.log('wfklwhfkwef');
 
       if (orderNumber) {
         await updateOrder({
@@ -226,6 +225,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
     }
   };
 
+  console.log(data, 'fwwdf');
+
   useEffect(() => {
     if (isRent) {
       setSelectedOption('origin');
@@ -248,7 +249,9 @@ const OrderCreate = ({ navigation, route }: Props) => {
           taxonId: data?.order?.taxonId || '',
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',
-          startDate: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
+          startDate: data?.order?.travelAt
+            ? dayjs(data?.order?.travelAt).format('YYYY/MM/DD')
+            : '',
           rentDay: data?.order?.data?.rent_day || '',
           motHour: data?.order?.data?.mot_hour || '',
           vatIncluded: data?.order?.vatIncluded || false,
@@ -262,8 +265,12 @@ const OrderCreate = ({ navigation, route }: Props) => {
           taxonId: data?.order?.taxonId || '',
           packageType: data?.order?.packageType || '',
           packageWeight: data?.order?.packageWeight || '',
-          travelDay: dayjs(data?.order?.travelAt).format('YYYY-MM-DD') || '',
-          travelHour: dayjs(data?.order?.travelAt).format('HH:mm') || '',
+          travelDay: data?.order?.travelAt
+            ? dayjs(data?.order?.travelAt).format('YYYY/MM/DD')
+            : '',
+          travelHour: data?.order?.travelAt
+            ? dayjs(data?.order?.travelAt).format('HH:mm')
+            : '',
           vatIncluded: data?.order?.vatIncluded || false,
           priceNegotiable: data?.order?.price ? false : true,
           price: String(data?.order?.price || ''),

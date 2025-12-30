@@ -25,7 +25,7 @@ import {
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes } from '@/constants/transportTypes';
-import { isRentOrder, moneyMask } from '@/utils/helpers';
+import { moneyMask } from '@/utils/helpers';
 import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
 import { OrderLocation } from '../components';
 import InputImage from './containers/InputImage';
@@ -104,13 +104,13 @@ const RentStep3 = ({
     }
   };
 
-  const onSubmitEditing = (index: number) => {
-    if (refs.current[index + 1]) {
+  const onSubmitEditing = (index: number, to?: number) => {
+    if (to) {
+      refs.current[to]?.focus();
+    } else if (refs.current[index + 1]) {
       refs.current[index + 1]?.focus();
     }
   };
-
-  console.log(errors, isRentOrder(values.carType));
 
   return (
     <CustomKeyboardAvoidingView>
@@ -154,6 +154,7 @@ const RentStep3 = ({
           </BoxContainer>
           <BoxContainer gap="m">
             <Select
+              label="Техникийн төрөл"
               icon={ContainerTruck01Icon}
               placeholder="Техникийн төрөл"
               options={rentCarTypes.map(p => ({
@@ -165,6 +166,7 @@ const RentStep3 = ({
               setSelectedOption={value => onChangeCarType(value)}
             />
             <Select
+              label="Даац/Хэмжээ"
               icon={WeightIcon}
               placeholder="Даац/Хэмжээ"
               options={
@@ -199,7 +201,9 @@ const RentStep3 = ({
             <Input
               icon={WorkHistoryIcon}
               label="Ажиллах хоног"
+              placeholder="Ажиллах хоног"
               keyboardType="number-pad"
+              returnKeyType="next"
               value={values.rentDay}
               ref={(el: TextInput | null) => (refs.current[0] = el)}
               onSubmitEditing={() => onSubmitEditing(0)}
@@ -212,9 +216,13 @@ const RentStep3 = ({
             <Input
               icon={TimeSetting01Icon}
               label="Ажиллах цаг"
+              placeholder="Ажиллах цаг"
               keyboardType="number-pad"
+              returnKeyType="next"
               ref={(el: TextInput | null) => (refs.current[1] = el)}
-              onSubmitEditing={() => onSubmitEditing(1)}
+              onSubmitEditing={() =>
+                onSubmitEditing(1, values?.priceNegotiable ? 3 : 2)
+              }
               value={values.motHour}
               onBlur={handleBlur('motHour')}
               onChangeText={handleChange('motHour')}
@@ -241,6 +249,7 @@ const RentStep3 = ({
                 placeholder="Үнэ"
                 keyboardType="number-pad"
                 value={values.price}
+                returnKeyType="next"
                 onBlur={handleBlur('price')}
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
                 ref={(el: TextInput | null) => (refs.current[2] = el)}
@@ -259,6 +268,7 @@ const RentStep3 = ({
               onChangeText={handleChange('additionalAddress')}
               ref={(el: TextInput | null) => (refs.current[3] = el)}
               onSubmitEditing={() => onSubmitEditing(3)}
+              returnKeyType="next"
               error={
                 touched.additionalAddress && errors.additionalAddress
                   ? errors.additionalAddress

@@ -20,8 +20,6 @@ const schema = yup.object().shape({
 });
 
 const Step1 = ({ setStep, setPhoneNumber }: Props) => {
-  console.log('uwifhwef');
-
   const [authCheckLogin, { loading }] = useAuthCheckLoginMutation();
   const navigation = useNavigation<INavigation>();
 
@@ -31,33 +29,28 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
     },
     validationSchema: schema,
     onSubmit: async () => {
-      try { 
-        authCheckLogin({
-          variables: {
-            login: values.login,
-            sendToken: false,
-          },
-        }).then(async ({ data }) => {
-          console.log(data);
-          // if (!data?.exists.exists) {
-          //   setPhoneNumber(values.login);
-          //   await authCheckLogin({
-          //     variables: {
-          //       login: values.login,
-          //       sendToken: true,
-          //     },
-          //   });
-          //   setStep(2);
-          // } else {
-          //   navigation.navigate('MsgModal', {
-          //     type: 'error',
-          //     msg: 'Та бүртгэлтэй байна.',
-          //   });
-          // }
-        });
-      } catch (e) {
-        console.log(e, 'eerr');
-      }
+      authCheckLogin({
+        variables: {
+          login: values.login,
+          sendToken: false,
+        },
+      }).then(async ({ data }) => {
+        if (!data?.exists.exists) {
+          setPhoneNumber(values.login);
+          await authCheckLogin({
+            variables: {
+              login: values.login,
+              sendToken: true,
+            },
+          });
+          setStep(2);
+        } else {
+          navigation.navigate('MsgModal', {
+            type: 'error',
+            msg: 'Та бүртгэлтэй байна.',
+          });
+        }
+      });
     },
   });
 

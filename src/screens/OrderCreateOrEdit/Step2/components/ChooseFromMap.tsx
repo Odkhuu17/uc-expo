@@ -93,7 +93,7 @@ const ChooseFromMap = ({
                 borderColor="border"
               >
                 <HugeiconsIcon icon={ArrowLeft01Icon} />
-                <Text fontFamily="Roboto_500Medium">{title}</Text>
+                <Text variant="title">{title}</Text>
               </Box>
             </TouchableOpacity>
             <Box p="m" gap="m">

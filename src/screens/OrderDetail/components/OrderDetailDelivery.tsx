@@ -72,7 +72,7 @@ const OrderDetailDelivery = ({ order }: Props) => {
           value={order?.price ? moneyFormat(order?.price) : 'Тохиролцоно'}
         />
         <SingleRow label="НӨАТ:" value={order?.vatIncluded ? 'Тийм' : 'Үгүй'} />
-        <SingleRow label="Ачааны жин:" value={order?.packageWeight} />
+        <SingleRow label="Ачааны жин:" value={`${order?.packageWeight} тн`} />
         <SingleRow
           label="Ачих өдөр:"
           value={order?.travelAt && dayjs(order?.travelAt).format('YYYY-MM-DD')}

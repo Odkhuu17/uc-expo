@@ -23,14 +23,19 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
       {
         headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
           Authorization: `Basic ${authHeader}`,
         },
       },
     );
 
-    await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
-      service: constants.keyChainAuthServiceKey,
-    });
+    await Keychain.setGenericPassword(
+      data?.access_token,
+      data?.access_token,
+      {
+        service: constants.keyChainAuthServiceKey,
+      },
+    );
 
     return data.access_token;
   }
@@ -43,6 +48,7 @@ export const refreshAccessToken = async (): Promise<string> => {
     },
     {
       headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${authHeader}`,
       },
     },

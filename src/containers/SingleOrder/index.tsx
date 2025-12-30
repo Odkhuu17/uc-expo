@@ -78,31 +78,19 @@ const SingleOrder = ({ item, children }: Props) => {
             alignItems="center"
             px="m"
             pt="m"
+            gap="s"
           >
-            <Box flexDirection="row" alignItems="center" gap="s">
-              <Image
-                style={styles.carImage}
-                resizeMode="contain"
-                source={
-                  isRent
-                    ? rentCarTypes.find(i => i.name === item?.carType)?.image
-                    : deliveryCarTypes?.find(i => i.name === item?.carType)
-                        ?.image
-                }
-              />
-              <Text variant="label">{item?.carType}</Text>
+            <Box flex={1}>
+              {!isRent && (
+                <Text color="primary" variant="title">
+                  {item?.packageType}
+                </Text>
+              )}
             </Box>
             <Label
               text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
               backgroundColor={isRent ? 'rent' : 'delivery'}
             />
-          </Box>
-          <Box px="m">
-            {!isRent && (
-              <Text color="primary" variant="title">
-                {item?.packageType}
-              </Text>
-            )}
           </Box>
           <Box flexDirection="row" alignItems="center" gap="s" px="m">
             <Box
@@ -133,7 +121,7 @@ const SingleOrder = ({ item, children }: Props) => {
                   <Box alignItems="center">
                     <HugeiconsIcon icon={Location05Icon} size={theme.icon.s} />
                   </Box>
-                  <Box>
+                  <Box flex={1}>
                     <Text variant="body2">{item?.origin?.address1}</Text>
                   </Box>
                 </Box>
@@ -168,7 +156,7 @@ const SingleOrder = ({ item, children }: Props) => {
                           size={theme.icon.s}
                         />
                       </Box>
-                      <Box>
+                      <Box flex={1}>
                         <Text variant="body2">
                           {item?.destination?.address1}
                         </Text>
@@ -180,12 +168,12 @@ const SingleOrder = ({ item, children }: Props) => {
               <Box gap="xs">
                 <Box flexDirection="row" alignItems="center" gap="xs">
                   <Box flex={1}>
-                    <Text variant="body2">
+                    <Text variant="body3">
                       {isRent ? 'Ажил эхлэх өдөр:' : 'Ачих:'}
                     </Text>
                   </Box>
                   <Box>
-                    <Text variant="body2" color="grey3">
+                    <Text variant="body3" color="grey4">
                       {isRent
                         ? dayjs(item?.travelAt).format('YYYY/MM/DD')
                         : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
@@ -194,10 +182,10 @@ const SingleOrder = ({ item, children }: Props) => {
                 </Box>
                 <Box flexDirection="row" alignItems="center" gap="xs">
                   <Box flex={1}>
-                    <Text variant="body2">Захиалсан:</Text>
+                    <Text variant="body3">Захиалсан:</Text>
                   </Box>
                   <Box>
-                    <Text variant="body2" color="grey3">
+                    <Text variant="body3" color="grey4">
                       {dayjs(item?.createdAt).format('YYYY/MM/DD')}
                     </Text>
                   </Box>

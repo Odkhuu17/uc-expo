@@ -24,6 +24,7 @@ interface Props extends TextInputProps {
   isRequired?: boolean;
   icon?: IconSvgElement;
   size?: keyof Theme['button'];
+  ref?: React.Ref<TextInput>;
 }
 
 const Input = ({
