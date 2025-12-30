@@ -20,7 +20,7 @@ export const GetOrdersMyDocument = gql`
     query GetOrdersMy($ordersFirst: Int, $after: String, $filter: OrderFilter = {published: {eq: true}}, $sort: SortFilter = {field: "created_at", direction: desc}) {
   me {
     id
-    orders(first: $ordersFirst, after: $after, sort: $sort) {
+    orders(first: $ordersFirst, after: $after, filter: $filter, sort: $sort) {
       edges {
         node {
           ...OrderFragment
