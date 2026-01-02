@@ -29,13 +29,9 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
     );
 
-    await Keychain.setGenericPassword(
-      data?.access_token,
-      data?.access_token,
-      {
-        service: constants.keyChainAuthServiceKey,
-      },
-    );
+    await Keychain.setGenericPassword(data?.access_token, data?.access_token, {
+      service: constants.keyChainAuthServiceKey,
+    });
 
     return data.access_token;
   }

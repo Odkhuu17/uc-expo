@@ -23,7 +23,7 @@ const AuthRegister = () => {
     switch (step) {
       case 2:
         return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2}>
+          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={2} flex={1}>
             <Step2
               phoneNumber={phoneNumber}
               setToken={setToken}
@@ -34,13 +34,13 @@ const AuthRegister = () => {
         );
       case 3:
         return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3}>
+          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
             <Step3 phoneNumber={phoneNumber} token={token} />;
           </AnimatedBox>
         );
       default:
         return (
-          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={1}>
+          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={1} flex={1}>
             <Step1 setStep={setStep} setPhoneNumber={setPhoneNumber} />
           </AnimatedBox>
         );

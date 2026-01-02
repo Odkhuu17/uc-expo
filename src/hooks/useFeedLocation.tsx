@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import GetLocation from 'react-native-get-location';
+import Geolocation from '@react-native-community/geolocation';
 
 import { useAppSelector } from '@/redux/hooks';
 import { useFeedLocationMutation } from '@/gql/mutations/feedLocation.generated';
@@ -33,24 +33,19 @@ const useFeedLocation = () => {
 
   const sendLocation = async () => {
     try {
-      const location = await GetLocation.getCurrentPosition({
-        enableHighAccuracy: false,
-        timeout: 60000,
+      Geolocation.getCurrentPosition(async info => {
+        const trucks = data?.me?.trucks?.filter(i => i.subscribed) || [];
+
+        for (let i = 0; i < trucks.length; i++) {
+          await feedLocation({
+            variables: {
+              truckId: trucks[i].id,
+              latitude: info.coords.latitude,
+              longitude: info.coords.longitude,
+            },
+          });
+        }
       });
-
-      const trucks = data?.me?.trucks?.filter(i => i.subscribed) || [];
-
-      for (let i = 0; i < trucks.length; i++) {
-        await feedLocation({
-          variables: {
-            truckId: trucks[i].id,
-            latitude: location.latitude,
-            longitude: location.longitude,
-          },
-        });
-      }
-
-      console.log('Location sent:', trucks.length);
     } catch (error) {
       console.error('Error sending location:', error);
     }

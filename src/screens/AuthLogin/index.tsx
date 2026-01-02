@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { INavigationProps } from '@/navigations';
 import { TextInput } from 'react-native';
 import { useRef } from 'react';
+import * as Keychain from 'react-native-keychain';
 
 import {
   Button,
@@ -18,6 +19,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { login } from './helpers';
+import constants from '@/constants';
 
 const schema = yup.object().shape({
   username: yup
@@ -42,8 +44,17 @@ const AuthLogin = ({ navigation }: Props) => {
       validationSchema: schema,
       onSubmit: async values => {
         try {
-          await login(values.username, values.password);
+          const { access_token, refresh_token } = await login(
+            values.username,
+            values.password,
+          );
+          
+          await Keychain.setGenericPassword(refresh_token, access_token, {
+            service: constants.keyChainAuthServiceKey,
+          });
+
           const { data } = await getMe();
+
           dispatch(authSlice.actions.changeUser(data?.me));
           dispatch(authSlice.actions.login());
         } catch {

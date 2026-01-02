@@ -17,14 +17,13 @@ import { useNavigation } from '@react-navigation/native';
 import { refreshAccessToken } from './helpers';
 import constants from '@/constants';
 import { INavigation } from '@/navigations';
-import { useAppDispatch } from '@/redux/hooks';
-import authSlice from '@/redux/slices/auth';
+import useLogout from '@/hooks/useLogout';
 
 export let apolloClient: ApolloClient | null = null;
 
 const useClient = () => {
   const navigation = useNavigation<INavigation>();
-  const dispatch = useAppDispatch();
+  const { logout } = useLogout();
 
   return useMemo(() => {
     if (apolloClient) {
@@ -101,12 +100,8 @@ const useClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(async refreshError => {
-              // If refresh fails, clear tokens and redirect to login
-              await Keychain.resetGenericPassword({
-                service: constants.keyChainAuthServiceKey,
-              });
+              await logout();
               observer.error(refreshError);
-              dispatch(authSlice.actions.logout());
             });
         });
       }

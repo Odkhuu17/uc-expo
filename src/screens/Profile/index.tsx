@@ -26,7 +26,7 @@ import { SingleMenu, UserInfo } from './components';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { INavigationProps } from '@/navigations';
 import settingsSlice from '@/redux/slices/settings';
-import { apolloClient } from '@/apollo/useClient';
+import useLogout from '@/hooks/useLogout';
 
 interface Props {
   navigation: INavigationProps<'Profile'>['navigation'];
@@ -38,6 +38,8 @@ const ProfileScreen = ({ navigation }: Props) => {
       fetchPolicy: 'no-cache',
     },
   );
+
+  const { logout } = useLogout();
 
   const dispatch = useAppDispatch();
   const [hasPendingUserVerification, setHasPendingUserVerification] =
@@ -92,10 +94,7 @@ const ProfileScreen = ({ navigation }: Props) => {
       {
         text: 'Тийм',
         style: 'destructive',
-        onPress: async () => {
-          await apolloClient?.clearStore();
-          dispatch(authSlice.actions.logout());
-        },
+        onPress: logout,
       },
     ]);
   };
