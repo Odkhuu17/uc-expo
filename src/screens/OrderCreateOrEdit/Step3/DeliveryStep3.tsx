@@ -191,7 +191,6 @@ const DeliveryStep3 = ({
               value={values.packageWeight}
               onBlur={handleBlur('packageWeight')}
               onChangeText={handleChange('packageWeight')}
-              returnKeyType="next"
               error={
                 touched.packageWeight && errors.packageWeight
                   ? errors.packageWeight
@@ -249,10 +248,10 @@ const DeliveryStep3 = ({
                 keyboardType="number-pad"
                 value={values.price}
                 onBlur={handleBlur('price')}
-                onSubmitEditing={() => onSubmitEditing(1)}
-                returnKeyType="next"
                 onChangeText={(_, unmasked) => handleChange('price')(unmasked)}
-                ref={(el: TextInput | null) => (refs.current[1] = el)}
+                ref={(el: TextInput | null) => (refs.current[0] = el)}
+                onSubmitEditing={() => onSubmitEditing(0)}
+                returnKeyType="next"
                 mask={moneyMask}
                 error={touched.price && errors.price ? errors.price : undefined}
               />
@@ -266,8 +265,8 @@ const DeliveryStep3 = ({
               onBlur={handleBlur('additionalInfo')}
               onChangeText={handleChange('additionalInfo')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[2] = el)}
-              onSubmitEditing={() => onSubmitEditing(2)}
+              ref={(el: TextInput | null) => (refs.current[1] = el)}
+              onSubmitEditing={() => onSubmitEditing(1)}
               error={
                 touched.additionalInfo && errors.additionalInfo
                   ? errors.additionalInfo
@@ -282,9 +281,9 @@ const DeliveryStep3 = ({
               value={values.senderName}
               onBlur={handleBlur('senderName')}
               onChangeText={handleChange('senderName')}
+              ref={(el: TextInput | null) => (refs.current[2] = el)}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[3] = el)}
-              onSubmitEditing={() => onSubmitEditing(3)}
+              onSubmitEditing={() => onSubmitEditing(2)}
               error={
                 touched.senderName && errors.senderName
                   ? errors.senderName
@@ -295,12 +294,13 @@ const DeliveryStep3 = ({
               label="Илгээгчийн утасны дугаар"
               placeholder="Утасны дугаар"
               keyboardType="number-pad"
+              maxLength={8}
               value={values.senderMobile}
               onBlur={handleBlur('senderMobile')}
               onChangeText={handleChange('senderMobile')}
               returnKeyType="next"
-              ref={(el: TextInput | null) => (refs.current[4] = el)}
-              onSubmitEditing={() => onSubmitEditing(4)}
+              ref={(el: TextInput | null) => (refs.current[3] = el)}
+              onSubmitEditing={() => onSubmitEditing(3)}
               error={
                 touched.senderMobile && errors.senderMobile
                   ? errors.senderMobile
@@ -313,6 +313,8 @@ const DeliveryStep3 = ({
               value={values.additionalAddressOrigin}
               onBlur={handleBlur('additionalAddressOrigin')}
               onChangeText={handleChange('additionalAddressOrigin')}
+              ref={(el: TextInput | null) => (refs.current[4] = el)}
+              onSubmitEditing={() => onSubmitEditing(4)}
               error={
                 touched.additionalAddressOrigin &&
                 errors.additionalAddressOrigin
@@ -341,12 +343,13 @@ const DeliveryStep3 = ({
               label="Хүлээн авагчийн утасны дугаар"
               placeholder="Утасны дугаар"
               keyboardType="number-pad"
+              maxLength={8}
               value={values.receiverMobile}
               onBlur={handleBlur('receiverMobile')}
               onChangeText={handleChange('receiverMobile')}
               ref={(el: TextInput | null) => (refs.current[6] = el)}
-              returnKeyType="done"
-              onSubmitEditing={handleSubmit}
+              returnKeyType="next"
+              onSubmitEditing={() => onSubmitEditing(6)}
               error={
                 touched.receiverMobile && errors.receiverMobile
                   ? errors.receiverMobile
@@ -359,6 +362,7 @@ const DeliveryStep3 = ({
               value={values.additionalAddressDestination}
               onBlur={handleBlur('additionalAddressDestination')}
               onChangeText={handleChange('additionalAddressDestination')}
+              ref={(el: TextInput | null) => (refs.current[7] = el)}
               error={
                 touched.additionalAddressDestination &&
                 errors.additionalAddressDestination

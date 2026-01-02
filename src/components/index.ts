@@ -29,3 +29,4 @@ export { default as InputDate } from './InputDate';
 export { default as InputMask } from './InputMask';
 export { default as MapPin } from './MapPin';
 export { default as MapDirections } from './MapDirections';
+export { default as InputOtp } from './InputOtp';

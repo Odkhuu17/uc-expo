@@ -6,6 +6,7 @@ import {
   ContainerTruck01Icon,
 } from '@hugeicons/core-free-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import { openSettings, PERMISSIONS, request } from 'react-native-permissions';
 
 import {
   BoxContainer,
@@ -24,6 +25,8 @@ import authSlice from '@/redux/slices/auth';
 import { SingleMenu, UserInfo } from './components';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { INavigationProps } from '@/navigations';
+import settingsSlice from '@/redux/slices/settings';
+import { apolloClient } from '@/apollo/useClient';
 
 interface Props {
   navigation: INavigationProps<'Profile'>['navigation'];
@@ -41,6 +44,7 @@ const ProfileScreen = ({ navigation }: Props) => {
     useState(false);
 
   const { mode } = useAppSelector(state => state.general);
+  const { locationPermission } = useAppSelector(state => state.settings);
 
   const hasVerifiedTruck = userData?.me?.trucks?.some(truck => truck.verified);
 
@@ -88,7 +92,8 @@ const ProfileScreen = ({ navigation }: Props) => {
       {
         text: 'Тийм',
         style: 'destructive',
-        onPress: () => {
+        onPress: async () => {
+          await apolloClient?.clearStore();
           dispatch(authSlice.actions.logout());
         },
       },
@@ -107,6 +112,18 @@ const ProfileScreen = ({ navigation }: Props) => {
     navigation.navigate('Terms');
   };
 
+  const onPressLocationPermission = () => {
+    request(PERMISSIONS.IOS.LOCATION_ALWAYS)
+      .then(res => {
+        if (res === 'granted') {
+          dispatch(settingsSlice.actions.changeLocationPermission(true));
+        } else {
+          openSettings('application');
+        }
+      })
+      .catch(() => console.warn('Cannot request location accuracy'));
+  };
+
   return (
     <Container>
       <HeaderNormal title="Миний мэдээлэл" />
@@ -121,6 +138,18 @@ const ProfileScreen = ({ navigation }: Props) => {
             }
           >
             <Box gap="m">
+              {!locationPermission && (
+                <BoxContainer gap="m">
+                  <Warning
+                    type="error"
+                    description="Таны байрлалын зөвшөөрөл олдоогүй байна! Та байрлалын зөвшөөрөл олгосны дараа манай системийг ашиглах боломжтой."
+                  />
+                  <Button
+                    title="Зөвшөөрөл олгох"
+                    onPress={onPressLocationPermission}
+                  />
+                </BoxContainer>
+              )}
               <BoxContainer gap="m">
                 <UserInfo userData={userData?.me} onPress={onPressProfile} />
                 {!userData?.me?.verified && mode === 'driver' && (

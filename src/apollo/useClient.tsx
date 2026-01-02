@@ -20,11 +20,17 @@ import { INavigation } from '@/navigations';
 import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
 
+export let apolloClient: ApolloClient | null = null;
+
 const useClient = () => {
   const navigation = useNavigation<INavigation>();
   const dispatch = useAppDispatch();
 
   return useMemo(() => {
+    if (apolloClient) {
+      return apolloClient;
+    }
+
     const authLink = new SetContextLink(async (prevContext, operation) => {
       const credentials = await Keychain.getGenericPassword({
         service: constants.keyChainAuthServiceKey,
@@ -156,7 +162,7 @@ const useClient = () => {
       .concat(retryLink)
       .concat(uploadLink);
 
-    return new ApolloClient({
+    apolloClient = new ApolloClient({
       link: authFlowLink,
       cache: new InMemoryCache(),
       defaultOptions: {
@@ -168,6 +174,8 @@ const useClient = () => {
         },
       },
     });
+
+    return apolloClient;
   }, []);
 };
 

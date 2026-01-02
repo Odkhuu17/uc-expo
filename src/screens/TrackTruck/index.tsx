@@ -85,7 +85,7 @@ const TrackTruck = ({ route }: Props) => {
 
   return (
     <Container>
-      <HeaderNormal hasBack title={`Ачаа хянах ${number}`} />
+      <HeaderNormal hasBack title={`Техник хянах ${number}`} />
       <Content edges={[]} noHSpace noVSpace>
         <MapView
           style={css.map}

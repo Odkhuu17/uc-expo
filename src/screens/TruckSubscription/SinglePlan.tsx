@@ -82,16 +82,20 @@ const SinglePlan = ({ node, truckId }: Props) => {
               return (
                 <TouchableOpacity
                   key={index}
-                  onPress={() =>
-                    Linking.canOpenURL(bank.link)
-                      .then(() => Linking.openURL(bank.link))
-                      .catch(() => {
-                        Alert.alert(
-                          'Алдаа',
-                          `Танд ${bank.name} апп байхгүй байна.`,
-                        );
-                      })
-                  }
+                  onPress={async () => {
+                    const supported = await Linking.canOpenURL(bank.link);
+
+                    if (supported) {
+                      await Linking.openURL(bank.link).catch(e =>
+                        console.log(e),
+                      );
+                    } else {
+                      Alert.alert(
+                        'Алдаа',
+                        `Танд ${bank.name} апп байхгүй байна.`,
+                      );
+                    }
+                  }}
                 >
                   <Box
                     flexDirection="row"

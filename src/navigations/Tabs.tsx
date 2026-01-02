@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CreateOrderTabButton = ({ onPress }: { onPress: () => void }) => {
+const OrderTabButton = ({ onPress }: { onPress: () => void }) => {
   const theme = useTheme();
   const styles = useStyles();
 
@@ -59,6 +59,7 @@ const Tabs = () => {
   const theme = useTheme();
   const { mode } = useAppSelector(state => state.general);
   const { user } = useAppSelector(state => state.auth);
+  const { locationPermission } = useAppSelector(state => state.settings);
 
   const navigation = useNavigation<any>();
 
@@ -79,7 +80,7 @@ const Tabs = () => {
         tabBarInactiveTintColor: theme.colors.grey4,
       }}
     >
-      {user?.verified && (
+      {user?.verified && locationPermission && (
         <>
           <Tab.Screen
             name="Orders"
@@ -117,7 +118,7 @@ const Tabs = () => {
               options={{
                 tabBarShowLabel: false,
                 tabBarButton: () => (
-                  <CreateOrderTabButton onPress={goToCreateOrder} />
+                  <OrderTabButton onPress={goToCreateOrder} />
                 ),
               }}
             />

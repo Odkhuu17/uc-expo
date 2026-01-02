@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { GetUserQuery } from '@/gql/query/getUserQuery.generated';
+import { GetMeQuery } from '@/gql/queries/getMe.generated';
 
 export interface IAuthReduxState {
   isAuthenticated: boolean;
-  user?: GetUserQuery['me'];
+  user?: GetMeQuery['me'];
 }
 
 const initialState: IAuthReduxState = {

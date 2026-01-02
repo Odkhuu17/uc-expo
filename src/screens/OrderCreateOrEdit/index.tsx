@@ -39,9 +39,9 @@ const deliverySchema = yup.object().shape({
   carType: yup.string().required('Энэ талбар хоосон байна!'),
   additionalInfo: yup.string().required('Энэ талбар хоосон байна!'),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
-  receiverMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
+  receiverMobile: yup.string().required('Энэ талбар хоосон байна!').length(8, 'Буруу дугаар оруулсан байна!'),
   senderName: yup.string(),
-  senderMobile: yup.string().length(8, 'Буруу дугаар оруулсан байна!'),
+  senderMobile: yup.string().required('Энэ талбар хоосон байна!').length(8, 'Буруу дугаар оруулсан байна!'),
   additionalAddressOrigin: yup.string().required('Энэ талбар хоосон байна!'),
   additionalAddressDestination: yup
     .string()
@@ -224,8 +224,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
       setOrderNumber(data?.createOrder?.number || null);
     }
   };
-
-  console.log(data, 'fwwdf');
 
   useEffect(() => {
     if (isRent) {

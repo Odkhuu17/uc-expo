@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -28,6 +28,7 @@ import DriverVerify from '@/screens/DriverVerify';
 import useFeedLocation from '@/hooks/useFeedLocation';
 import useLinkDevice from '@/hooks/useLinkDevice';
 import useUpdateUser from '@/hooks/useUpdateUser';
+import useLocationPermission from '@/hooks/useLocationPermission';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -81,6 +82,7 @@ const AppNavigator = () => {
   useFeedLocation();
   useLinkDevice();
   useUpdateUser();
+  useLocationPermission();
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

@@ -42,6 +42,11 @@ export const theme = createTheme({
     green3: '#00e676',
     green4: '#00c853',
 
+    blue1: '#82b1ff',
+    blue2: '#448aff',
+    blue3: '#2979ff',
+    blue4: '#1265FF',
+
     facebook: '#1877F2',
 
     transparent: 'transparent',

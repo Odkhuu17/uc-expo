@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Image, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import dayjs from 'dayjs';
 import { RefreshControl } from 'react-native-gesture-handler';
@@ -76,6 +76,28 @@ const OrderDetail = ({ navigation, route }: Props) => {
 
   const onPressTrack = () => {
     navigation.navigate('TrackTruck', { number });
+  };
+
+  const onPressOriginLocation = () => {
+    const origin = data?.order?.origin;
+
+    if (origin?.latitude && origin?.longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${origin.latitude},${origin.longitude}`;
+      Linking.openURL(url).catch(err =>
+        console.error('Failed to open Google Maps:', err),
+      );
+    }
+  };
+
+  const onPressDestinationLocation = () => {
+    const destination = data?.order?.destination;
+
+    if (destination?.latitude && destination?.longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${destination.latitude},${destination.longitude}`;
+      Linking.openURL(url).catch(err =>
+        console.error('Failed to open Google Maps:', err),
+      );
+    }
   };
 
   return (
@@ -175,7 +197,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                     label="Утасны дугаар"
                     value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
                   />
-                  <Button title="Ачаа хянах" onPress={onPressTrack} />
+                  <Button title="Техник хянах" onPress={onPressTrack} />
                 </BoxContainer>
               )}
               {mode === 'driver' && data?.order?.myRequest && (
@@ -206,8 +228,31 @@ const OrderDetail = ({ navigation, route }: Props) => {
                   />
                 </BoxContainer>
               )}
-              {mode === 'driver' && data?.order?.status !== 'accepted' && (
-                <OrderRequestButton data={data?.order} refetch={refetch} />
+              {mode === 'driver' && (
+                <>
+                  {data?.order?.status !== 'accepted' ? (
+                    <OrderRequestButton data={data?.order} refetch={refetch} />
+                  ) : (
+                    <Box flexDirection="row" gap="m">
+                      {data?.order?.origin && (
+                        <Box flex={1}>
+                          <Button
+                            title={isRent ? 'Ажиллах байршил' : 'Авах байршил'}
+                            onPress={onPressOriginLocation}
+                          />
+                        </Box>
+                      )}
+                      {data?.order?.destination && !isRent && (
+                        <Box flex={1}>
+                          <Button
+                            title="Хүргэх байршил"
+                            onPress={onPressDestinationLocation}
+                          />
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </>
               )}
             </Box>
           )}

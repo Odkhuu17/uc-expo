@@ -10,12 +10,12 @@ import { useAppSelector } from '@/redux/hooks';
 import { getImageUrl, isRentOrder } from '@/utils/helpers';
 import { Label, BoxContainer, ModalMsg } from '@/components';
 import { GetOrdersQuery } from '@/gql/queries/getOrders.generated';
-import { deliveryCarTypes, rentCarTypes } from '@/constants/transportTypes';
 import { INavigation } from '@/navigations';
 
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
   children?: ReactNode;
+  deliveryRequestsCount?: number;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SingleOrder = ({ item, children }: Props) => {
+const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const navigation = useNavigation<INavigation>();
@@ -193,6 +193,16 @@ const SingleOrder = ({ item, children }: Props) => {
               </Box>
             </Box>
           </Box>
+          {deliveryRequestsCount !== undefined && (
+            <Box px="m">
+              <Text variant="body2">
+                Хүсэлтийн тоо:{' '}
+                <Text variant="body2" color="error" fontWeight={600}>
+                  {deliveryRequestsCount}
+                </Text>
+              </Text>
+            </Box>
+          )}
           {children}
         </BoxContainer>
       </TouchableOpacity>

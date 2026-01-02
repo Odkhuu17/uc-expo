@@ -1,114 +1,61 @@
-import { useFormik } from 'formik';
-import { useState } from 'react';
-import * as yup from 'yup';
+import { Dispatch, SetStateAction } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import {
-  CirclePasswordIcon,
-  LockPasswordIcon,
-} from '@hugeicons/core-free-icons';
 
-import { Button, ModalMsg } from '@/components';
-import Input from '@/components/Input';
+import { Box } from '@/components/Theme';
+import { useAuthCheckTokenMutation } from '@/gql/mutations/authCheckToken.generated';
+import { Button, InputOtp } from '@/components';
 import { INavigation } from '@/navigations';
-import { useResetPasswordMutation } from '@/gql/mutations/resetPassword.generated';
 
 interface Props {
   phoneNumber: string;
+  token: string;
+  setToken: Dispatch<SetStateAction<string>>;
+  setStep: Dispatch<SetStateAction<number>>;
 }
 
-const schema = yup.object().shape({
-  token: yup.string().required('Энэ талбар хоосон байна!'),
-  password: yup.string().required('Энэ талбар хоосон байна!'),
-  passwordConfirmation: yup
-    .string()
-    .oneOf([yup.ref('password')], 'Нууц үг таарахгүй байна!'),
-});
+const MAX_OTP_LENGTH = 4;
 
-const Step2 = ({ phoneNumber }: Props) => {
-  const [resetPassword, { loading }] = useResetPasswordMutation();
-  const [successModal, setSuccessModal] = useState(false);
+const Step2 = ({ phoneNumber, setToken, token, setStep }: Props) => {
+  const [authCheckToken, { loading }] = useAuthCheckTokenMutation();
   const navigation = useNavigation<INavigation>();
 
-  const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
-    useFormik({
-      initialValues: {
-        token: '',
-        password: '',
-        passwordConfirmation: '',
-      },
-      validationSchema: schema,
-      onSubmit: async () => {
-        await resetPassword({
-          variables: {
-            login: phoneNumber,
-            password: values.password,
-            token: values.token,
-          },
-        });
-        setSuccessModal(true);
-      },
-    });
+  const onSubmit = async () => {
+    if (token.length < MAX_OTP_LENGTH) {
+      return navigation.navigate('MsgModal', {
+        type: 'error',
+        msg: 'Баталгаажуулах код дутуу байна.',
+      });
+    } else {
+      const { data } = await authCheckToken({
+        variables: {
+          login: phoneNumber,
+          token,
+        },
+      });
 
-  const handleCloseSuccessModal = () => {
-    setSuccessModal(false);
-    navigation.navigate('AuthLogin');
+      if (!data?.valid) {
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: 'Баталгаажуулах код буруу байна.',
+        });
+      } else {
+        setStep(3);
+      }
+    }
   };
 
   return (
     <>
-      <Input
-        label="Нууц үг"
-        placeholder="Нууц үг"
-        isRequired
-        width={270}
-        icon={LockPasswordIcon}
-        value={values.password}
-        onBlur={handleBlur('password')}
-        onChangeText={handleChange('password')}
-        secureTextEntry
-        error={
-          touched.password && errors.password ? errors.password : undefined
-        }
-      />
-      <Input
-        label="Нууц үг давтан оруулна уу!"
-        placeholder="Нууц үг давтан оруулна уу!"
-        isRequired
-        width={270}
-        icon={LockPasswordIcon}
-        value={values.passwordConfirmation}
-        onBlur={handleBlur('passwordConfirmation')}
-        onChangeText={handleChange('passwordConfirmation')}
-        secureTextEntry
-        error={
-          touched.passwordConfirmation && errors.passwordConfirmation
-            ? errors.passwordConfirmation
-            : undefined
-        }
-      />
-      <Input
-        label="Таны утсанд ирсэн код"
-        placeholder="Таны утсанд ирсэн код"
-        isRequired
-        width={270}
-        icon={CirclePasswordIcon}
-        value={values.token}
-        onBlur={handleBlur('token')}
-        onChangeText={handleChange('token')}
-        error={touched.token && errors.token ? errors.token : undefined}
-      />
-      <Button
-        title="Нууц үг сэргээх"
-        width={180}
-        loading={loading}
-        onPress={handleSubmit}
-      />
-      <ModalMsg
-        type="success"
-        msg="Таны нууц үг амжилттай солигдлоо"
-        handleClose={handleCloseSuccessModal}
-        visible={successModal}
-      />
+      <Box flex={2} alignItems="center" justifyContent="center" gap="m">
+        <InputOtp
+          otp={token}
+          setOtp={setToken}
+          length={MAX_OTP_LENGTH}
+          description={`Таны ${phoneNumber} руу илгээсэн кодыг оруулна уу`}
+        />
+        <Button title="Үргэлжлүүлэх" onPress={onSubmit} loading={loading} />
+      </Box>
+      <Box flex={1} />
     </>
   );
 };

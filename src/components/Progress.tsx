@@ -4,8 +4,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  runOnJS,
 } from 'react-native-reanimated';
-import { scheduleOnRN } from 'react-native-worklets';
 
 import { Box, Text, useTheme } from '@/components/Theme';
 import BoxContainer from './BoxContainer';
@@ -24,7 +24,8 @@ const Progress = ({ sec, onFinish }: Props) => {
   useEffect(() => {
     width.value = withTiming(100, { duration: sec * 1000 }, finished => {
       if (finished) {
-        scheduleOnRN(onFinish);
+        console.log(finished)
+        runOnJS(onFinish)();
       }
     });
   }, []);

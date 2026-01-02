@@ -1,0 +1,13 @@
+mutation authCheckToken(
+  $login: String!
+  $token: String!
+  $clientMutationId: String
+) {
+  valid: authCheckToken(
+    input: {
+      login: $login
+      token: $token
+      clientMutationId: $clientMutationId
+    }
+  )
+}

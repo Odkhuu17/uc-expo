@@ -73,6 +73,7 @@ const DriverVerify = ({ navigation }: Props) => {
           <InputImage
             isRequired
             image={selfie}
+            onlyCamera
             setImage={setSelfie}
             label="Өөрийн зураг"
           />

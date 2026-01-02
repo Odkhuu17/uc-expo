@@ -10,6 +10,14 @@ query GetOrdersMy(
       edges {
         node {
           ...OrderFragment
+          deliveryRequests {
+            edges {
+              node {
+                id
+              }
+            }
+            totalCount
+          }
         }
         cursor
       }

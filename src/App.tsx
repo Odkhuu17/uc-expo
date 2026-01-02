@@ -12,6 +12,7 @@ import { theme } from '@/components/Theme';
 import ApolloProvider from '@/apollo/Provider';
 import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
+import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 const App = () => {
   useEffect(() => {
@@ -31,23 +32,26 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView>
-      <SafeAreaProvider>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <ThemeProvider theme={theme}>
-              <BottomSheetModalProvider>
-                <NavigationContainer>
-                  <ApolloProvider>
-                    <AppNavigator />
-                  </ApolloProvider>
-                </NavigationContainer>
-              </BottomSheetModalProvider>
-            </ThemeProvider>
-          </PersistGate>
-        </Provider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <>
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <ThemeProvider theme={theme}>
+                <BottomSheetModalProvider>
+                  <NavigationContainer>
+                    <ApolloProvider>
+                      <AppNavigator />
+                    </ApolloProvider>
+                  </NavigationContainer>
+                </BottomSheetModalProvider>
+              </ThemeProvider>
+            </PersistGate>
+          </Provider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+      <ReducedMotionConfig mode={ReduceMotion.Never} />
+    </>
   );
 };
 

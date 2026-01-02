@@ -7,6 +7,7 @@ import {
   useGetOrdersMyQuery,
 } from '@/gql/queries/getOrdersMy.generated';
 import Status from '@/containers/SingleOrder/Status';
+import { Box, Text } from '@/components/Theme';
 
 const MyOrders = () => {
   const [isRefetching, setIsRefetching] = useState(false);
@@ -15,6 +16,7 @@ const MyOrders = () => {
     variables: {
       ordersFirst: 10,
     },
+    pollInterval: 30000,
     notifyOnNetworkStatusChange: true,
   });
 
@@ -39,7 +41,7 @@ const MyOrders = () => {
     if (hasNextPage && !loading) {
       fetchMore({
         variables: {
-          ordersFirst: 20,
+          ordersFirst: 10,
           after: endCursor,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
@@ -76,7 +78,10 @@ const MyOrders = () => {
     item: NonNullable<GetOrdersMyQuery['me']>['orders']['edges'][0]['node'];
   }) => {
     return (
-      <SingleOrder item={item}>
+      <SingleOrder
+        item={item}
+        deliveryRequestsCount={item?.deliveryRequests?.totalCount}
+      >
         <Status item={item} />
       </SingleOrder>
     );
