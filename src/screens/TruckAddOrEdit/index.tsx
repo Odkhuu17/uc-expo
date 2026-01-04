@@ -1,6 +1,5 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import { ContainerTruck01Icon } from '@hugeicons/core-free-icons';
 import { TextInput } from 'react-native';
@@ -15,8 +14,9 @@ import {
   HeaderNormal,
   InputImage,
   ContentScrollable,
+  BottomContainer,
 } from '@/components';
-import { Box, useTheme } from '@/components/Theme';
+import { Box } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
 import { useAppSelector } from '@/redux/hooks';
 import { imageToFile } from '@/utils/fileHelpers';
@@ -36,7 +36,11 @@ const schema = yup.object().shape({
   mark: yup.string().required('Энэ талбар хоосон байна!'),
   model: yup.string().required('Энэ талбар хоосон байна!'),
   taxonId: yup.string().required('Энэ талбар хоосон байна!'),
-  plateNumber: yup.string().required('Энэ талбар хоосон байна!'),
+  plateNumber: yup
+    .string()
+    .required('Энэ талбар хоосон байна!')
+    .max(7, 'Та буруу дугаар оруулсан байна!')
+    .min(6, 'Та буруу дугаар оруулсан байна!'),
 });
 
 const TruckAddOrEdit = ({ navigation, route }: Props) => {
@@ -44,8 +48,6 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
   const { user } = useAppSelector(state => state.auth);
   const [createTruck] = useCreateTruckMutation();
   const [verifyTruck] = useVerifyTruckMutation();
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
   const [successModal, setSuccessModal] = useState(false);
   const { data: taxonsData } = useGetTaxonsQuery();
   const [passport, setPassport] = useState<string | null>(null);
@@ -54,6 +56,8 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
   const refs = useRef<TextInput[]>([]);
 
   const truck = trucksData?.me?.trucks?.find(truck => truck.id === id);
+
+  console.log(trucksData);
 
   useEffect(() => {
     if (id) {
@@ -225,6 +229,7 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
               <Input
                 label="Машины дугаар"
                 placeholder="1234УНА"
+                maxLength={7}
                 value={values.plateNumber}
                 autoCapitalize="characters"
                 onBlur={handleBlur('plateNumber')}
@@ -245,17 +250,14 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
               />
             </Box>
           </ContentScrollable>
-          <Box
-            px="m"
-            style={{ paddingBottom: insets.bottom + theme.spacing.m }}
-          >
-            <Button
-              title={id ? 'Мэдээлэл шинэчлэх' : 'Машин нэмэх'}
-              onPress={handleSubmit}
-              loading={isSubmitting}
-            />
-          </Box>
         </CustomKeyboardAvoidingView>
+        <BottomContainer>
+          <Button
+            title={id ? 'Мэдээлэл шинэчлэх' : 'Машин нэмэх'}
+            onPress={handleSubmit}
+            loading={isSubmitting}
+          />
+        </BottomContainer>
       </Container>
       <ModalMsg
         type="success"

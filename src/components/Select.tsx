@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import React, { useRef } from 'react';
-import { Pressable, ViewStyle } from 'react-native';
+import { Keyboard, Pressable, ViewStyle } from 'react-native';
 import { IconSvgElement } from '@hugeicons/react-native';
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
@@ -45,10 +45,15 @@ function Select({
     hasRightIcon: true,
   });
 
+  const onPress = () => {
+    Keyboard.dismiss();
+    ref.current?.present();
+  };
+
   return (
     <Box>
       {label && <InputLabel isRequired={isRequired} label={label} />}
-      <Pressable onPress={() => ref.current?.present()}>
+      <Pressable onPress={onPress}>
         <InputContainer width={width} size={size}>
           {icon && <InputIcon position="left" icon={icon} />}
           <Box style={style} flex={1} justifyContent="center">

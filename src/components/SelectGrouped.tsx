@@ -1,6 +1,6 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import React, { useRef } from 'react';
-import { Pressable, ViewStyle } from 'react-native';
+import { Keyboard, Pressable, ViewStyle } from 'react-native';
 import { IconSvgElement } from '@hugeicons/react-native';
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
@@ -49,6 +49,7 @@ function Select({
   });
 
   const onPress = () => {
+    Keyboard.dismiss();
     ref.current?.present();
   };
 

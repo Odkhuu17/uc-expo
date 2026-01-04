@@ -1,4 +1,3 @@
-import { useTheme } from '@shopify/restyle';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
@@ -27,7 +26,6 @@ interface Props {
 
 const SingleTruck = ({ item, refetch }: Props) => {
   const navigation = useNavigation<INavigation>();
-  const theme = useTheme();
   const [destroyTruck, { loading }] = useDestroyTruckMutation();
   const [hasPendingUserVerification, setHasPendingUserVerification] =
     useState(false);
@@ -135,7 +133,7 @@ const SingleTruck = ({ item, refetch }: Props) => {
         {item?.subscribed ? (
           <Text variant="label" textAlign="right">
             Эрх дуусах хугацаа:{' '}
-            {dayjs(item?.subscribedUntil).format('YYYY/MM/DD')}
+            {dayjs(item?.subscribedUntil).format('YYYY-MM-DD')}
           </Text>
         ) : (
           <Button

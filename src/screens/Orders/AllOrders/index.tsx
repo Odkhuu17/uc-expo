@@ -8,7 +8,6 @@ import {
   useGetOrdersQuery,
 } from '@/gql/queries/getOrders.generated';
 import SingleOrder from '@/containers/SingleOrder';
-import Status from '@/containers/SingleOrder/Status';
 
 const AllOrders = () => {
   const [isRefetching, setIsRefetching] = useState(false);
@@ -62,11 +61,7 @@ const AllOrders = () => {
   }: {
     item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
   }) => {
-    return (
-      <SingleOrder item={item}>
-        <Status item={item} />
-      </SingleOrder>
-    );
+    return <SingleOrder item={item} />;
   };
 
   const renderFooter = () => {

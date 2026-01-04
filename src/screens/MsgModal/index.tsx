@@ -1,5 +1,6 @@
 import { INavigationProps } from '@/navigations';
 import ModalMsgContent from '@/components/ModalMsgContent';
+import useLogout from '@/hooks/useLogout';
 
 interface Props {
   navigation: INavigationProps<'MsgModal'>['navigation'];
@@ -8,9 +9,15 @@ interface Props {
 
 const MsgModal = ({ navigation, route }: Props) => {
   const { type, msg } = route.params;
+  const { logout } = useLogout();
 
-  const handleClose = () => {
-    navigation.goBack();
+  const handleClose = async () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      await logout();
+      navigation.navigate('AuthChooseType');
+    }
   };
 
   return <ModalMsgContent type={type} msg={msg} handleClose={handleClose} />;

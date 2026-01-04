@@ -54,7 +54,7 @@ const InputDate = ({
 
   const onClose = () => {
     if (!value) {
-      onChange(dayjs().format('YYYY/MM/DD'));
+      onChange(dayjs().format('YYYY-MM-DD'));
     }
     ref.current?.dismiss();
   };
@@ -62,7 +62,7 @@ const InputDate = ({
   const onChangeDate = (event: DateTimePickerEvent) => {
     const ts = event?.nativeEvent?.timestamp;
     if (mode === 'date') {
-      onChange(dayjs(ts).format('YYYY/MM/DD'));
+      onChange(dayjs(ts).format('YYYY-MM-DD'));
     } else {
       onChange(dayjs(ts).format('HH:mm'));
     }
@@ -105,7 +105,7 @@ const InputDate = ({
                 {value
                   ? mode === 'time'
                     ? dayjs(pickerValue).format('HH:mm')
-                    : dayjs(value).format('YYYY/MM/DD')
+                    : dayjs(value).format('YYYY-MM-DD')
                   : placeholder}
               </Text>
             </Box>

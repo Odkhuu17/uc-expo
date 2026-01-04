@@ -108,7 +108,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
     initialValues: {
       packageType: '',
       packageWeight: '',
-      travelDay: dayjs().format('YYYY/MM/DD'),
+      travelDay: dayjs().format('YYYY-MM-DD'),
       travelHour: dayjs().format('HH:mm'),
       vatIncluded: false,
       priceNegotiable: false,
@@ -163,7 +163,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const rentFormik = useFormik({
     initialValues: {
       carWeight: '',
-      startDate: dayjs().format('YYYY/MM/DD'),
+      startDate: dayjs().format('YYYY-MM-DD'),
       rentDay: '',
       motHour: '',
       vatIncluded: false,
@@ -248,7 +248,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
           carType: data?.order?.carType || '',
           carWeight: data?.order?.carWeight || '',
           startDate: data?.order?.travelAt
-            ? dayjs(data?.order?.travelAt).format('YYYY/MM/DD')
+            ? dayjs(data?.order?.travelAt).format('YYYY-MM-DD')
             : '',
           rentDay: data?.order?.data?.rent_day || '',
           motHour: data?.order?.data?.mot_hour || '',
@@ -264,7 +264,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
           packageType: data?.order?.packageType || '',
           packageWeight: data?.order?.packageWeight || '',
           travelDay: data?.order?.travelAt
-            ? dayjs(data?.order?.travelAt).format('YYYY/MM/DD')
+            ? dayjs(data?.order?.travelAt).format('YYYY-MM-DD')
             : '',
           travelHour: data?.order?.travelAt
             ? dayjs(data?.order?.travelAt).format('HH:mm')

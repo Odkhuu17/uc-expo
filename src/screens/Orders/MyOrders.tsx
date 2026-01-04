@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
-import { CustomFlatList, Empty, Loader } from '@/components';
+import { CustomFlatList, Empty, Label, Loader } from '@/components';
 import SingleOrder from '@/containers/SingleOrder';
 import {
   GetOrdersMyQuery,
   useGetOrdersMyQuery,
 } from '@/gql/queries/getOrdersMy.generated';
-import Status from '@/containers/SingleOrder/Status';
 import { Box, Text } from '@/components/Theme';
 
 const MyOrders = () => {
@@ -16,7 +15,6 @@ const MyOrders = () => {
     variables: {
       ordersFirst: 10,
     },
-    pollInterval: 30000,
     notifyOnNetworkStatusChange: true,
   });
 
@@ -78,11 +76,21 @@ const MyOrders = () => {
     item: NonNullable<GetOrdersMyQuery['me']>['orders']['edges'][0]['node'];
   }) => {
     return (
-      <SingleOrder
-        item={item}
-        deliveryRequestsCount={item?.deliveryRequests?.totalCount}
-      >
-        <Status item={item} />
+      <SingleOrder item={item}>
+        {item?.status === 'accepted' ? (
+          <Box alignItems="center" flexDirection="row">
+            <Text variant="body2">Төлөв: </Text>
+            <Label text="Баталгаажсан" backgroundColor="success" />
+          </Box>
+        ) : (
+          <Box alignItems="center" flexDirection="row">
+            <Text variant="body2">Хүсэлтийн тоо: </Text>
+            <Label
+              text={String(item?.deliveryRequests.totalCount || 0)}
+              backgroundColor="error"
+            />
+          </Box>
+        )}
       </SingleOrder>
     );
   };

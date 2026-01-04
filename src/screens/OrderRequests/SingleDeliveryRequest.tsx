@@ -12,8 +12,11 @@ import {
   ModalBottomSheet,
   Input,
   ModalMsg,
+  BottomContainer,
+  RowValue,
+  Label,
 } from '@/components';
-import { Box, Text, useTheme } from '@/components/Theme';
+import { Box, useTheme } from '@/components/Theme';
 import { moneyFormat } from '@/utils/helpers';
 import { INavigation } from '@/navigations';
 import type { GetOrderRequestsQuery } from '@/gql/queries/orderRequests.generated';
@@ -78,6 +81,7 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
         });
         setSuccessModal(true);
       } else {
+        ref.current?.dismiss();
         navigation.navigate('MsgModal', {
           type: 'error',
           msg: 'Та буруу дугаар оруулсан байна!',
@@ -100,53 +104,35 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
 
   return (
     <>
-      <BoxContainer
-        gap="s"
-        borderColor="success"
-        borderWidth={item?.status === 'accepted' ? 2 : 0}
-      >
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">Үнэ:</Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {moneyFormat(item?.price || 0)}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">
-            {isRent ? 'Ажил эхлэх өдөр:' : 'Ачих өдөр:'}
-          </Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {isRent
-              ? dayjs(item?.travelAt).format('YYYY/MM/DD')
-              : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">Жолоочын овог:</Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {item?.user?.lastName || '-'}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">Жолоочын нэр:</Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {item?.user?.firstName || '-'}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">Жолоочын дугаар:</Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {item?.user?.mobile || '-'}
-          </Text>
-        </Box>
-        <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="body2">Төлөв:</Text>
-          <Text variant="body2" fontFamily="Roboto_500Medium">
-            {item?.status === 'accepted' ? 'Баталгаажсан' : '-'}
-          </Text>
-        </Box>
+      <BoxContainer gap="s">
+        <RowValue label="Үнэ:" value={moneyFormat(item?.price || 0)} />
+        <RowValue
+          label={isRent ? 'Ажил эхлэх өдөр:' : 'Ачих өдөр:'}
+          value={
+            isRent
+              ? dayjs(item?.travelAt).format('YYYY-MM-DD')
+              : dayjs(item?.travelAt).format('YYYY-MM-DD HH:mm')
+          }
+        />
+        <RowValue label="Жолоочын овог:" value={item?.user?.lastName || '-'} />
+        <RowValue label="Жолоочын нэр:" value={item?.user?.firstName || '-'} />
+        <RowValue label="Жолоочын дугаар:" value={item?.user?.mobile || '-'} />
+        <RowValue label="Төлөв:">
+          <Label
+            text={
+              item?.status === 'accepted' ? 'Баталгаажсан' : 'Хүлээгдэж буй'
+            }
+            backgroundColor={
+              item?.status === 'accepted' ? 'success' : 'pending'
+            }
+          />
+        </RowValue>
         {item?.status !== 'accepted' && (
-          <Button title="Захиалга баталгаажуулах" onPress={onPressConfirm} />
+          <Button
+            title="Захиалга баталгаажуулах"
+            onPress={onPressConfirm}
+            color={isRent ? 'rent' : 'delivery'}
+          />
         )}
       </BoxContainer>
       <ModalBottomSheet
@@ -156,30 +142,29 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
         onChange={onChangeSheet}
       >
         <BottomSheetView>
-          <Box
-            style={{ paddingBottom: insets.bottom + theme.spacing.m }}
-            px="m"
-            pt="m"
-            gap="m"
-          >
-            <Input
-              label="Жолоочийн утасны дугаар"
-              placeholder="Жолоочийн утасны дугаар"
-              keyboardAvoiding
-              keyboardType="number-pad"
-              onChangeText={handleChange('mobile')}
-              onBlur={handleBlur('mobile')}
-              value={values.mobile}
-              error={
-                touched.mobile && errors.mobile ? errors.mobile : undefined
-              }
-            />
-            <Button
-              title="Баталгаажуулах"
-              loading={loading}
-              onPress={handleSubmit}
-            />
-          </Box>
+          <BottomContainer>
+            <Box gap="m">
+              <Input
+                label="Жолоочийн утасны дугаар"
+                placeholder="Жолоочийн утасны дугаар"
+                maxLength={8}
+                keyboardAvoiding
+                keyboardType="number-pad"
+                onChangeText={handleChange('mobile')}
+                onBlur={handleBlur('mobile')}
+                autoFocus
+                value={values.mobile}
+                error={
+                  touched.mobile && errors.mobile ? errors.mobile : undefined
+                }
+              />
+              <Button
+                title="Баталгаажуулах"
+                loading={loading}
+                onPress={handleSubmit}
+              />
+            </Box>
+          </BottomContainer>
         </BottomSheetView>
       </ModalBottomSheet>
       <ModalMsg

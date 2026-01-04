@@ -9,7 +9,7 @@ interface Props {
   value: string | number | undefined;
 }
 
-const SingleCallRow = ({ label, value }: Props) => {
+const RowValueCall = ({ label, value }: Props) => {
   const theme = useTheme();
 
   const onPressCall = () => {
@@ -30,11 +30,7 @@ const SingleCallRow = ({ label, value }: Props) => {
             gap="xs"
           >
             <HugeiconsIcon icon={Call} size={theme.icon.s} />
-            <Text
-              variant="body2"
-              fontFamily="Roboto_500Medium"
-              textAlign="right"
-            >
+            <Text variant="body2" textAlign="right">
               {value}
             </Text>
           </Box>
@@ -44,4 +40,4 @@ const SingleCallRow = ({ label, value }: Props) => {
   );
 };
 
-export default SingleCallRow;
+export default RowValueCall;

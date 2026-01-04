@@ -1,94 +1,74 @@
-import Video, { VideoRef } from 'react-native-video';
+import { PlayIcon } from '@hugeicons/core-free-icons';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import { PlayCircleIcon } from '@hugeicons/core-free-icons';
+import { StyleSheet } from 'react-native';
+import {
+  useEvent,
+  useVideoPlayer,
+  VideoView,
+  VideoViewRef,
+} from 'react-native-video';
 
-import { BoxContainer, ButtonIcon } from '@/components';
-import { Box, Text, useTheme } from '@/components/Theme';
+import { ButtonIcon } from '@/components';
+import { Box, Text } from '@/components/Theme';
+import { getImageUrl } from '@/utils/helpers';
+import dayjs from 'dayjs';
 
 interface Props {
   video: string;
 }
 
-const OrderDetailVideo = ({ video }: Props) => {
-  const theme = useTheme();
-  const videoRef = useRef<VideoRef>(null);
-  const [isLoading, setIsLoading] = useState(true);
+const Video = ({ video }: Props) => {
+  const player = useVideoPlayer(getImageUrl(video));
+  const videoViewRef = useRef<VideoViewRef>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
 
-  const handlePlayFullscreen = async () => {
-    videoRef.current?.presentFullscreenPlayer();
+  useEvent(player, 'onLoad', ({ duration }) => {
+    if (Number.isFinite(duration)) {
+      setDurationSeconds(duration);
+    }
+  });
+
+  const onPlay = () => {
+    videoViewRef?.current?.enterFullscreen();
+    player.play();
   };
 
-  const onFullscreenPlayerDidPresent = () => {
-    videoRef.current?.resume();
-  };
-
-  const onFullscreenPlayerWillDismiss = () => {
-    videoRef.current?.seek(0);
-    videoRef.current?.pause();
-  };
-
-  const onLoad = () => {
-    setIsLoading(false);
-  };
-
-  const onLoadStart = () => {
-    setIsLoading(true);
-  };
-
-  const onBuffer = ({ isBuffering }: { isBuffering: boolean }) => {
-    setIsLoading(isBuffering);
+  const onFullscreenChange = (fullscreen: boolean) => {
+    setIsFullscreen(fullscreen);
   };
 
   return (
-    <BoxContainer gap="s">
-      <Box flexDirection="row" alignItems="center">
-        <Text variant="title" flex={1}>
-          Бичлэг
+    <Box flex={1} alignItems="center" flexDirection="row">
+      <Box flexDirection="row" alignItems="center" gap="s">
+        <ButtonIcon icon={PlayIcon} onPress={onPlay} />
+        <Text variant="body2" color="grey4">
+          {durationSeconds != null
+            ? dayjs(durationSeconds * 1000).format('mm:ss')
+            : ''}
         </Text>
       </Box>
-      <Box flexDirection="row" alignItems="center" gap="s">
-        <Video
-          source={{ uri: video }}
-          ref={videoRef}
-          style={css.video}
-          resizeMode="cover"
-          fullscreen
-          onFullscreenPlayerDidPresent={onFullscreenPlayerDidPresent}
-          onFullscreenPlayerWillDismiss={onFullscreenPlayerWillDismiss}
-          onLoad={onLoad}
-          onLoadStart={onLoadStart}
-          onBuffer={onBuffer}
-        />
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          justifyContent="center"
-          alignItems="center"
-        >
-          {isLoading ? (
-            <ActivityIndicator size="large" color={theme.colors.primary} />
-          ) : (
-            <ButtonIcon
-              icon={PlayCircleIcon}
-              backgroundColor="backdrop"
-              onPress={handlePlayFullscreen}
-            />
-          )}
-        </Box>
-      </Box>
-    </BoxContainer>
+
+      <VideoView
+        style={css.video}
+        player={player}
+        controls={isFullscreen}
+        resizeMode="cover"
+        ref={videoViewRef}
+        onFullscreenChange={onFullscreenChange}
+      />
+    </Box>
   );
 };
 
 const css = StyleSheet.create({
   video: {
-    width: '100%',
-    height: 150,
+    height: 0,
+    width: 0,
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
 });
 
-export default OrderDetailVideo;
+export default Video;

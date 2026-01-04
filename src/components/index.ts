@@ -30,3 +30,5 @@ export { default as InputMask } from './InputMask';
 export { default as MapPin } from './MapPin';
 export { default as MapDirections } from './MapDirections';
 export { default as InputOtp } from './InputOtp';
+export { default as RowValue } from './RowValue';
+export { default as RowValueCall } from './RowValueCall';

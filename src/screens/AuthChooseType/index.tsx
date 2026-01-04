@@ -34,7 +34,7 @@ const AuthChooseType = ({ navigation }: Props) => {
               <Button
                 title="Жолооч"
                 onPress={handlePressDriver}
-                color="secondary"
+                color="delivery"
               />
             </SingleButton>
           </TouchableOpacity>
@@ -43,7 +43,7 @@ const AuthChooseType = ({ navigation }: Props) => {
               <Button
                 title="Ачаа илгээгч"
                 onPress={handlePressShipper}
-                color="secondary"
+                color="delivery"
               />
             </SingleButton>
           </TouchableOpacity>

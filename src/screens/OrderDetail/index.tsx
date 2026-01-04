@@ -11,6 +11,8 @@ import {
   Loader,
   HeaderNormal,
   ContentScrollable,
+  RowValue,
+  Label,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
@@ -19,7 +21,6 @@ import {
   OrderDetailAudio,
   OrderDetailDelivery,
   OrderDetailVideo,
-  SingleRow,
   Title,
 } from './components';
 import OrderDestroyButton from './containers/OrderDestroyButton';
@@ -139,12 +140,16 @@ const OrderDetail = ({ navigation, route }: Props) => {
                   </ScrollView>
                 </BoxContainer>
               )}
-              {/* {data?.order?.video && (
-                <OrderDetailVideo video={getImageUrl(data?.order?.video)} />
+              {data?.order?.video && (
+                <BoxContainer>
+                  <OrderDetailVideo video={getImageUrl(data?.order?.video)} />
+                </BoxContainer>
               )}
               {data?.order?.audio && (
-                <OrderDetailAudio audio={getImageUrl(data?.order?.audio)} />
-              )} */}
+                <BoxContainer>
+                  <OrderDetailAudio audio={getImageUrl(data?.order?.audio)} />
+                </BoxContainer>
+              )}
               {isRent ? (
                 <OrderDetailRent order={data?.order} />
               ) : (
@@ -158,6 +163,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                       title={`Захиалгын хүсэлтүүд (${
                         data?.order?.deliveryRequests?.totalCount || 0
                       })`}
+                      color={isRent ? 'rent' : 'delivery'}
                       onPress={onPressRequests}
                     />
                     <Box flexDirection="row" gap="s">
@@ -176,56 +182,67 @@ const OrderDetail = ({ navigation, route }: Props) => {
                 )}
               {mode === 'shipper' && data?.order?.acceptedDeliveryRequest && (
                 <BoxContainer gap="m">
-                  <Title title="Жолоочын мэдээлэл" />
-                  <SingleRow
+                  <Title
+                    title="Жолоочын мэдээлэл"
+                    color={isRent ? 'rent' : 'delivery'}
+                  />
+                  <RowValue
                     label="Үнэ:"
                     value={moneyFormat(
                       data?.order?.acceptedDeliveryRequest?.price,
                     )}
                   />
-                  <SingleRow
+                  <RowValue
                     label="Овог"
                     value={data?.order?.acceptedDeliveryRequest?.user?.lastName}
                   />
-                  <SingleRow
+                  <RowValue
                     label="Нэр"
                     value={
                       data?.order?.acceptedDeliveryRequest?.user?.firstName
                     }
                   />
-                  <SingleRow
+                  <RowValue
                     label="Утасны дугаар"
                     value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
                   />
-                  <Button title="Техник хянах" onPress={onPressTrack} />
+                  <Button
+                    title="Техник хянах"
+                    onPress={onPressTrack}
+                    color={isRent ? 'rent' : 'delivery'}
+                  />
                 </BoxContainer>
               )}
               {mode === 'driver' && data?.order?.myRequest && (
                 <BoxContainer gap="m">
-                  <Title title="Миний хүсэлт" />
-                  <SingleRow
+                  <Title
+                    title="Миний хүсэлт"
+                    color={isRent ? 'rent' : 'delivery'}
+                  />
+                  <RowValue
                     label="Үнэ:"
                     value={moneyFormat(data?.order?.myRequest?.price)}
                   />
-                  <SingleRow
+                  <RowValue
                     label="Илгээсэн огноо:"
                     value={dayjs(data?.order?.myRequest?.updatedAt).format(
-                      'YYYY/MM/DD HH:mm',
+                      'YYYY-MM-DD HH:mm',
                     )}
                   />
-                  <SingleRow
-                    backgroundColor={
-                      data?.order?.myRequest?.status === 'pending'
-                        ? 'pending'
-                        : 'success'
-                    }
-                    label="Төлөв:"
-                    value={
-                      data?.order?.myRequest?.status === 'pending'
-                        ? 'Хүлээгдэж буй'
-                        : 'Зөвшөөрөгдсөн'
-                    }
-                  />
+                  <RowValue label="Төлөв:">
+                    <Label
+                      text={
+                        data?.order?.myRequest?.status === 'pending'
+                          ? 'Хүлээгдэж буй'
+                          : 'Зөвшөөрөгдсөн'
+                      }
+                      backgroundColor={
+                        data?.order?.myRequest?.status === 'pending'
+                          ? 'pending'
+                          : 'success'
+                      }
+                    />
+                  </RowValue>
                 </BoxContainer>
               )}
               {mode === 'driver' && (

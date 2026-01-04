@@ -1,88 +1,40 @@
-import { useCallback, useEffect, useState } from 'react';
 import { Alert, RefreshControl } from 'react-native';
-import {
-  Book02Icon,
-  CallIcon,
-  ContainerTruck01Icon,
-} from '@hugeicons/core-free-icons';
-import { useFocusEffect } from '@react-navigation/native';
-import { openSettings, PERMISSIONS, request } from 'react-native-permissions';
+import { Book02Icon, CallIcon } from '@hugeicons/core-free-icons';
 
 import {
   BoxContainer,
   Button,
   Container,
-  Loader,
   HeaderNormal,
-  Progress,
   ContentScrollable,
-  Warning,
   BottomContainer,
 } from '@/components';
 import { Box } from '@/components/Theme';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import authSlice from '@/redux/slices/auth';
 import { SingleMenu, UserInfo } from './components';
-import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
+import { useGetMeQuery } from '@/gql/queries/getMe.generated';
 import { INavigationProps } from '@/navigations';
-import settingsSlice from '@/redux/slices/settings';
 import useLogout from '@/hooks/useLogout';
+import LocationPermission from './LocationPermission';
+import UserVerify from './UserVerify';
+import UserTrucks from './UserTrucks';
 
 interface Props {
   navigation: INavigationProps<'Profile'>['navigation'];
 }
 
 const ProfileScreen = ({ navigation }: Props) => {
-  const [getUser, { data: userData, loading: userLoading }] = useGetMeLazyQuery(
-    {
-      fetchPolicy: 'no-cache',
-    },
-  );
+  const {
+    data: userData,
+    loading: userLoading,
+    refetch,
+  } = useGetMeQuery({
+    fetchPolicy: 'no-cache',
+  });
 
   const { logout } = useLogout();
 
-  const dispatch = useAppDispatch();
-  const [hasPendingUserVerification, setHasPendingUserVerification] =
-    useState(false);
-
-  const { mode } = useAppSelector(state => state.general);
-  const { locationPermission } = useAppSelector(state => state.settings);
-
-  const hasVerifiedTruck = userData?.me?.trucks?.some(truck => truck.verified);
-
-  useFocusEffect(
-    useCallback(() => {
-      getUser();
-    }, []),
-  );
-
-  useEffect(() => {
-    if (userData) {
-      dispatch(authSlice.actions.changeUser(userData.me!));
-      if (userData.me?.verifications?.edges?.[0]?.node?.status === 'pending') {
-        setHasPendingUserVerification(true);
-      }
-    }
-  }, [userData]);
-
-  useEffect(() => {
-    if (userData && hasPendingUserVerification) {
-      if (userData.me?.verified) {
-        setHasPendingUserVerification(false);
-        return navigation.navigate('MsgModal', {
-          type: 'success',
-          msg: 'Таны бүртгэл амжилттай баталгаажлаа.',
-        });
-      }
-    }
-  }, [userData, hasPendingUserVerification]);
-
   const onPressProfile = () => {
     navigation.navigate('ProfileUpdate');
-  };
-
-  const onPressVerification = () => {
-    navigation.navigate('DriverVerify');
   };
 
   const onLogout = () => {
@@ -99,10 +51,6 @@ const ProfileScreen = ({ navigation }: Props) => {
     ]);
   };
 
-  const onPressMyTrucks = () => {
-    navigation.navigate('TrucksMy');
-  };
-
   const onPressContact = () => {
     navigation.navigate('Contact');
   };
@@ -111,106 +59,39 @@ const ProfileScreen = ({ navigation }: Props) => {
     navigation.navigate('Terms');
   };
 
-  const onPressLocationPermission = () => {
-    request(PERMISSIONS.IOS.LOCATION_ALWAYS)
-      .then(res => {
-        if (res === 'granted') {
-          dispatch(settingsSlice.actions.changeLocationPermission(true));
-        } else {
-          openSettings('application');
-        }
-      })
-      .catch(() => console.warn('Cannot request location accuracy'));
-  };
-
   return (
     <Container>
       <HeaderNormal title="Миний мэдээлэл" />
-      {userLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <ContentScrollable
-            edges={['bottom']}
-            refreshControl={
-              <RefreshControl onRefresh={getUser} refreshing={userLoading} />
-            }
-          >
-            <Box gap="m">
-              {!locationPermission && (
-                <BoxContainer gap="m">
-                  <Warning
-                    type="error"
-                    description="Таны байрлалын зөвшөөрөл олдоогүй байна! Та байрлалын зөвшөөрөл олгосны дараа манай системийг ашиглах боломжтой."
-                  />
-                  <Button
-                    title="Зөвшөөрөл олгох"
-                    onPress={onPressLocationPermission}
-                  />
-                </BoxContainer>
-              )}
-              <BoxContainer gap="m">
-                <UserInfo userData={userData?.me} onPress={onPressProfile} />
-                {!userData?.me?.verified && mode === 'driver' && (
-                  <>
-                    {userData?.me?.verifications?.edges?.[0]?.node?.status ===
-                    'pending' ? (
-                      <Progress sec={15} onFinish={getUser} />
-                    ) : (
-                      <Warning description="Таны бүртгэл баталгаажаагүй байна! Та бүртгэлээ баталгаажуулсны дараа манай системийг ашиглах боломжтой." />
-                    )}
-                    {userData?.me?.verifications?.edges?.[0]?.node?.field5 && (
-                      <Warning
-                        type="error"
-                        description={
-                          userData?.me?.verifications?.edges?.[0]?.node?.field5
-                        }
-                      />
-                    )}
-                    {!userData?.me?.verified &&
-                      userData?.me?.verifications?.edges?.[0]?.node?.status !==
-                        'pending' && (
-                        <Button
-                          title="Бүртгэл баталгаажуулах"
-                          onPress={onPressVerification}
-                        />
-                      )}
-                  </>
-                )}
-              </BoxContainer>
-              {mode === 'driver' && (
-                <BoxContainer gap="m">
-                  <Box gap="m">
-                    <SingleMenu
-                      title="Миний машин"
-                      icon={ContainerTruck01Icon}
-                      onPress={onPressMyTrucks}
-                    />
-                    {!hasVerifiedTruck && (
-                      <Warning description="Танд баталгаажсан машин байхгүй байна! Та машинаа баталгаажуулсны дараагаар манай системийг ашиглах боломжтой." />
-                    )}
-                  </Box>
-                </BoxContainer>
-              )}
-              <BoxContainer gap="m">
-                <SingleMenu
-                  title="Холбоо барих"
-                  icon={CallIcon}
-                  onPress={onPressContact}
-                />
-                <SingleMenu
-                  title="Үйлчилгээний нөхцөл"
-                  icon={Book02Icon}
-                  onPress={onPressTerms}
-                />
-              </BoxContainer>
-            </Box>
-          </ContentScrollable>
-          <BottomContainer noInsets>
-            <Button title="Гарах" onPress={onLogout} variant="outlined" />
-          </BottomContainer>
-        </>
-      )}
+      <ContentScrollable
+        edges={['bottom']}
+        refreshControl={
+          <RefreshControl onRefresh={refetch} refreshing={userLoading} />
+        }
+      >
+        <Box gap="m">
+          <LocationPermission />
+          <BoxContainer gap="m">
+            <UserInfo userData={userData?.me} onPress={onPressProfile} />
+            <UserVerify userData={userData?.me} refetch={refetch} />
+          </BoxContainer>
+          <UserTrucks userData={userData?.me} />
+          <BoxContainer gap="m">
+            <SingleMenu
+              title="Холбоо барих"
+              icon={CallIcon}
+              onPress={onPressContact}
+            />
+            <SingleMenu
+              title="Үйлчилгээний нөхцөл"
+              icon={Book02Icon}
+              onPress={onPressTerms}
+            />
+          </BoxContainer>
+        </Box>
+      </ContentScrollable>
+      <BottomContainer noInsets>
+        <Button title="Гарах" onPress={onLogout} variant="outlined" />
+      </BottomContainer>
     </Container>
   );
 };

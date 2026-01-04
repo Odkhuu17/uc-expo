@@ -15,7 +15,6 @@ import { INavigation } from '@/navigations';
 interface Props {
   item: NonNullable<GetOrdersQuery['orders']>['edges'][0]['node'];
   children?: ReactNode;
-  deliveryRequestsCount?: number;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
+const SingleOrder = ({ item, children }: Props) => {
   const theme = useTheme();
   const styles = useStyles();
   const navigation = useNavigation<INavigation>();
@@ -71,14 +70,16 @@ const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
   return (
     <>
       <TouchableOpacity onPress={onNavigateToDetail}>
-        <BoxContainer p={undefined} overflow="hidden" gap="m">
+        <BoxContainer
+          borderWidth={1}
+          borderColor={isRent ? 'rent' : 'delivery'}
+          overflow="hidden"
+          gap="s"
+        >
           <Box
             flexDirection="row"
             justifyContent="space-between"
             alignItems="center"
-            px="m"
-            pt="m"
-            gap="s"
           >
             <Box flex={1}>
               {!isRent && (
@@ -92,7 +93,7 @@ const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
               backgroundColor={isRent ? 'rent' : 'delivery'}
             />
           </Box>
-          <Box flexDirection="row" alignItems="center" gap="s" px="m">
+          <Box flexDirection="row" alignItems="center" gap="s">
             <Box
               width={100}
               height={100}
@@ -175,8 +176,8 @@ const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
                   <Box>
                     <Text variant="body3" color="grey4">
                       {isRent
-                        ? dayjs(item?.travelAt).format('YYYY/MM/DD')
-                        : dayjs(item?.travelAt).format('YYYY/MM/DD HH:mm')}
+                        ? dayjs(item?.travelAt).format('YYYY-MM-DD')
+                        : dayjs(item?.travelAt).format('YYYY-MM-DD HH:mm')}
                     </Text>
                   </Box>
                 </Box>
@@ -186,23 +187,13 @@ const SingleOrder = ({ item, children, deliveryRequestsCount }: Props) => {
                   </Box>
                   <Box>
                     <Text variant="body3" color="grey4">
-                      {dayjs(item?.createdAt).format('YYYY/MM/DD')}
+                      {dayjs(item?.createdAt).format('YYYY-MM-DD')}
                     </Text>
                   </Box>
                 </Box>
               </Box>
             </Box>
           </Box>
-          {deliveryRequestsCount !== undefined && (
-            <Box px="m">
-              <Text variant="body2">
-                Хүсэлтийн тоо:{' '}
-                <Text variant="body2" color="error" fontWeight={600}>
-                  {deliveryRequestsCount}
-                </Text>
-              </Text>
-            </Box>
-          )}
           {children}
         </BoxContainer>
       </TouchableOpacity>

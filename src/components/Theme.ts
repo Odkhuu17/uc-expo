@@ -14,7 +14,7 @@ export const theme = createTheme({
     success: '#00c853',
     primary: '#1265FF',
     pending: '#ffab00',
-    secondary: '#45C4FA',
+    secondary: '#ffab00',
     backdrop: 'rgba(0, 0, 0, 0.5)',
     rent: '#ffab00',
     delivery: '#429AFF',
@@ -42,7 +42,7 @@ export const theme = createTheme({
     green3: '#00e676',
     green4: '#00c853',
 
-    blue1: '#82b1ff',
+    blue1: '#e0ecff',
     blue2: '#448aff',
     blue3: '#2979ff',
     blue4: '#1265FF',

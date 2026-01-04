@@ -48,7 +48,7 @@ const AuthLogin = ({ navigation }: Props) => {
             values.username,
             values.password,
           );
-          
+
           await Keychain.setGenericPassword(refresh_token, access_token, {
             service: constants.keyChainAuthServiceKey,
           });
@@ -95,7 +95,7 @@ const AuthLogin = ({ navigation }: Props) => {
           handlePressBack={handlePressBack}
         />
         <ContentScrollable edges={['bottom']}>
-          <Box gap="m" alignItems="center" flex={1} justifyContent="center">
+          <Box gap="m" alignItems="center" flex={2} justifyContent="center">
             <Input
               label="Утасны дугаар"
               placeholder="Утасны дугаар"
@@ -123,27 +123,28 @@ const AuthLogin = ({ navigation }: Props) => {
               returnKeyType="go"
               onSubmitEditing={handleSubmit}
             />
+            <Box alignItems="flex-end" justifyContent="flex-end" width={270}>
+              <Button
+                title="Нууц үг сэргээх"
+                onPress={handlePressForgot}
+                size="s"
+                variant="text"
+              />
+            </Box>
             <Button
               title="Нэвтрэх"
               onPress={handleSubmit}
               width={190}
               loading={isSubmitting}
             />
-            <Box flexDirection="row" alignItems="center" gap="xl" mt="xl2">
-              <Button
-                title="Бүртгүүлэх"
-                onPress={handlePressRegister}
-                width={130}
-                size="s"
-              />
-              <Button
-                title="Нууц үг сэргээх"
-                onPress={handlePressForgot}
-                width={130}
-                size="s"
-              />
-            </Box>
+            <Button
+              title="Бүртгүүлэх"
+              onPress={handlePressRegister}
+              width={190}
+              variant="text"
+            />
           </Box>
+          <Box flex={1} />
         </ContentScrollable>
       </CustomKeyboardAvoidingView>
     </Container>

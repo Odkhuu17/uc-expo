@@ -61,8 +61,8 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
     initialValues: {
       price: data?.price ? formatNumberWithCommas(`${data?.price}`) : '0',
       travelAt: data?.travelAt
-        ? dayjs(data?.travelAt).format('YYYY/MM/DD')
-        : dayjs().format('YYYY/MM/DD'),
+        ? dayjs(data?.travelAt).format('YYYY-MM-DD')
+        : dayjs().format('YYYY-MM-DD'),
     },
     validationSchema: schema,
     onSubmit: async () => {

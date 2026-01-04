@@ -21,8 +21,6 @@ const Player = ({ audio, number, setAudio }: Props) => {
   const [playTime, setPlayTime] = useState('00:00:00');
   const [duration, setDuration] = useState('00:00:00');
 
-  console.log('Audio URL:', getImageUrl(audio));
-
   const onDestroyAudio = async () => {
     await destroyOrderAudio({ variables: { number } });
     onStopPlay();

@@ -9,6 +9,7 @@ import Animated, {
 
 import { Box, Text, useTheme } from '@/components/Theme';
 import BoxContainer from './BoxContainer';
+import { scheduleOnRN } from 'react-native-worklets';
 
 interface Props {
   sec: number;
@@ -22,11 +23,8 @@ const Progress = ({ sec, onFinish }: Props) => {
   const theme = useTheme();
 
   useEffect(() => {
-    width.value = withTiming(100, { duration: sec * 1000 }, finished => {
-      if (finished) {
-        console.log(finished)
-        runOnJS(onFinish)();
-      }
+    width.value = withTiming(100, { duration: sec * 1000 }, () => {
+      scheduleOnRN(onFinish);
     });
   }, []);
 

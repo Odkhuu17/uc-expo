@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import { Button, ContentScrollable, FitImage } from '@/components';
-import { Box, Text } from '@/components/Theme';
+import { Box } from '@/components/Theme';
 
 interface Props {
   setIsRent: Dispatch<SetStateAction<boolean>>;
@@ -24,7 +24,6 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
     <ContentScrollable edges={['bottom']}>
       <Box flex={1} alignItems="center" justifyContent="center">
         <Box gap="xl3" alignItems="center">
-          <Text variant="title">Техникийн төрөл сонгох</Text>
           <Box gap="xl">
             <TouchableOpacity onPress={onPress1}>
               <Box alignItems="center">
@@ -32,7 +31,11 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
                   source={require('assets/images/trucks.png')}
                   width={300}
                 />
-                <Button title="Ачааны машин" onPress={onPress1} />
+                <Button
+                  title="Ачааны машин"
+                  onPress={onPress1}
+                  color="delivery"
+                />
               </Box>
             </TouchableOpacity>
             <TouchableOpacity onPress={onPress2}>
@@ -41,7 +44,7 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
                   source={require('assets/images/rents.png')}
                   width={300}
                 />
-                <Button title="Техник түрээс" onPress={onPress2} />
+                <Button title="Техник түрээс" onPress={onPress2} color="rent" />
               </Box>
             </TouchableOpacity>
           </Box>

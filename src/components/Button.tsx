@@ -12,7 +12,7 @@ interface Props {
   title: string;
   onPress: () => void;
   variant?: 'text' | 'outlined' | 'contained';
-  color?: 'primary' | 'secondary' | 'error' | 'success';
+  color?: 'primary' | 'secondary' | 'error' | 'success' | 'delivery' | 'rent';
   size?: keyof Theme['button'];
   loading?: boolean;
   fullWidth?: boolean;
@@ -40,46 +40,19 @@ const Button = ({
   const getBackgroundColor = (): keyof Theme['colors'] => {
     if (variant === 'text' || variant === 'outlined') return 'transparent';
 
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      case 'error':
-        return 'error';
-      case 'success':
-        return 'success';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   const getTextColor = (): keyof Theme['colors'] => {
     if (variant === 'contained') return 'white';
 
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      case 'error':
-        return 'error';
-      case 'success':
-        return 'success';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   const getBorderColor = (): keyof Theme['colors'] => {
     if (variant === 'text') return 'transparent';
 
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      case 'error':
-        return 'error';
-      case 'success':
-        return 'success';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   const getTextVariant = () => {
@@ -104,7 +77,7 @@ const Button = ({
           alignItems="center"
           height={theme.button[size]}
           justifyContent="center"
-          px="l"
+          px="s"
         >
           {loading ? (
             <ActivityIndicator color={theme.colors[getTextColor()]} />

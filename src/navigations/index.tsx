@@ -121,7 +121,7 @@ const AppNavigator = () => {
             backgroundColor: theme.colors.backdrop,
           },
           presentation: 'transparentModal',
-          ...TransitionPresets.FadeFromBottomAndroid,
+          ...TransitionPresets.ModalFadeTransition,
         }}
       >
         <Stack.Screen name="MsgModal" component={MsgModal} />
