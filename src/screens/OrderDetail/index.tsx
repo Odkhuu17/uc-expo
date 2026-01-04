@@ -248,12 +248,17 @@ const OrderDetail = ({ navigation, route }: Props) => {
               {mode === 'driver' && (
                 <>
                   {data?.order?.status !== 'accepted' ? (
-                    <OrderRequestButton data={data?.order} refetch={refetch} />
+                    <OrderRequestButton
+                      data={data?.order}
+                      refetch={refetch}
+                      isRent={isRent}
+                    />
                   ) : (
                     <Box flexDirection="row" gap="m">
                       {data?.order?.origin && (
                         <Box flex={1}>
                           <Button
+                            color={isRent ? 'rent' : 'delivery'}
                             title={isRent ? 'Ажиллах байршил' : 'Авах байршил'}
                             onPress={onPressOriginLocation}
                           />
@@ -262,6 +267,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                       {data?.order?.destination && !isRent && (
                         <Box flex={1}>
                           <Button
+                            color="delivery"
                             title="Хүргэх байршил"
                             onPress={onPressDestinationLocation}
                           />

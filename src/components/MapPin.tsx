@@ -11,6 +11,7 @@ interface Props {
 const MapPin = ({ title }: Props) => {
   return (
     <Box
+      pointerEvents="none"
       flex={1}
       height={PIN_HEIGHT}
       style={{

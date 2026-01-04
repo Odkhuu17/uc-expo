@@ -2,22 +2,29 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { useMemo, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 
-import { Button, ModalBottomSheet, Input, ModalMsg } from '@/components';
-import { Box, useTheme } from '@/components/Theme';
+import {
+  Button,
+  ModalBottomSheet,
+  Input,
+  ModalMsg,
+  BottomContainer,
+} from '@/components';
+import { Box } from '@/components/Theme';
 import {
   GetOrderDetailQuery,
   GetOrderDetailDocument,
 } from '@/gql/queries/getOrderDetail.generated';
+import { GetMyDeliveryRequestsDocument } from '@/gql/queries/getMyDeliveryRequests.generated';
 import { INavigation } from '@/navigations';
 import { useCreateDeliveryRequestMutation } from '@/gql/mutations/createDeliveryRequest.generated';
 
 interface Props {
   data: GetOrderDetailQuery['order'];
   refetch: () => void;
+  isRent?: boolean;
 }
 
 const schema = yup.object().shape({
@@ -25,13 +32,11 @@ const schema = yup.object().shape({
   travelAt: yup.string(),
 });
 
-const OrderRequestButton = ({ data, refetch }: Props) => {
+const OrderRequestButton = ({ data, refetch, isRent }: Props) => {
   const [createDeliveryRequest, { loading }] =
     useCreateDeliveryRequestMutation();
   const ref = useRef<BottomSheetModal | null>(null);
   const snapPoints = useMemo(() => [], []);
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
   const navigation = useNavigation<INavigation>();
   const [successModal, setSuccessModal] = useState(false);
 
@@ -77,10 +82,13 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
         refetchQueries: [
           {
             query: GetOrderDetailDocument,
-            variables: { id: data?.id! },
+            variables: { number: data?.number! },
+          },
+          {
+            query: GetMyDeliveryRequestsDocument,
+            variables: { first: 10 },
           },
         ],
-        awaitRefetchQueries: true,
       })
         .then(() => {
           navigation.navigate('MsgModal', {
@@ -95,7 +103,9 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
   });
 
   const handlePriceChange = (text: string) => {
-    const formatted = formatNumberWithCommas(text);
+    // Remove leading zeros
+    const cleanedText = text.replace(/^0+/, '') || '0';
+    const formatted = formatNumberWithCommas(cleanedText);
     setFieldValue('price', formatted);
   };
 
@@ -107,7 +117,12 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
 
   return (
     <>
-      <Button title="Хүсэлт илгээх" loading={loading} onPress={onPress} />
+      <Button
+        title="Хүсэлт илгээх"
+        loading={loading}
+        onPress={onPress}
+        color={isRent ? 'rent' : 'delivery'}
+      />
       <ModalBottomSheet
         ref={ref}
         snapPoints={snapPoints}
@@ -115,29 +130,26 @@ const OrderRequestButton = ({ data, refetch }: Props) => {
         onChange={onChangeSheet}
       >
         <BottomSheetView>
-          <Box
-            style={{ paddingBottom: insets.bottom + theme.spacing.m }}
-            px="m"
-            pt="m"
-            gap="m"
-          >
-            <Input
-              value={values.price}
-              onChangeText={handlePriceChange}
-              onBlur={handleBlur('price')}
-              keyboardAvoiding
-              autoFocus
-              keyboardType="number-pad"
-              label="Үнэ"
-              placeholder="Үнэ"
-              error={touched.price && errors.price ? errors.price : undefined}
-            />
-            <Button
-              title="Хүсэлт илгээх"
-              loading={loading}
-              onPress={handleSubmit}
-            />
-          </Box>
+          <BottomContainer listenKeyboard>
+            <Box gap="m">
+              <Input
+                value={values.price}
+                onChangeText={handlePriceChange}
+                onBlur={handleBlur('price')}
+                keyboardAvoiding
+                autoFocus
+                keyboardType="number-pad"
+                label="Үнэ"
+                placeholder="Үнэ"
+                error={touched.price && errors.price ? errors.price : undefined}
+              />
+              <Button
+                title="Хүсэлт илгээх"
+                loading={loading}
+                onPress={handleSubmit}
+              />
+            </Box>
+          </BottomContainer>
         </BottomSheetView>
       </ModalBottomSheet>
       <ModalMsg

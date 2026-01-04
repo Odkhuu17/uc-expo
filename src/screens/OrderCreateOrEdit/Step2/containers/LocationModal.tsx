@@ -78,8 +78,8 @@ const LocationModal = ({
           />
         )}
       </Box>
-      <CustomKeyboardAvoidingView>
-        <BottomSheetScrollView>
+      <CustomKeyboardAvoidingView keyboardVerticalOffset={100}>
+        <BottomSheetScrollView keyboardShouldPersistTaps="handled">
           <Box px="m" gap="m">
             {searchLoading ? (
               <Loader />

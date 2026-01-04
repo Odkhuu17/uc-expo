@@ -19,6 +19,8 @@ import { useOrderCreateMutation } from '@/gql/mutations/orderCreate.generated';
 import { useOrderUpdateMutation } from '@/gql/mutations/orderUpdate.generated';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import { useGetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
+import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
+import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
 import { ImageObject } from '@/gql/graphql';
 
@@ -39,9 +41,15 @@ const deliverySchema = yup.object().shape({
   carType: yup.string().required('Энэ талбар хоосон байна!'),
   additionalInfo: yup.string().required('Энэ талбар хоосон байна!'),
   receiverName: yup.string().required('Энэ талбар хоосон байна!'),
-  receiverMobile: yup.string().required('Энэ талбар хоосон байна!').length(8, 'Буруу дугаар оруулсан байна!'),
+  receiverMobile: yup
+    .string()
+    .required('Энэ талбар хоосон байна!')
+    .length(8, 'Буруу дугаар оруулсан байна!'),
   senderName: yup.string(),
-  senderMobile: yup.string().required('Энэ талбар хоосон байна!').length(8, 'Буруу дугаар оруулсан байна!'),
+  senderMobile: yup
+    .string()
+    .required('Энэ талбар хоосон байна!')
+    .length(8, 'Буруу дугаар оруулсан байна!'),
   additionalAddressOrigin: yup.string().required('Энэ талбар хоосон байна!'),
   additionalAddressDestination: yup
     .string()
@@ -154,6 +162,16 @@ const OrderCreate = ({ navigation, route }: Props) => {
               published: true,
             },
           },
+          refetchQueries: [
+            {
+              query: GetOrdersDocument,
+              variables: { first: 10 },
+            },
+            {
+              query: GetOrdersMyDocument,
+              variables: { ordersFirst: 10 },
+            },
+          ],
         });
       }
       setSuccessModal(true);
@@ -199,6 +217,16 @@ const OrderCreate = ({ navigation, route }: Props) => {
               published: true,
             },
           },
+          refetchQueries: [
+            {
+              query: GetOrdersDocument,
+              variables: { first: 10 },
+            },
+            {
+              query: GetOrdersMyDocument,
+              variables: { ordersFirst: 10 },
+            },
+          ],
         });
       }
       setSuccessModal(true);

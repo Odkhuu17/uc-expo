@@ -89,7 +89,7 @@ const DeliveryRequestsMy = () => {
     return (
       <>
         <SingleOrder item={item?.order}>
-          <Box p="m" px="m" gap="s" borderTopWidth={1} borderColor="border">
+          <Box gap="s" pt="s" borderTopWidth={1} borderColor="border">
             <Box
               flexDirection="row"
               alignItems="center"
