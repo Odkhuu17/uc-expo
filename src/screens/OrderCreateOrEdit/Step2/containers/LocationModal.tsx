@@ -1,11 +1,16 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowRight01Icon, Location05Icon } from '@hugeicons/core-free-icons';
 
-import { Button, ModalBottomSheet, Input, Loader } from '@/components';
+import {
+  Button,
+  ModalBottomSheet,
+  Input,
+  Loader,
+  CustomKeyboardAvoidingView,
+} from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
 import {
   AddressSearchQuery,
@@ -29,7 +34,6 @@ const LocationModal = ({
   setShowChooseFromMap,
   isRent,
 }: Props) => {
-  const insets = useSafeAreaInsets();
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
 
@@ -74,65 +78,63 @@ const LocationModal = ({
           />
         )}
       </Box>
-      <BottomSheetScrollView>
-        <Box
-          style={{ paddingBottom: insets.bottom + theme.spacing.m }}
-          px="m"
-          gap="m"
-        >
-          {searchLoading ? (
-            <Loader />
-          ) : (
-            searchData?.searchAddress?.map((address, index) => {
-              const onPressAddress = () => {
-                setLocation(address);
-                ref.current?.dismiss();
-              };
+      <CustomKeyboardAvoidingView>
+        <BottomSheetScrollView>
+          <Box px="m" gap="m">
+            {searchLoading ? (
+              <Loader />
+            ) : (
+              searchData?.searchAddress?.map((address, index) => {
+                const onPressAddress = () => {
+                  setLocation(address);
+                  ref.current?.dismiss();
+                };
 
-              return (
-                <TouchableOpacity key={index} onPress={onPressAddress}>
-                  <Box
-                    flexDirection="row"
-                    alignItems="center"
-                    gap="s"
-                    borderBottomWidth={1}
-                    borderBottomColor="border"
-                    pb="m"
-                  >
+                return (
+                  <TouchableOpacity key={index} onPress={onPressAddress}>
                     <Box
-                      p="s"
+                      flexDirection="row"
                       alignItems="center"
-                      justifyContent="center"
-                      borderRadius="full"
+                      gap="s"
+                      borderBottomWidth={1}
+                      borderBottomColor="border"
+                      pb="m"
                     >
+                      <Box
+                        p="s"
+                        alignItems="center"
+                        justifyContent="center"
+                        borderRadius="full"
+                      >
+                        <HugeiconsIcon
+                          icon={Location05Icon}
+                          size={theme.icon.s}
+                        />
+                      </Box>
+                      <Box flex={1} gap="xs">
+                        <Box flex={1}>
+                          <Text variant="title" numberOfLines={1}>
+                            {address?._source?.nameMn}
+                          </Text>
+                        </Box>
+                        <Box flex={1}>
+                          <Text variant="body2" color="grey4" numberOfLines={1}>
+                            {address?._source?.nameFullMn}
+                          </Text>
+                        </Box>
+                      </Box>
                       <HugeiconsIcon
-                        icon={Location05Icon}
-                        size={theme.icon.s}
+                        icon={ArrowRight01Icon}
+                        size={theme.icon.m}
                       />
                     </Box>
-                    <Box flex={1} gap="xs">
-                      <Box flex={1}>
-                        <Text variant="title" numberOfLines={1}>
-                          {address?._source?.nameMn}
-                        </Text>
-                      </Box>
-                      <Box flex={1}>
-                        <Text variant="body2" color="grey4" numberOfLines={1}>
-                          {address?._source?.nameFullMn}
-                        </Text>
-                      </Box>
-                    </Box>
-                    <HugeiconsIcon
-                      icon={ArrowRight01Icon}
-                      size={theme.icon.m}
-                    />
-                  </Box>
-                </TouchableOpacity>
-              );
-            })
-          )}
-        </Box>
-      </BottomSheetScrollView>
+                  </TouchableOpacity>
+                );
+              })
+            )}
+          </Box>
+        </BottomSheetScrollView>
+      </CustomKeyboardAvoidingView>
     </ModalBottomSheet>
   );
 };

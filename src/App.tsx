@@ -13,6 +13,9 @@ import ApolloProvider from '@/apollo/Provider';
 import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
 import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
+import { Appearance } from 'react-native';
+
+Appearance.setColorScheme('light');
 
 const App = () => {
   useEffect(() => {

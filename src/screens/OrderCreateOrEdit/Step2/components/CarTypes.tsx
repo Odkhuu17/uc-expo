@@ -8,7 +8,7 @@ import Animated, {
 
 import { Box, Text, useTheme } from '@/components/Theme';
 
-const TOGGLE_BUTTON_WIDTH = 220;
+const TOGGLE_BUTTON_WIDTH = 250;
 const TOGGLE_BUTTON_HEIGHT = 20;
 
 const CAR_IMAGE_SIZE = 55;
@@ -57,7 +57,7 @@ const CarTypes = ({
         py="m"
         pl="s"
         pr="m"
-        backgroundColor="secondary"
+        backgroundColor="primaryLight"
         borderWidth={1}
         borderColor="primary"
         borderTopRightRadius="l"

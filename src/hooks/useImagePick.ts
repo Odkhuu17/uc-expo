@@ -1,6 +1,6 @@
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Dispatch, SetStateAction } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Keyboard } from 'react-native';
 import {
   check,
   request,
@@ -17,6 +17,7 @@ interface Props {
 
 const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
   const checkAndRequestCameraPermission = async (): Promise<boolean> => {
+    Keyboard.dismiss();
     const permission = PERMISSIONS.IOS.CAMERA;
     const result = await check(permission);
 
@@ -39,6 +40,7 @@ const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
   };
 
   const checkAndRequestPhotoLibraryPermission = async (): Promise<boolean> => {
+    Keyboard.dismiss();
     const permission = PERMISSIONS.IOS.PHOTO_LIBRARY;
     const result = await check(permission);
 

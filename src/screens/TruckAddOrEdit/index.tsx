@@ -15,6 +15,7 @@ import {
   InputImage,
   ContentScrollable,
   BottomContainer,
+  Loader,
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
@@ -24,7 +25,10 @@ import { INavigationProps } from '@/navigations';
 import { useCreateTruckMutation } from '@/gql/mutations/createTruck.generated';
 import { useVerifyTruckMutation } from '@/gql/mutations/verifyTruck.generated';
 import { useGetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
-import { useGetMyTrucksQuery } from '@/gql/queries/getMyTruck.generated';
+import {
+  useGetMyTrucksQuery,
+  GetMyTrucksDocument,
+} from '@/gql/queries/getMyTruck.generated';
 import { useUpdateTruckMutation } from '@/gql/mutations/updateTruck.generated';
 
 interface Props {
@@ -49,15 +53,15 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
   const [createTruck] = useCreateTruckMutation();
   const [verifyTruck] = useVerifyTruckMutation();
   const [successModal, setSuccessModal] = useState(false);
-  const { data: taxonsData } = useGetTaxonsQuery();
+  const { data: taxonsData, loading: taxonsLoading } = useGetTaxonsQuery();
   const [passport, setPassport] = useState<string | null>(null);
-  const { data: trucksData } = useGetMyTrucksQuery();
+  const { data: trucksData, loading: trucksLoading } = useGetMyTrucksQuery({
+    fetchPolicy: 'no-cache',
+  });
   const [updateTruck] = useUpdateTruckMutation();
   const refs = useRef<TextInput[]>([]);
 
   const truck = trucksData?.me?.trucks?.find(truck => truck.id === id);
-
-  console.log(trucksData);
 
   useEffect(() => {
     if (id) {
@@ -103,6 +107,7 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
             userId: user!.id,
             plateNumber: values.plateNumber,
           },
+          refetchQueries: [{ query: GetMyTrucksDocument }],
         });
 
         await verifyTruck({
@@ -122,6 +127,7 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
             userId: user!.id,
             plateNumber: values.plateNumber,
           },
+          refetchQueries: [{ query: GetMyTrucksDocument }],
         });
 
         await verifyTruck({
@@ -153,102 +159,110 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
         <CustomKeyboardAvoidingView>
           <HeaderNormal title="Машин нэмэх" hasBack />
           <ContentScrollable edges={[]}>
-            <Box gap="m">
-              <SelectGrouped
-                label="Техникийн төрөл"
-                placeholder="Техникийн төрөл"
-                icon={ContainerTruck01Icon}
-                options={[
-                  {
-                    title: 'Ачааны машин',
-                    options:
-                      taxonsData?.taxons?.edges
-                        ?.filter(i => i?.node?.code === 'delivery')
-                        .map(i => {
-                          return {
-                            label: i?.node?.name || '',
-                            value: i?.node?.id || '',
-                            image: deliveryCarTypes?.find(
-                              k => k.name === i?.node?.name,
-                            )?.image,
-                          };
-                        }) || [],
-                  },
-                  {
-                    title: 'Техник түрээс',
-                    options:
-                      taxonsData?.taxons?.edges
-                        ?.filter(i => i?.node?.code === 'rent')
-                        .map(i => {
-                          return {
-                            label: i?.node?.name || '',
-                            value: i?.node?.id || '',
-                            image: rentCarTypes?.find(
-                              k => k?.name === i?.node?.name,
-                            )?.image,
-                          };
-                        }) || [],
-                  },
-                ]}
-                setSelectedOption={handleChange('taxonId')}
-                selectedOption={
-                  taxonsData?.taxons?.edges?.find(
-                    i => i?.node?.id === values.taxonId,
-                  )?.node?.name || ''
-                }
-                error={
-                  touched.taxonId && errors.taxonId ? errors.taxonId : undefined
-                }
-              />
-              <Input
-                label="Марк"
-                placeholder="Марк"
-                value={values.mark}
-                onBlur={handleBlur('mark')}
-                onChangeText={handleChange('mark')}
-                returnKeyType="next"
-                ref={(el: TextInput) => {
-                  refs.current[0] = el;
-                }}
-                onSubmitEditing={() => handleSubmitEditing(0)}
-                error={touched.mark && errors.mark ? errors.mark : undefined}
-              />
-              <Input
-                label="Модел"
-                placeholder="Модел"
-                value={values.model}
-                onBlur={handleBlur('model')}
-                onChangeText={handleChange('model')}
-                error={touched.model && errors.model ? errors.model : undefined}
-                returnKeyType="next"
-                ref={(el: TextInput) => {
-                  refs.current[1] = el;
-                }}
-                onSubmitEditing={() => handleSubmitEditing(1)}
-              />
-              <Input
-                label="Машины дугаар"
-                placeholder="1234УНА"
-                maxLength={7}
-                value={values.plateNumber}
-                autoCapitalize="characters"
-                onBlur={handleBlur('plateNumber')}
-                onChangeText={handleChange('plateNumber')}
-                error={
-                  touched.plateNumber && errors.plateNumber
-                    ? errors.plateNumber
-                    : undefined
-                }
-                ref={(el: TextInput) => {
-                  refs.current[2] = el;
-                }}
-              />
-              <InputImage
-                label="Машины гэрчилгээ"
-                image={passport}
-                setImage={setPassport}
-              />
-            </Box>
+            {taxonsLoading || trucksLoading ? (
+              <Loader />
+            ) : (
+              <Box gap="m">
+                <SelectGrouped
+                  label="Техникийн төрөл"
+                  placeholder="Техникийн төрөл"
+                  icon={ContainerTruck01Icon}
+                  options={[
+                    {
+                      title: 'Ачааны машин',
+                      options:
+                        taxonsData?.taxons?.edges
+                          ?.filter(i => i?.node?.code === 'delivery')
+                          .map(i => {
+                            return {
+                              label: i?.node?.name || '',
+                              value: i?.node?.id || '',
+                              image: deliveryCarTypes?.find(
+                                k => k.name === i?.node?.name,
+                              )?.image,
+                            };
+                          }) || [],
+                    },
+                    {
+                      title: 'Техник түрээс',
+                      options:
+                        taxonsData?.taxons?.edges
+                          ?.filter(i => i?.node?.code === 'rent')
+                          .map(i => {
+                            return {
+                              label: i?.node?.name || '',
+                              value: i?.node?.id || '',
+                              image: rentCarTypes?.find(
+                                k => k?.name === i?.node?.name,
+                              )?.image,
+                            };
+                          }) || [],
+                    },
+                  ]}
+                  setSelectedOption={handleChange('taxonId')}
+                  selectedOption={
+                    taxonsData?.taxons?.edges?.find(
+                      i => i?.node?.id === values.taxonId,
+                    )?.node?.name || ''
+                  }
+                  error={
+                    touched.taxonId && errors.taxonId
+                      ? errors.taxonId
+                      : undefined
+                  }
+                />
+                <Input
+                  label="Марк"
+                  placeholder="Марк"
+                  value={values.mark}
+                  onBlur={handleBlur('mark')}
+                  onChangeText={handleChange('mark')}
+                  returnKeyType="next"
+                  ref={(el: TextInput) => {
+                    refs.current[0] = el;
+                  }}
+                  onSubmitEditing={() => handleSubmitEditing(0)}
+                  error={touched.mark && errors.mark ? errors.mark : undefined}
+                />
+                <Input
+                  label="Модел"
+                  placeholder="Модел"
+                  value={values.model}
+                  onBlur={handleBlur('model')}
+                  onChangeText={handleChange('model')}
+                  error={
+                    touched.model && errors.model ? errors.model : undefined
+                  }
+                  returnKeyType="next"
+                  ref={(el: TextInput) => {
+                    refs.current[1] = el;
+                  }}
+                  onSubmitEditing={() => handleSubmitEditing(1)}
+                />
+                <Input
+                  label="Машины дугаар"
+                  placeholder="1234УНА"
+                  maxLength={7}
+                  value={values.plateNumber}
+                  autoCapitalize="characters"
+                  onBlur={handleBlur('plateNumber')}
+                  onChangeText={handleChange('plateNumber')}
+                  error={
+                    touched.plateNumber && errors.plateNumber
+                      ? errors.plateNumber
+                      : undefined
+                  }
+                  ref={(el: TextInput) => {
+                    refs.current[2] = el;
+                  }}
+                />
+                <InputImage
+                  label="Машины гэрчилгээ"
+                  image={passport}
+                  setImage={setPassport}
+                />
+              </Box>
+            )}
           </ContentScrollable>
         </CustomKeyboardAvoidingView>
         <BottomContainer>

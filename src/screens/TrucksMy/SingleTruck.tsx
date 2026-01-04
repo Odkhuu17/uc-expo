@@ -49,23 +49,20 @@ const SingleTruck = ({ item, refetch }: Props) => {
   }, [item, hasPendingUserVerification]);
 
   const onPressDelete = () => {
-    Alert.alert(
-      'Захиалга устгах',
-      'Та энэ захиалгыг устгахдаа итгэлтэй байна уу?',
-      [
-        {
-          text: 'Буцах',
-          style: 'cancel',
+    Alert.alert('Машин устгах', 'Та энэ машиныг устгахдаа итгэлтэй байна уу?', [
+      {
+        text: 'Буцах',
+        style: 'cancel',
+      },
+      {
+        text: 'Устгах',
+        style: 'destructive',
+        onPress: async () => {
+          await destroyTruck({ variables: { id: item?.id || '' } });
+          refetch();
         },
-        {
-          text: 'Устгах',
-          style: 'destructive',
-          onPress: () => {
-            destroyTruck({ variables: { id: item?.id || '' } });
-          },
-        },
-      ],
-    );
+      },
+    ]);
   };
 
   const onPress = () => {
@@ -82,6 +79,8 @@ const SingleTruck = ({ item, refetch }: Props) => {
   const onPressExtendSubscription = () => {
     navigation.navigate('TruckSubscription', { truckId: item?.id });
   };
+
+  console.log('item truck', item);
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -107,12 +106,15 @@ const SingleTruck = ({ item, refetch }: Props) => {
               <Text variant="body2">{item?.model}</Text>
             </Box>
           </Box>
-          <ButtonIcon
-            icon={Delete03Icon}
-            backgroundColor="white"
-            loading={loading}
-            onPress={onPressDelete}
-          />
+          {item?.verifications?.edges?.[0]?.node?.status !== 'pending' &&
+            !item?.subscribed && (
+              <ButtonIcon
+                icon={Delete03Icon}
+                backgroundColor="white"
+                loading={loading}
+                onPress={onPressDelete}
+              />
+            )}
         </Box>
         {item?.verifications?.edges?.[0]?.node?.status === 'pending' && (
           <Progress sec={15} onFinish={refetch} />
@@ -131,16 +133,20 @@ const SingleTruck = ({ item, refetch }: Props) => {
           </>
         )}
         {item?.subscribed ? (
-          <Text variant="label" textAlign="right">
+          <Text variant="body2" textAlign="right">
             Эрх дуусах хугацаа:{' '}
-            {dayjs(item?.subscribedUntil).format('YYYY-MM-DD')}
+            <Text variant="label">
+              {dayjs(item?.subscribedUntil).format('YYYY-MM-DD')}
+            </Text>
           </Text>
         ) : (
-          <Button
-            title="Эрх сунгах"
-            variant="outlined"
-            onPress={onPressExtendSubscription}
-          />
+          item?.verified && (
+            <Button
+              title="Эрх сунгах"
+              variant="outlined"
+              onPress={onPressExtendSubscription}
+            />
+          )
         )}
       </BoxContainer>
     </TouchableOpacity>

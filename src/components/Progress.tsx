@@ -4,12 +4,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { Box, Text, useTheme } from '@/components/Theme';
 import BoxContainer from './BoxContainer';
-import { scheduleOnRN } from 'react-native-worklets';
 
 interface Props {
   sec: number;

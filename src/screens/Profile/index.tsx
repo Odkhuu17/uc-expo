@@ -1,5 +1,7 @@
 import { Alert, RefreshControl } from 'react-native';
 import { Book02Icon, CallIcon } from '@hugeicons/core-free-icons';
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 import {
   BoxContainer,
@@ -11,7 +13,7 @@ import {
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { SingleMenu, UserInfo } from './components';
-import { useGetMeQuery } from '@/gql/queries/getMe.generated';
+import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { INavigationProps } from '@/navigations';
 import useLogout from '@/hooks/useLogout';
 import LocationPermission from './LocationPermission';
@@ -23,11 +25,7 @@ interface Props {
 }
 
 const ProfileScreen = ({ navigation }: Props) => {
-  const {
-    data: userData,
-    loading: userLoading,
-    refetch,
-  } = useGetMeQuery({
+  const [getMe, { data: userData, loading: userLoading }] = useGetMeLazyQuery({
     fetchPolicy: 'no-cache',
   });
 
@@ -59,20 +57,26 @@ const ProfileScreen = ({ navigation }: Props) => {
     navigation.navigate('Terms');
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      getMe();
+    }, []),
+  );
+
   return (
     <Container>
       <HeaderNormal title="Миний мэдээлэл" />
       <ContentScrollable
         edges={['bottom']}
         refreshControl={
-          <RefreshControl onRefresh={refetch} refreshing={userLoading} />
+          <RefreshControl onRefresh={getMe} refreshing={userLoading} />
         }
       >
         <Box gap="m">
           <LocationPermission />
           <BoxContainer gap="m">
             <UserInfo userData={userData?.me} onPress={onPressProfile} />
-            <UserVerify userData={userData?.me} refetch={refetch} />
+            <UserVerify userData={userData?.me} refetch={getMe} />
           </BoxContainer>
           <UserTrucks userData={userData?.me} />
           <BoxContainer gap="m">

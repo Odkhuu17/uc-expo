@@ -80,7 +80,6 @@ const Banners = () => {
           </TouchableOpacity>
         ))}
       </Animated.ScrollView>
-
       {data?.banners?.totalCount && data?.banners?.totalCount > 1 && (
         <Box
           flexDirection="row"
