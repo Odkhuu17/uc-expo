@@ -2,7 +2,6 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { useMemo, useRef, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,6 +20,7 @@ import { moneyFormat } from '@/utils/helpers';
 import { INavigation } from '@/navigations';
 import type { GetOrderRequestsQuery } from '@/gql/queries/orderRequests.generated';
 import { useAcceptDeliveryRequestMutation } from '@/gql/mutations/acceptDeliveryRequest.generated';
+import { GetOrderDetailDocument } from '@/gql/queries/getOrderDetail.generated';
 
 type DeliveryRequestNode = NonNullable<
   NonNullable<
@@ -48,8 +48,6 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
     useAcceptDeliveryRequestMutation();
   const ref = useRef<BottomSheetModal | null>(null);
   const snapPoints = useMemo(() => [], []);
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
   const [successModal, setSuccessModal] = useState(false);
   const navigation = useNavigation<INavigation>();
 
@@ -76,6 +74,12 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
           variables: {
             id: item?.id,
           },
+          refetchQueries: [
+            {
+              query: GetOrderDetailDocument,
+              variables: { number },
+            },
+          ],
         }).finally(() => {
           ref?.current?.dismiss();
         });
@@ -142,7 +146,7 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
         onChange={onChangeSheet}
       >
         <BottomSheetView>
-          <BottomContainer>
+          <BottomContainer listenKeyboard>
             <Box gap="m">
               <Input
                 label="Жолоочийн утасны дугаар"

@@ -83,7 +83,9 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
 
   const showSettingsAlert = (permissionType: string) => {
     Alert.alert(
-      `${permissionType.charAt(0).toUpperCase() + permissionType.slice(1)}ийн зөвшөөрөл хэрэгтэй`,
+      `${
+        permissionType.charAt(0).toUpperCase() + permissionType.slice(1)
+      }ийн зөвшөөрөл хэрэгтэй`,
       `Та тохиргоо руу орж ${permissionType}ийн зөвшөөрөл олгоно уу.`,
       [
         {
@@ -108,7 +110,13 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
       quality: 0.5,
     });
     if (result.assets && result.assets.length > 0) {
-      setVideo(result.assets[0].uri || null);
+      const { data } = await attachOrderVideo({
+        variables: {
+          number,
+          video: videoToFile(result.assets[0].uri || ''),
+        },
+      });
+      setVideo(data?.attachOrderVideo?.video || null);
     }
   };
 

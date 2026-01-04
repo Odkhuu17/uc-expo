@@ -142,12 +142,12 @@ const OrderDetail = ({ navigation, route }: Props) => {
               )}
               {data?.order?.video && (
                 <BoxContainer>
-                  <OrderDetailVideo video={getImageUrl(data?.order?.video)} />
+                  <OrderDetailVideo video={data?.order?.video} />
                 </BoxContainer>
               )}
               {data?.order?.audio && (
                 <BoxContainer>
-                  <OrderDetailAudio audio={getImageUrl(data?.order?.audio)} />
+                  <OrderDetailAudio audio={data?.order?.audio} />
                 </BoxContainer>
               )}
               {isRent ? (

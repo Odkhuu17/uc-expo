@@ -80,7 +80,42 @@ const Tabs = () => {
         tabBarInactiveTintColor: theme.colors.grey4,
       }}
     >
-      {user?.verified && locationPermission && (
+      {mode === 'driver' ? (
+        <>
+          {user?.verified && locationPermission && (
+            <>
+              <Tab.Screen
+                name="Orders"
+                component={Orders}
+                options={{
+                  tabBarLabel: 'Захиалгууд',
+                  tabBarIcon: ({ color, size }) => (
+                    <HugeiconsIcon
+                      icon={PackageSearchIcon}
+                      color={color}
+                      size={size}
+                    />
+                  ),
+                }}
+              />
+              <Tab.Screen
+                name="My delivery requests"
+                component={DeliveryRequestsMy}
+                options={{
+                  tabBarLabel: 'Миний хүсэлтүүд',
+                  tabBarIcon: ({ color, size }) => (
+                    <HugeiconsIcon
+                      icon={PackageReceive01Icon}
+                      color={color}
+                      size={size}
+                    />
+                  ),
+                }}
+              />
+            </>
+          )}
+        </>
+      ) : (
         <>
           <Tab.Screen
             name="Orders"
@@ -96,33 +131,14 @@ const Tabs = () => {
               ),
             }}
           />
-          {mode === 'driver' ? (
-            <Tab.Screen
-              name="My delivery requests"
-              component={DeliveryRequestsMy}
-              options={{
-                tabBarLabel: 'Миний хүсэлтүүд',
-                tabBarIcon: ({ color, size }) => (
-                  <HugeiconsIcon
-                    icon={PackageReceive01Icon}
-                    color={color}
-                    size={size}
-                  />
-                ),
-              }}
-            />
-          ) : (
-            <Tab.Screen
-              name="CreateOrder"
-              component={CreateOrderPlaceholder}
-              options={{
-                tabBarShowLabel: false,
-                tabBarButton: () => (
-                  <OrderTabButton onPress={goToCreateOrder} />
-                ),
-              }}
-            />
-          )}
+          <Tab.Screen
+            name="CreateOrder"
+            component={CreateOrderPlaceholder}
+            options={{
+              tabBarShowLabel: false,
+              tabBarButton: () => <OrderTabButton onPress={goToCreateOrder} />,
+            }}
+          />
         </>
       )}
       <Tab.Screen
