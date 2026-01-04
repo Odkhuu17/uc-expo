@@ -1,14 +1,13 @@
 import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-// import { InstantSearch } from 'react-instantsearch';
+import { InstantSearch } from 'react-instantsearch-core';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
 
 import { Container, Loader, ModalMsg, HeaderNormal } from '@/components';
 import { Box } from '@/components/Theme';
 import { isRentOrder } from '@/utils/helpers';
-// import searchClient from '@/utils/searchkit';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DeliveryStep3 from './Step3/DeliveryStep3';
@@ -23,6 +22,7 @@ import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
 import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
 import { ImageObject } from '@/gql/graphql';
+import searchClient from '@/utils/searchkit';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -409,28 +409,28 @@ const OrderCreate = ({ navigation, route }: Props) => {
   };
 
   return (
-    // <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
-    <>
-      <Container>
-        <HeaderNormal
-          hasBack
-          title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
-          handlePressBack={onPressBack}
+    <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
+      <>
+        <Container>
+          <HeaderNormal
+            hasBack
+            title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
+            handlePressBack={onPressBack}
+          />
+          {getOrderLoading ? <Loader /> : renderContent()}
+        </Container>
+        <ModalMsg
+          type="success"
+          msg={
+            number
+              ? 'Захиалга амжилттай шинэчлэгдлээ'
+              : 'Захиалга амжилттай үүслээ'
+          }
+          handleClose={onCloseSuccessModal}
+          visible={successModal}
         />
-        {getOrderLoading ? <Loader /> : renderContent()}
-      </Container>
-      <ModalMsg
-        type="success"
-        msg={
-          number
-            ? 'Захиалга амжилттай шинэчлэгдлээ'
-            : 'Захиалга амжилттай үүслээ'
-        }
-        handleClose={onCloseSuccessModal}
-        visible={successModal}
-      />
-    </>
-    // </InstantSearch>
+      </>
+    </InstantSearch>
   );
 };
 

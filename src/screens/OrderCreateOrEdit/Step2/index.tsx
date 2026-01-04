@@ -6,9 +6,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-// import { useInfiniteHits } from 'react-instantsearch';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import { useInfiniteHits } from 'react-instantsearch-core';
+import { Modal } from 'react-native';
 
 import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
@@ -25,7 +26,6 @@ import {
 import { INavigation } from '@/navigations';
 import { OrderLocation } from '../components';
 import LocationModal from './containers/LocationModal';
-import { Modal } from 'react-native';
 import { getMapRegion } from '@/utils/helpers';
 
 interface Props {
@@ -216,9 +216,11 @@ const Step2 = ({
     destinationModalRef.current?.present();
   };
 
-  // const { items, isLastPage, showMore } = useInfiniteHits({
-  //   escapeHTML: false,
-  // });
+  const { items, isLastPage, showMore } = useInfiniteHits({
+    escapeHTML: false,
+  });
+
+  console.log(items, 'haaaa');
 
   return (
     <>
