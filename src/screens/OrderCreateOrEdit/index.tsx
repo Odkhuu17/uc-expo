@@ -22,7 +22,6 @@ import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
 import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
 import { ImageObject } from '@/gql/graphql';
-import searchClient from '@/utils/searchkit';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -409,28 +408,26 @@ const OrderCreate = ({ navigation, route }: Props) => {
   };
 
   return (
-    <InstantSearch indexName="supp_tracks" searchClient={searchClient}>
-      <>
-        <Container>
-          <HeaderNormal
-            hasBack
-            title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
-            handlePressBack={onPressBack}
-          />
-          {getOrderLoading ? <Loader /> : renderContent()}
-        </Container>
-        <ModalMsg
-          type="success"
-          msg={
-            number
-              ? 'Захиалга амжилттай шинэчлэгдлээ'
-              : 'Захиалга амжилттай үүслээ'
-          }
-          handleClose={onCloseSuccessModal}
-          visible={successModal}
+    <>
+      <Container>
+        <HeaderNormal
+          hasBack
+          title={number ? `Захиалга засах ${number}` : 'Захиалга үүсгэх'}
+          handlePressBack={onPressBack}
         />
-      </>
-    </InstantSearch>
+        {getOrderLoading ? <Loader /> : renderContent()}
+      </Container>
+      <ModalMsg
+        type="success"
+        msg={
+          number
+            ? 'Захиалга амжилттай шинэчлэгдлээ'
+            : 'Захиалга амжилттай үүслээ'
+        }
+        handleClose={onCloseSuccessModal}
+        visible={successModal}
+      />
+    </>
   );
 };
 

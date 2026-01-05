@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import Sound from 'react-native-nitro-sound';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Delete03Icon, PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
 
 import { getImageUrl } from '@/utils/helpers';
 import { Box, Text } from '@/components/Theme';
 import { ButtonIcon } from '@/components';
+import useSound from '@/hooks/useSound';
 import { useDestroyOrderAudioMutation } from '@/gql/mutations/destroyOrderAudio.generated';
 
 interface Props {
@@ -16,98 +16,28 @@ interface Props {
 const Player = ({ audio, number, setAudio }: Props) => {
   const [destroyOrderAudio, { loading: destroying }] =
     useDestroyOrderAudioMutation();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [playTime, setPlayTime] = useState('00:00:00');
-  const [duration, setDuration] = useState('00:00:00');
+  const { play, stop, isLoaded, isPlaying, durationSec, currentTimeSec } =
+    useSound(getImageUrl(audio));
 
   const onDestroyAudio = async () => {
     await destroyOrderAudio({ variables: { number } });
-    onStopPlay();
     setAudio(null);
-  };
-  // Initialize duration when audio changes
-  useEffect(() => {
-    const initDuration = async () => {
-      try {
-        // Start player briefly to get duration
-        await Sound.startPlayer(getImageUrl(audio));
-        Sound.addPlayBackListener(e => {
-          if (e.duration) {
-            setDuration(Sound.mmssss(Math.floor(e.duration)));
-            Sound.removePlayBackListener();
-            Sound.stopPlayer();
-          }
-        });
-      } catch (error) {
-        console.error('Failed to load duration:', error);
-      }
-    };
-
-    if (audio) {
-      initDuration();
-    }
-
-    return () => {
-      Sound.removePlayBackListener();
-    };
-  }, [audio]);
-
-  const onStartPlay = async () => {
-    setIsLoading(true);
-    try {
-      await Sound.startPlayer(getImageUrl(audio));
-      Sound.addPlayBackListener(e => {
-        setPlayTime(Sound.mmssss(Math.floor(e.currentPosition)));
-      });
-
-      // Use the proper playback end listener
-      Sound.addPlaybackEndListener(e => {
-        setIsPlaying(false);
-        setPlayTime('00:00:00');
-      });
-
-      setIsPlaying(true);
-    } catch (error) {
-      console.error('Failed to start playback:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const onStopPlay = async () => {
-    setIsLoading(true);
-    try {
-      await Sound.stopPlayer();
-      Sound.removePlayBackListener();
-      Sound.removePlaybackEndListener();
-      setIsPlaying(false);
-      setPlayTime('00:00:00');
-    } catch (error) {
-      console.error('Failed to stop playback:', error);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const onTogglePlay = () => {
-    if (isPlaying) {
-      onStopPlay();
-    } else {
-      onStartPlay();
-    }
+    isPlaying ? stop() : play();
   };
 
   return (
     <Box flexDirection="row" alignItems="center" gap="s">
       <Box flex={1} flexDirection="row" alignItems="center" gap="s">
         <ButtonIcon
-          loading={isLoading}
+          loading={!isLoaded}
           icon={isPlaying ? PauseIcon : PlayIcon}
           onPress={onTogglePlay}
         />
         <Text variant="body2" color="grey4">
-          {playTime} / {duration}
+          {Math.floor(currentTimeSec)} cек / {Math.floor(durationSec)} cек
         </Text>
       </Box>
       <ButtonIcon

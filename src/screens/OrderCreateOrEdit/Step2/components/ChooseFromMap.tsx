@@ -44,7 +44,19 @@ const ChooseFromMap = ({
         },
       },
     });
-    setLocalLocation(data?.searchAddress?.[0] || null);
+
+    if (data?.searchAddress?.[0]) {
+      setLocalLocation({
+        ...data?.searchAddress?.[0],
+        _source: {
+          ...data?.searchAddress?.[0]?._source,
+          location: {
+            lat: region.latitude,
+            lon: region.longitude,
+          },
+        },
+      });
+    }
   };
 
   const onSubmit = async () => {

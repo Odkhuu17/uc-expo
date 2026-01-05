@@ -35,6 +35,7 @@ import InputAudio from './containers/InputAudio';
 import { ImageObject } from '@/gql/graphql';
 import InputLabel from '@/components/InputLabel';
 import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
+import useSoundRecord from '@/hooks/useSoundRecord';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -112,9 +113,18 @@ const RentStep3 = ({
     }
   };
 
+  const { isRecording, isLoading, recordTime, onToggleRecord, onStopRecord } =
+    useSoundRecord({ setAudio, number: number || orderNumber });
+
+  const onScroll = () => {
+    if (isRecording) {
+      onStopRecord();
+    }
+  };
+
   return (
     <CustomKeyboardAvoidingView>
-      <ContentScrollable edges={[]}>
+      <ContentScrollable edges={[]} onScroll={onScroll}>
         <Box gap="s">
           <OrderLocation
             isRent
@@ -150,6 +160,11 @@ const RentStep3 = ({
               audio={audio}
               setAudio={setAudio}
               number={number || orderNumber}
+              isRecording={isRecording}
+              isLoading={isLoading}
+              recordTime={recordTime}
+              onToggleRecord={onToggleRecord}
+              onStopRecord={onStopRecord}
             />
           </BoxContainer>
           <BoxContainer gap="m">

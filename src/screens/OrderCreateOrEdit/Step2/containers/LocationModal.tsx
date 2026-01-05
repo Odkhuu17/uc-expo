@@ -3,6 +3,7 @@ import { Dispatch, RefObject, SetStateAction, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowRight01Icon, Location05Icon } from '@hugeicons/core-free-icons';
+import MapView from 'react-native-maps';
 
 import {
   Button,
@@ -25,6 +26,7 @@ interface Props {
   location: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
   setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
   isRent?: boolean;
+  mapRef?: RefObject<MapView | null>;
 }
 
 const LocationModal = ({
@@ -33,6 +35,7 @@ const LocationModal = ({
   location,
   setShowChooseFromMap,
   isRent,
+  mapRef,
 }: Props) => {
   const theme = useTheme();
   const [address1, setAddress1] = useState('');
@@ -87,6 +90,20 @@ const LocationModal = ({
               searchData?.searchAddress?.map((address, index) => {
                 const onPressAddress = () => {
                   setLocation(address);
+
+                  if (isRent) {
+                    const originCoordinate = {
+                      latitude: address?._source?.location?.lat || 47.92123,
+                      longitude: address?._source?.location?.lon || 106.918556,
+                    };
+
+                    mapRef?.current?.animateToRegion({
+                      ...originCoordinate,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05,
+                    });
+                  }
+
                   ref.current?.dismiss();
                 };
 

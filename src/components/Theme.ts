@@ -17,6 +17,7 @@ export const theme = createTheme({
     pending: '#ffab00',
     secondary: '#ffab00',
     backdrop: 'rgba(0, 0, 0, 0.5)',
+    backdropLight: 'rgba(0, 0, 0, 0.2)',
     rent: '#ffab00',
     rentLight: '#fad78e',
     delivery: '#429AFF',

@@ -9,7 +9,7 @@ interface Props {
   size?: keyof Theme['button'];
   loading?: boolean;
   icon: IconSvgElement;
-  color?: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary' | 'white';
   variant?: 'text' | 'outlined' | 'contained';
 }
 
@@ -26,32 +26,17 @@ const ButtonIcon = ({
   const getBackgroundColor = (): keyof Theme['colors'] => {
     if (variant === 'outlined') return 'transparent';
 
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   const getTextColor = (): keyof Theme['colors'] => {
     if (variant === 'contained') return 'white';
 
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   const getBorderColor = (): keyof Theme['colors'] => {
-    switch (color) {
-      case 'secondary':
-        return 'secondary';
-      default:
-        return 'primary';
-    }
+    return color;
   };
 
   return (
@@ -80,4 +65,4 @@ const ButtonIcon = ({
   );
 };
 
-export default ButtonIcon
+export default ButtonIcon;

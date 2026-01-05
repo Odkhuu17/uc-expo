@@ -34,6 +34,7 @@ import Images from './containers/Images';
 import InputVideo from './containers/InputVideo';
 import InputAudio from './containers/InputAudio';
 import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
+import useSoundRecord from '@/hooks/useSoundRecord';
 
 interface Props {
   setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
@@ -73,6 +74,8 @@ const DeliveryStep3 = ({
   const insets = useSafeAreaInsets();
   const theme = useTheme();
   const refs = useRef<(TextInput | null)[]>([]);
+  const { isRecording, isLoading, recordTime, onToggleRecord, onStopRecord } =
+    useSoundRecord({ setAudio, number: number || orderNumber });
 
   const {
     handleSubmit,
@@ -114,9 +117,15 @@ const DeliveryStep3 = ({
     }
   };
 
+  const onScroll = () => {
+    if (isRecording) {
+      onStopRecord();
+    }
+  };
+
   return (
     <CustomKeyboardAvoidingView>
-      <ContentScrollable edges={[]}>
+      <ContentScrollable edges={[]} onScroll={onScroll}>
         <Box gap="s">
           <OrderLocation
             origin={createdOrigin?.address1}
@@ -152,6 +161,11 @@ const DeliveryStep3 = ({
               audio={audio}
               setAudio={setAudio}
               number={number || orderNumber}
+              isRecording={isRecording}
+              isLoading={isLoading}
+              recordTime={recordTime}
+              onToggleRecord={onToggleRecord}
+              onStopRecord={onStopRecord}
             />
           </BoxContainer>
           <BoxContainer gap="m">
@@ -187,7 +201,7 @@ const DeliveryStep3 = ({
               icon={WeightIcon}
               label="Ачааны жин (тн)"
               placeholder="Ачааны жин (тн)"
-              keyboardType="number-pad"
+              keyboardType="numeric"
               value={values.packageWeight}
               onBlur={handleBlur('packageWeight')}
               onChangeText={handleChange('packageWeight')}

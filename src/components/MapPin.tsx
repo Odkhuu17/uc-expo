@@ -20,7 +20,7 @@ const MapPin = ({ title }: Props) => {
       alignItems="center"
       justifyContent="center"
     >
-      {title && (
+      {title ? (
         <Box
           height={25}
           backgroundColor="primary"
@@ -32,6 +32,8 @@ const MapPin = ({ title }: Props) => {
             {title}
           </Text>
         </Box>
+      ) : (
+        <Box height={25} />
       )}
       <FitImage
         source={require('assets/images/map_pin.png')}

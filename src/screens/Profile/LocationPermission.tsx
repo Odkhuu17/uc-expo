@@ -6,6 +6,7 @@ import { BoxContainer, Button, Warning } from '@/components';
 
 const LocationPermission = () => {
   const dispatch = useAppDispatch();
+  const { mode } = useAppSelector(state => state.general);
 
   const { locationPermission } = useAppSelector(state => state.settings);
 
@@ -21,7 +22,7 @@ const LocationPermission = () => {
       .catch(() => console.warn('Cannot request location accuracy'));
   };
 
-  if (!locationPermission) {
+  if (!locationPermission && mode === 'driver') {
     return (
       <BoxContainer gap="m">
         <Warning

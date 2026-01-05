@@ -165,7 +165,7 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
         borderWidth={2}
         borderStyle="dashed"
         borderRadius="m"
-        height={80}
+        height={100}
         p={undefined}
         overflow="hidden"
       >

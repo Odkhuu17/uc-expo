@@ -7,13 +7,15 @@ import { ThemeProvider } from '@shopify/restyle';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { OneSignal, LogLevel } from 'react-native-onesignal';
+import { Appearance } from 'react-native';
+import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 import { theme } from '@/components/Theme';
 import ApolloProvider from '@/apollo/Provider';
 import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
-import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
-import { Appearance } from 'react-native';
+import { InstantSearch } from 'react-instantsearch-core';
+import searchClient from './utils/searchkit';
 
 Appearance.setColorScheme('light');
 
@@ -36,24 +38,26 @@ const App = () => {
 
   return (
     <>
-      <GestureHandlerRootView>
-        <SafeAreaProvider>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <ThemeProvider theme={theme}>
-                <BottomSheetModalProvider>
-                  <NavigationContainer>
-                    <ApolloProvider>
-                      <AppNavigator />
-                    </ApolloProvider>
-                  </NavigationContainer>
-                </BottomSheetModalProvider>
-              </ThemeProvider>
-            </PersistGate>
-          </Provider>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-      <ReducedMotionConfig mode={ReduceMotion.Never} />
+      <InstantSearch indexName="supp_trucks" searchClient={searchClient}>
+        <GestureHandlerRootView>
+          <SafeAreaProvider>
+            <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <ThemeProvider theme={theme}>
+                  <BottomSheetModalProvider>
+                    <NavigationContainer>
+                      <ApolloProvider>
+                        <AppNavigator />
+                      </ApolloProvider>
+                    </NavigationContainer>
+                  </BottomSheetModalProvider>
+                </ThemeProvider>
+              </PersistGate>
+            </Provider>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+        <ReducedMotionConfig mode={ReduceMotion.Never} />
+      </InstantSearch>
     </>
   );
 };

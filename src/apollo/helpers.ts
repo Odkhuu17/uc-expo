@@ -40,7 +40,7 @@ export const refreshAccessToken = async (): Promise<string> => {
     `${Config.API_URL}/oauth/token`,
     {
       grant_type: 'refresh_token',
-      refresh_token: credentials.password,
+      refresh_token: credentials.username,
     },
     {
       headers: {

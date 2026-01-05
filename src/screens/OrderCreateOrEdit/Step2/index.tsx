@@ -116,32 +116,34 @@ const Step2 = ({
   }, [searchData]);
 
   useEffect(() => {
-    if (origin && destination && !showChooseFromMap) {
-      const region = getMapRegion({
-        origin: {
+    if (!isRent) {
+      if (origin && destination && !showChooseFromMap) {
+        const region = getMapRegion({
+          origin: {
+            latitude: origin?._source?.location?.lat || 47.92123,
+            longitude: origin?._source?.location?.lon || 106.918556,
+          },
+          destination: {
+            latitude: destination?._source?.location?.lat || 47.92123,
+            longitude: destination?._source?.location?.lon || 106.918556,
+          },
+        });
+
+        mapRef?.current?.animateToRegion(region, 350);
+      } else if (origin) {
+        const originCoordinate = {
           latitude: origin?._source?.location?.lat || 47.92123,
           longitude: origin?._source?.location?.lon || 106.918556,
-        },
-        destination: {
-          latitude: destination?._source?.location?.lat || 47.92123,
-          longitude: destination?._source?.location?.lon || 106.918556,
-        },
-      });
+        };
 
-      mapRef?.current?.animateToRegion(region, 350);
-    } else if (origin) {
-      const originCoordinate = {
-        latitude: origin?._source?.location?.lat || 47.92123,
-        longitude: origin?._source?.location?.lon || 106.918556,
-      };
-
-      mapRef?.current?.animateToRegion({
-        ...originCoordinate,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      });
+        mapRef?.current?.animateToRegion({
+          ...originCoordinate,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
+      }
     }
-  }, [origin, destination, mapRef, showChooseFromMap]);
+  }, [origin, destination, mapRef, showChooseFromMap, isRent]);
 
   const onRegionChangeComplete = async (region: Region) => {
     if (isRent) {
@@ -220,108 +222,104 @@ const Step2 = ({
     escapeHTML: false,
   });
 
-  console.log(items, 'haaaa');
-
   return (
     <>
-      <>
-        <MapView
-          style={styles.map}
-          ref={mapRef}
-          initialRegion={{
-            latitude: 47.92123,
-            longitude: 106.918556,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.03,
-          }}
-          onRegionChangeComplete={onRegionChangeComplete}
-        >
-          {!isRent && origin && destination && (
-            <MapDirections
-              origin={{
-                latitude: origin?._source?.location?.lat || 0,
-                longitude: origin?._source?.location?.lon || 0,
-              }}
-              destination={{
-                latitude: destination?._source?.location?.lat || 0,
-                longitude: destination?._source?.location?.lon || 0,
-              }}
-            />
-          )}
-          {!isRent && origin && (
-            <Marker
-              coordinate={{
-                latitude: origin?._source?.location?.lat || 0,
-                longitude: origin?._source?.location?.lon || 0,
-              }}
-            >
-              <MapPin title="Очиж авах хаяг" />
-            </Marker>
-          )}
-          {!isRent && destination && (
-            <Marker
-              coordinate={{
-                latitude: destination?._source?.location?.lat || 0,
-                longitude: destination?._source?.location?.lon || 0,
-              }}
-            >
-              <MapPin title="Хүргэх хаяг" />
-            </Marker>
-          )}
-        </MapView>
-        <Box
-          flex={1}
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Box position="absolute" top={theme.spacing.xl2} left={0}>
-            <CarTypes
-              setSelectedCarTypes={setSelectedCarTypes}
-              selectedCarTypes={selectedCarTypes}
-              carTypes={isRent ? rentCarTypes : deliveryCarTypes}
-              title={
-                isRent
-                  ? 'Техник түрээсийн төрөл сонгох'
-                  : 'Техникийн төрөл сонгох'
-              }
-            />
-          </Box>
-          {isRent && <MapPin title="Ажиллах байршил" />}
-          <Box bottom={0} position="absolute" left={0} right={0}>
-            <BottomContainer>
-              <Box gap="m">
-                <OrderLocation
-                  isRent={isRent}
-                  origin={
-                    createdOrigin
-                      ? createdOrigin.address1
-                      : origin?._source?.nameFullMn
-                  }
-                  destination={
-                    createdDestination
-                      ? createdDestination.address1
-                      : destination?._source?.nameFullMn
-                  }
-                  selected={selectedLocation}
-                  onPressOrigin={onPressOrigin}
-                  onPressDestination={onPressDestination}
-                  loading={searchLoading}
-                />
-                <Button
-                  loading={createLoading}
-                  title="Үргэлжүүлэх"
-                  onPress={onSubmit}
-                />
-              </Box>
-            </BottomContainer>
-          </Box>
+      <MapView
+        style={styles.map}
+        ref={mapRef}
+        initialRegion={{
+          latitude: 47.92123,
+          longitude: 106.918556,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
+        }}
+        onRegionChangeComplete={onRegionChangeComplete}
+      >
+        {!isRent && origin && destination && (
+          <MapDirections
+            origin={{
+              latitude: origin?._source?.location?.lat || 0,
+              longitude: origin?._source?.location?.lon || 0,
+            }}
+            destination={{
+              latitude: destination?._source?.location?.lat || 0,
+              longitude: destination?._source?.location?.lon || 0,
+            }}
+          />
+        )}
+        {!isRent && origin && (
+          <Marker
+            coordinate={{
+              latitude: origin?._source?.location?.lat || 0,
+              longitude: origin?._source?.location?.lon || 0,
+            }}
+          >
+            <MapPin title="Очиж авах хаяг" />
+          </Marker>
+        )}
+        {!isRent && destination && (
+          <Marker
+            coordinate={{
+              latitude: destination?._source?.location?.lat || 0,
+              longitude: destination?._source?.location?.lon || 0,
+            }}
+          >
+            <MapPin title="Хүргэх хаяг" />
+          </Marker>
+        )}
+      </MapView>
+      <Box
+        flex={1}
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box position="absolute" top={theme.spacing.xl2} left={0}>
+          <CarTypes
+            setSelectedCarTypes={setSelectedCarTypes}
+            selectedCarTypes={selectedCarTypes}
+            carTypes={isRent ? rentCarTypes : deliveryCarTypes}
+            title={
+              isRent
+                ? 'Техник түрээсийн төрөл сонгох'
+                : 'Техникийн төрөл сонгох'
+            }
+          />
         </Box>
-      </>
+        {isRent && <MapPin title="Ажиллах байршил" />}
+        <Box bottom={0} position="absolute" left={0} right={0}>
+          <BottomContainer>
+            <Box gap="m">
+              <OrderLocation
+                isRent={isRent}
+                origin={
+                  createdOrigin
+                    ? createdOrigin.address1
+                    : origin?._source?.nameFullMn
+                }
+                destination={
+                  createdDestination
+                    ? createdDestination.address1
+                    : destination?._source?.nameFullMn
+                }
+                selected={selectedLocation}
+                onPressOrigin={onPressOrigin}
+                onPressDestination={onPressDestination}
+                loading={searchLoading}
+              />
+              <Button
+                loading={createLoading}
+                title="Үргэлжүүлэх"
+                onPress={onSubmit}
+              />
+            </Box>
+          </BottomContainer>
+        </Box>
+      </Box>
       <Modal
         animationType="slide"
         transparent={false}
@@ -344,6 +342,7 @@ const Step2 = ({
         location={origin}
         setShowChooseFromMap={setShowChooseFromMap}
         isRent={isRent}
+        mapRef={mapRef}
       />
       <LocationModal
         ref={destinationModalRef}
@@ -351,6 +350,7 @@ const Step2 = ({
         location={destination}
         setShowChooseFromMap={setShowChooseFromMap}
         isRent={isRent}
+        mapRef={mapRef}
       />
     </>
   );

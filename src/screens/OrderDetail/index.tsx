@@ -207,7 +207,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                     value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
                   />
                   <Button
-                    title="Техник хянах"
+                    title={isRent ? 'Техник хянах' : 'Ачаа хянах'}
                     onPress={onPressTrack}
                     color={isRent ? 'rent' : 'delivery'}
                   />

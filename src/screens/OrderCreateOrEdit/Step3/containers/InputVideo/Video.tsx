@@ -1,17 +1,11 @@
 import { PlayIcon } from '@hugeicons/core-free-icons';
 import { useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import {
-  useEvent,
-  useVideoPlayer,
-  VideoView,
-  VideoViewRef,
-} from 'react-native-video';
+import { useVideoPlayer, VideoView, VideoViewRef } from 'react-native-video';
 
 import { ButtonIcon } from '@/components';
-import { Box, Text } from '@/components/Theme';
+import { Box } from '@/components/Theme';
 import { getImageUrl } from '@/utils/helpers';
-import dayjs from 'dayjs';
 
 interface Props {
   video: string;
@@ -21,13 +15,6 @@ const Video = ({ video }: Props) => {
   const player = useVideoPlayer(getImageUrl(video));
   const videoViewRef = useRef<VideoViewRef>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [durationSeconds, setDurationSeconds] = useState<number | null>(null);
-
-  useEvent(player, 'onLoad', ({ duration }) => {
-    if (Number.isFinite(duration)) {
-      setDurationSeconds(duration);
-    }
-  });
 
   const onPlay = () => {
     videoViewRef?.current?.enterFullscreen();
@@ -39,35 +26,37 @@ const Video = ({ video }: Props) => {
   };
 
   return (
-    <Box flex={1} alignItems="center" flexDirection="row">
-      <Box flexDirection="row" alignItems="center" gap="s">
-        <ButtonIcon icon={PlayIcon} onPress={onPlay} />
-        <Text variant='body2' color="grey4">
-          {durationSeconds != null
-            ? dayjs(durationSeconds * 1000).format('mm:ss')
-            : ''}
-        </Text>
+    <Box flex={1}>
+      <Box width={80} height={80} borderRadius="s" overflow="hidden">
+        <VideoView
+          style={css.video}
+          player={player}
+          controls={isFullscreen}
+          resizeMode="cover"
+          ref={videoViewRef}
+          onFullscreenChange={onFullscreenChange}
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          alignItems="center"
+          justifyContent="center"
+          backgroundColor="backdropLight"
+        >
+          <ButtonIcon color="white" icon={PlayIcon} onPress={onPlay} />
+        </Box>
       </Box>
-
-      <VideoView
-        style={css.video}
-        player={player}
-        controls={isFullscreen}
-        resizeMode="cover"
-        ref={videoViewRef}
-        onFullscreenChange={onFullscreenChange}
-      />
     </Box>
   );
 };
 
 const css = StyleSheet.create({
   video: {
-    height: 0,
-    width: 0,
-    position: 'absolute',
-    top: 0,
-    left: 0,
+    width: '100%',
+    height: '100%',
   },
 });
 
