@@ -1,0 +1,5 @@
+mutation PublishOrder($input: publishOrderInput!) {
+  publishOrder(input: $input) {
+    id
+  }
+}

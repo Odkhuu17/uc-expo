@@ -504,6 +504,8 @@ export type Mutation = {
   destroyUserAddress?: Maybe<UserAddress>;
   feedLocation?: Maybe<TruckTrack>;
   linkDevice: Device;
+  markAsReadNotification?: Maybe<Notification>;
+  publishOrder?: Maybe<Order>;
   rejectDeliveryRequest?: Maybe<DeliveryRequest>;
   resetPassword?: Maybe<User>;
   sendEmailTest?: Maybe<Scalars['JSON']['output']>;
@@ -773,6 +775,16 @@ export type MutationLinkDeviceArgs = {
 };
 
 
+export type MutationMarkAsReadNotificationArgs = {
+  input: MarkAsReadNotificationInput;
+};
+
+
+export type MutationPublishOrderArgs = {
+  input: PublishOrderInput;
+};
+
+
 export type MutationRejectDeliveryRequestArgs = {
   input: RejectDeliveryRequestInput;
 };
@@ -879,6 +891,46 @@ export type MutationVerifyTruckArgs = {
 
 export type Node = {
   id: Scalars['ID']['output'];
+};
+
+export type Notification = BaseModelInterface & {
+  __typename?: 'Notification';
+  createdAt: Scalars['ISO8601DateTime']['output'];
+  event: NotificationEvent;
+  id: Scalars['ID']['output'];
+  read: Scalars['Boolean']['output'];
+  readAt: Scalars['ISO8601DateTime']['output'];
+  recipient: User;
+  seen: Scalars['Boolean']['output'];
+  seenAt: Scalars['ISO8601DateTime']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
+};
+
+export type NotificationConnection = {
+  __typename?: 'NotificationConnection';
+  edges: Array<NotificationEdge>;
+  nodes: Array<Notification>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type NotificationEdge = {
+  __typename?: 'NotificationEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Notification>;
+};
+
+export type NotificationEvent = BaseModelInterface & {
+  __typename?: 'NotificationEvent';
+  createdAt: Scalars['ISO8601DateTime']['output'];
+  id: Scalars['ID']['output'];
+  notificationsCount: Scalars['Int']['output'];
+  params?: Maybe<Scalars['JSON']['output']>;
+  recordId: Scalars['ID']['output'];
+  recordType: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
 export type Order = BaseModelInterface & {
@@ -1975,6 +2027,7 @@ export type User = BaseModelInterface & {
   lastTrackedAt?: Maybe<Scalars['ISO8601DateTime']['output']>;
   mobile?: Maybe<Scalars['String']['output']>;
   nickName?: Maybe<Scalars['String']['output']>;
+  notifications: NotificationConnection;
   orders: OrderConnection;
   registerNum?: Maybe<Scalars['String']['output']>;
   role?: Maybe<Scalars['String']['output']>;
@@ -2010,6 +2063,16 @@ export type UserDevicesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<DeviceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortFilter>;
+};
+
+
+export type UserNotificationsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2572,6 +2635,17 @@ export type LinkDeviceInput = {
   token: Scalars['String']['input'];
 };
 
+export type MarkAsReadNotificationInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+};
+
+export type PublishOrderInput = {
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  published: Scalars['Boolean']['input'];
+};
+
 export type RejectDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -2669,7 +2743,6 @@ export type UpdateOrderInput = {
   packageType?: InputMaybe<Scalars['String']['input']>;
   packageWeight?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
-  published?: InputMaybe<Scalars['Boolean']['input']>;
   receiverMobile?: InputMaybe<Scalars['String']['input']>;
   receiverName?: InputMaybe<Scalars['String']['input']>;
   senderMobile?: InputMaybe<Scalars['String']['input']>;

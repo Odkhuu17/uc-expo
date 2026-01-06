@@ -17,6 +17,6 @@ const sk = new Searchkit({
   },
 });
 
-const searchClient = Client(sk);
+const searchClient = Client(sk, {});
 
 export default searchClient;

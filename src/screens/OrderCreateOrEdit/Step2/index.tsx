@@ -9,7 +9,7 @@ import React, {
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { useInfiniteHits } from 'react-instantsearch-core';
-import { Modal } from 'react-native';
+import { Image, Modal, StyleSheet } from 'react-native';
 
 import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
@@ -65,6 +65,10 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  img: {
+    width: '100%',
+    height: '100%',
   },
 }));
 
@@ -235,6 +239,44 @@ const Step2 = ({
         }}
         onRegionChangeComplete={onRegionChangeComplete}
       >
+        {items?.map(item => {
+          if (!selectedCarTypes?.includes(item?.taxon?.name)) {
+            return null;
+          }
+
+          return (
+            <Marker
+              key={item?.id}
+              coordinate={{
+                latitude: Number(item.location?.lat),
+                longitude: Number(item.location?.lon),
+              }}
+            >
+              <Box
+                width={50}
+                height={50}
+                borderRadius="full"
+                overflow="hidden"
+                backgroundColor="white"
+                borderWidth={2}
+                borderColor="primary"
+              >
+                <Image
+                  source={
+                    isRent
+                      ? rentCarTypes?.find(i => i.name === item?.taxon?.name)
+                          ?.image
+                      : deliveryCarTypes?.find(
+                          i => i.name === item?.taxon?.name,
+                        )?.image
+                  }
+                  resizeMode="contain"
+                  style={styles.img}
+                />
+              </Box>
+            </Marker>
+          );
+        })}
         {!isRent && origin && destination && (
           <MapDirections
             origin={{

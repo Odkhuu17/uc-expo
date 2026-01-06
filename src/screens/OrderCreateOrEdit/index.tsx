@@ -22,6 +22,7 @@ import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
 import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
 import { ImageObject } from '@/gql/graphql';
+import { usePublishOrderMutation } from '@/gql/mutations/orderPublish.generated';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -104,6 +105,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const { data: taxonsData } = useGetTaxonsQuery();
 
   const [createOrder, { data: createOrderData }] = useOrderCreateMutation();
+  const [publishOrder] = usePublishOrderMutation();
   const [updateOrder] = useOrderUpdateMutation();
 
   const { data, loading: getOrderLoading } = useGetOrderDetailQuery({
@@ -158,6 +160,13 @@ const OrderCreate = ({ navigation, route }: Props) => {
               receiverMobile: values.receiverMobile,
               senderName: values.senderName,
               senderMobile: values.senderMobile,
+            },
+          },
+        });
+        await publishOrder({
+          variables: {
+            input: {
+              id: createOrderData?.createOrder?.id || data?.order?.id!,
               published: true,
             },
           },
@@ -196,6 +205,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
       const values = rentFormik.values;
 
       if (orderNumber) {
+        console.log(createOrderData?.createOrder?.id || data?.order?.id!);
+
         await updateOrder({
           variables: {
             input: {
@@ -213,6 +224,13 @@ const OrderCreate = ({ navigation, route }: Props) => {
                 additionalInfo: values.additionalInfo,
                 additionalAddress: values.additionalAddress,
               },
+            },
+          },
+        });
+        await publishOrder({
+          variables: {
+            input: {
+              id: createOrderData?.createOrder?.id || data?.order?.id!,
               published: true,
             },
           },
