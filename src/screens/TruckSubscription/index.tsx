@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { useGetMyTrucksLazyQuery } from '@/gql/queries/getMyTruck.generated';
 import {
   GetSubscriptionPlansQuery,
   useGetSubscriptionPlansQuery,
@@ -21,7 +20,6 @@ interface Props {
 }
 
 const TruckSubscription = ({ navigation, route }: Props) => {
-  const [getTruck] = useGetMyTrucksLazyQuery();
   const [successModal, setSuccessModal] = useState(false);
 
   const { data, loading, refetch } = useGetSubscriptionPlansQuery({
@@ -29,17 +27,6 @@ const TruckSubscription = ({ navigation, route }: Props) => {
       first: 10,
     },
   });
-
-  const init = async () => {
-    const { data } = await getTruck();
-    data?.me?.trucks.forEach(truck => {
-      if (truck.id === route.params.truckId) {
-        if (truck.subscribed) {
-          setSuccessModal(true);
-        }
-      }
-    });
-  };
 
   const onCloseSuccessModal = () => {
     navigation.goBack();

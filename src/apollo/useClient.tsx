@@ -35,6 +35,8 @@ const useClient = () => {
         service: constants.keyChainAuthServiceKey,
       });
 
+      console.log(credentials);
+
       const authHeader = await Buffer.from(
         `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
       ).toString('base64');
@@ -69,6 +71,8 @@ const useClient = () => {
           type: 'error',
           msg: error.message,
         });
+      } else if (ServerError.is(error) && error.statusCode === 401) {
+        return;
       } else {
         return navigation.navigate('MsgModal', {
           type: 'error',
@@ -80,6 +84,7 @@ const useClient = () => {
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
         return new Observable(observer => {
+          console.log('jhgrbergbergber', error);
           refreshAccessToken()
             .then(newToken => {
               // Update the operation context with the new token
@@ -100,6 +105,7 @@ const useClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(async refreshError => {
+              console.log('985y5486uy54896uy4598u65', error);
               await logout();
               observer.error(refreshError);
             });

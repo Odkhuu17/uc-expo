@@ -179,7 +179,6 @@ const OrderDetail = ({ navigation, route }: Props) => {
                         title={`Захиалгын хүсэлтүүд (${
                           data?.order?.deliveryRequests?.totalCount || 0
                         })`}
-                        color={isRent ? 'rent' : 'delivery'}
                         onPress={onPressRequests}
                       />
                     </Box>

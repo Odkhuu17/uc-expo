@@ -2,7 +2,7 @@ query getSubscriptionPlans(
   $first: Int
   $after: String
   $filter: SubscriptionPlanFilter
-  $sort: SortFilter
+  $sort: SortFilter = { field: "created_at", direction: asc }
 ) {
   subscriptionPlans(
     first: $first

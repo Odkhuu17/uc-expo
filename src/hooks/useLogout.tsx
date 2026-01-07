@@ -9,11 +9,11 @@ const useLogout = () => {
   const dispatch = useAppDispatch();
 
   const logout = async () => {
-    await apolloClient?.clearStore();
+    dispatch(authSlice.actions.logout());
     await Keychain.resetGenericPassword({
       service: constants.keyChainAuthServiceKey,
     });
-    dispatch(authSlice.actions.logout());
+    await apolloClient?.clearStore();
   };
 
   return { logout };

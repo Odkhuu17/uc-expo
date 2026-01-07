@@ -116,7 +116,11 @@ const ProfileUpdate = ({ navigation }: Props) => {
                     borderWidth={1}
                     borderColor="border"
                   >
-                    <HugeiconsIcon icon={Camera01Icon} color={theme.colors.grey4} size={theme.icon.m} />
+                    <HugeiconsIcon
+                      icon={Camera01Icon}
+                      color={theme.colors.grey4}
+                      size={theme.icon.m}
+                    />
                   </Box>
                 </TouchableOpacity>
               </Box>
@@ -129,12 +133,12 @@ const ProfileUpdate = ({ navigation }: Props) => {
                 label="Овог"
                 placeholder="Овог"
                 editable={!user?.verified}
-                value={values.firstName}
-                onChangeText={handleChange('firstName')}
-                onBlur={handleBlur('firstName')}
+                value={values.lastName}
+                onChangeText={handleChange('lastName')}
+                onBlur={handleBlur('lastName')}
                 error={
-                  touched.firstName && errors.firstName
-                    ? errors.firstName
+                  touched.lastName && errors.lastName
+                    ? errors.lastName
                     : undefined
                 }
               />
@@ -143,12 +147,12 @@ const ProfileUpdate = ({ navigation }: Props) => {
                 label="Нэр"
                 placeholder="Нэр"
                 editable={!user?.verified}
-                value={values.lastName}
-                onChangeText={handleChange('lastName')}
-                onBlur={handleBlur('lastName')}
+                value={values.firstName}
+                onChangeText={handleChange('firstName')}
+                onBlur={handleBlur('firstName')}
                 error={
-                  touched.lastName && errors.firstName
-                    ? errors.lastName
+                  touched.firstName && errors.firstName
+                    ? errors.firstName
                     : undefined
                 }
               />

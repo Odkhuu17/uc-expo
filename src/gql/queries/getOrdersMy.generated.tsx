@@ -17,7 +17,7 @@ export type GetOrdersMyQuery = { __typename?: 'Query', me?: { __typename?: 'User
 
 
 export const GetOrdersMyDocument = gql`
-    query GetOrdersMy($ordersFirst: Int, $after: String, $filter: OrderFilter = {published: {eq: true}}, $sort: SortFilter = {field: "created_at", direction: desc}) {
+    query GetOrdersMy($ordersFirst: Int, $after: String, $filter: OrderFilter = {published: {eq: true}}, $sort: SortFilter = {field: "updated_at", direction: desc}) {
   me {
     id
     orders(first: $ordersFirst, after: $after, filter: $filter, sort: $sort) {

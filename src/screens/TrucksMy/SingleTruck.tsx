@@ -117,7 +117,7 @@ const SingleTruck = ({ item, refetch }: Props) => {
             )}
         </Box>
         {item?.verifications?.edges?.[0]?.node?.status === 'pending' && (
-          <Progress sec={15} onFinish={refetch} />
+          <Progress sec={20} onFinish={refetch} />
         )}
         {!item?.verified && item?.verifications?.edges?.[0]?.node?.field5 && (
           <Warning

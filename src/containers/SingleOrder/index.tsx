@@ -185,7 +185,7 @@ const SingleOrder = ({ item, children }: Props) => {
                   </Box>
                   <Box>
                     <Text variant="body3" color="grey4">
-                      {dayjs(item?.createdAt).format('YYYY-MM-DD')}
+                      {dayjs(item?.updatedAt).format('YYYY-MM-DD')}
                     </Text>
                   </Box>
                 </Box>

@@ -48,7 +48,7 @@ const UserVerify = ({ userData, refetch }: Props) => {
     return (
       <>
         {userData?.verifications?.edges?.[0]?.node?.status === 'pending' ? (
-          <Progress sec={15} onFinish={refetch} />
+          <Progress sec={20} onFinish={refetch} />
         ) : (
           <Warning description="Таны бүртгэл баталгаажаагүй байна! Та бүртгэлээ баталгаажуулсны дараа манай системийг ашиглах боломжтой." />
         )}

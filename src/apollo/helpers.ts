@@ -33,6 +33,8 @@ export const refreshAccessToken = async (): Promise<string> => {
       service: constants.keyChainAuthServiceKey,
     });
 
+    console.log(data?.access_token, data?.refresh_token, '1st');
+
     return data.access_token;
   }
 
@@ -49,6 +51,8 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
     },
   );
+
+  console.log(data?.refresh_token, data?.access_token, '2nd');
 
   await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
     service: constants.keyChainAuthServiceKey,

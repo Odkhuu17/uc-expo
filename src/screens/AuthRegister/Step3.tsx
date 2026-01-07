@@ -176,11 +176,7 @@ const Step3 = ({ phoneNumber, token }: Props) => {
               : undefined
           }
         />
-        <Button
-          title="Бүртгүүлэх"
-          loading={loading}
-          onPress={handleSubmit}
-        />
+        <Button title="Бүртгүүлэх" loading={loading} onPress={handleSubmit} />
       </Box>
       <ModalMsg
         type="success"

@@ -117,12 +117,7 @@ const OrderRequestButton = ({ data, refetch, isRent }: Props) => {
 
   return (
     <>
-      <Button
-        title="Хүсэлт илгээх"
-        loading={loading}
-        onPress={onPress}
-        color={isRent ? 'rent' : 'delivery'}
-      />
+      <Button title="Хүсэлт илгээх" loading={loading} onPress={onPress} />
       <ModalBottomSheet
         ref={ref}
         snapPoints={snapPoints}

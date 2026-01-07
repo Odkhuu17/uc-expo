@@ -16,7 +16,7 @@ export type GetSubscriptionPlansQuery = { __typename?: 'Query', subscriptionPlan
 
 
 export const GetSubscriptionPlansDocument = gql`
-    query getSubscriptionPlans($first: Int, $after: String, $filter: SubscriptionPlanFilter, $sort: SortFilter) {
+    query getSubscriptionPlans($first: Int, $after: String, $filter: SubscriptionPlanFilter, $sort: SortFilter = {field: "created_at", direction: asc}) {
   subscriptionPlans(first: $first, after: $after, filter: $filter, sort: $sort) {
     edges {
       node {
