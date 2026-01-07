@@ -2,11 +2,7 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
-import {
-  Camera01Icon,
-  PencilEdit01Icon,
-  UserIcon,
-} from '@hugeicons/core-free-icons';
+import { Camera01Icon, UserIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 
 import {
@@ -25,6 +21,7 @@ import { getImageUrl } from '@/utils/helpers';
 import { INavigationProps } from '@/navigations';
 import { useUpdateUserMutation } from '@/gql/mutations/updateUser.generated';
 import useImagePick from '@/hooks/useImagePick';
+import AccountDelete from './AccountDelete';
 
 interface Props {
   navigation: INavigationProps<'ProfileUpdate'>['navigation'];
@@ -177,6 +174,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
                   loading={loading}
                 />
               )}
+              <AccountDelete />
             </Box>
           </ContentScrollable>
         </Container>

@@ -72,28 +72,30 @@ const ProfileScreen = ({ navigation }: Props) => {
           <RefreshControl onRefresh={getMe} refreshing={userLoading} />
         }
       >
-        <Box gap="m">
-          <LocationPermission />
-          <BoxContainer gap="m">
-            <UserInfo userData={userData?.me} onPress={onPressProfile} />
-            <UserVerify userData={userData?.me} refetch={getMe} />
-          </BoxContainer>
-          <UserTrucks userData={userData?.me} />
-          <BoxContainer gap="m">
-            <SingleMenu
-              title="Холбоо барих"
-              icon={CallIcon}
-              onPress={onPressContact}
-            />
-          </BoxContainer>
-          <BoxContainer gap="m">
-            <SingleMenu
-              title="Үйлчилгээний нөхцөл"
-              icon={Book02Icon}
-              onPress={onPressTerms}
-            />
-          </BoxContainer>
-        </Box>
+        {userData?.me && (
+          <Box gap="m">
+            <LocationPermission />
+            <BoxContainer gap="m">
+              <UserInfo userData={userData?.me} onPress={onPressProfile} />
+              <UserVerify userData={userData?.me} refetch={getMe} />
+            </BoxContainer>
+            <UserTrucks userData={userData?.me} />
+            <BoxContainer gap="m">
+              <SingleMenu
+                title="Холбоо барих"
+                icon={CallIcon}
+                onPress={onPressContact}
+              />
+            </BoxContainer>
+            <BoxContainer gap="m">
+              <SingleMenu
+                title="Үйлчилгээний нөхцөл"
+                icon={Book02Icon}
+                onPress={onPressTerms}
+              />
+            </BoxContainer>
+          </Box>
+        )}
       </ContentScrollable>
       <BottomContainer noInsets>
         <Button title="Системээс гарах" onPress={onLogout} variant="outlined" />

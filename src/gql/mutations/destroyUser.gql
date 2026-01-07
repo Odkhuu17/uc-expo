@@ -1,0 +1,5 @@
+mutation DestroyUser($id: ID!) {
+  destroyUser(input: { id: $id }) {
+    id
+  }
+}
