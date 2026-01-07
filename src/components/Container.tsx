@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { ImageBackground, StyleSheet } from 'react-native';
+import { Box } from './Theme';
 
 interface Props {
   children: ReactNode;
@@ -19,6 +20,14 @@ const getImage = (bg: Props['bg']) => {
 };
 
 const Container = ({ children, bg = 'light' }: Props) => {
+  if (bg === 'light') {
+    return (
+      <Box backgroundColor="bg" flex={1}>
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <ImageBackground style={css.imageBackground} source={getImage(bg)}>
       {children}

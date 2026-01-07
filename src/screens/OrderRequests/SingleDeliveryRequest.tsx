@@ -108,34 +108,46 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
 
   return (
     <>
-      <BoxContainer gap="s">
-        <RowValue label="Үнэ:" value={moneyFormat(item?.price || 0)} />
-        <RowValue
-          label={isRent ? 'Ажил эхлэх өдөр:' : 'Ачих өдөр:'}
-          value={
-            isRent
-              ? dayjs(item?.travelAt).format('YYYY-MM-DD')
-              : dayjs(item?.travelAt).format('YYYY-MM-DD HH:mm')
-          }
-        />
-        <RowValue label="Жолоочын овог:" value={item?.user?.lastName || '-'} />
-        <RowValue label="Жолоочын нэр:" value={item?.user?.firstName || '-'} />
-        <RowValue label="Жолоочын дугаар:" value={item?.user?.mobile || '-'} />
-        <RowValue label="Төлөв:">
-          <Label
-            text={
-              item?.status === 'accepted' ? 'Баталгаажсан' : 'Хүлээгдэж буй'
-            }
-            backgroundColor={
-              item?.status === 'accepted' ? 'success' : 'pending'
+      <BoxContainer gap="l">
+        <Box gap="s">
+          <RowValue label="Үнэ:" value={moneyFormat(item?.price || 0)} />
+          <RowValue
+            label={isRent ? 'Ажил эхлэх өдөр:' : 'Ачих өдөр:'}
+            value={
+              isRent
+                ? dayjs(item?.travelAt).format('YYYY-MM-DD')
+                : dayjs(item?.travelAt).format('YYYY-MM-DD HH:mm')
             }
           />
-        </RowValue>
+          <RowValue
+            label="Жолоочын овог:"
+            value={item?.user?.lastName || '-'}
+          />
+          <RowValue
+            label="Жолоочын нэр:"
+            value={item?.user?.firstName || '-'}
+          />
+          <RowValue
+            label="Жолоочын дугаар:"
+            value={item?.user?.mobile || '-'}
+          />
+          <RowValue label="Төлөв:">
+            <Label
+              text={
+                item?.status === 'accepted' ? 'Баталгаажсан' : 'Хүлээгдэж буй'
+              }
+              backgroundColor={
+                item?.status === 'accepted' ? 'success' : 'pending'
+              }
+            />
+          </RowValue>
+        </Box>
         {item?.status !== 'accepted' && (
           <Button
             title="Захиалга баталгаажуулах"
             onPress={onPressConfirm}
-            color={isRent ? 'rent' : 'delivery'}
+            color="primary"
+            variant='outlined'
           />
         )}
       </BoxContainer>

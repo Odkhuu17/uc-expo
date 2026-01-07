@@ -8,14 +8,14 @@ import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export const theme = createTheme({
   colors: {
-    bg: '#f5f5f5',
+    bg: '#EAEAEA',
     border: '#e0e0e0',
     error: '#d50000',
     success: '#00c853',
     primary: '#1265FF',
     primaryLight: '#8dc1fc',
     pending: '#ffab00',
-    secondary: '#ffab00',
+    secondary: '#429AFF',
     backdrop: 'rgba(0, 0, 0, 0.5)',
     backdropLight: 'rgba(0, 0, 0, 0.2)',
     rent: '#ffab00',
@@ -40,6 +40,7 @@ export const theme = createTheme({
     grey2: '#e0e0e0',
     grey3: '#bdbdbd',
     grey4: '#616161',
+    grey5: '#A1A1A1',
 
     green1: '#b9f6ca',
     green2: '#69f0ae',
@@ -58,8 +59,8 @@ export const theme = createTheme({
   spacing: {
     xs2: 3,
     xs: 5,
-    s: 10,
-    m: 15,
+    s: 8,
+    m: 16,
     l: 20,
     xl: 25,
     xl2: 50,
@@ -83,7 +84,8 @@ export const theme = createTheme({
   },
   button: {
     s: 30,
-    m: 40,
+    sm: 42,
+    m: 52,
     l: 60,
   },
   textVariants: {
@@ -107,7 +109,7 @@ export const theme = createTheme({
       fontSize: 14,
       fontWeight: '600',
     },
-    button: { fontSize: 16, fontWeight: '600' },
+    button: { fontSize: 18, fontWeight: '600' },
     button2: { fontSize: 14, fontWeight: '600' },
     button3: { fontSize: 12, fontWeight: '600' },
     header: { fontSize: 16, fontWeight: '600' },

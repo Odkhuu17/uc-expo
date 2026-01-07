@@ -84,12 +84,11 @@ const Step3 = ({ phoneNumber, token }: Props) => {
 
   return (
     <>
-      <Box gap="m" alignItems="center">
+      <Box gap="m">
         <Input
           label="Овог"
           isRequired
           placeholder="Овог"
-          width={270}
           icon={UserListIcon}
           value={values.lastname}
           onBlur={handleBlur('lastname')}
@@ -107,7 +106,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
           label="Нэр"
           isRequired
           placeholder="Нэр"
-          width={270}
           icon={UserListIcon}
           value={values.firstname}
           onBlur={handleBlur('firstname')}
@@ -125,7 +123,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
           label="Регистр дугаар"
           placeholder="Регистр эсвэл иргэний үнэмлэхний дугаар"
           isRequired
-          width={270}
           icon={IdentityCardIcon}
           autoCapitalize="characters"
           value={values.registerNum}
@@ -146,7 +143,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
           label="Нууц үг"
           placeholder="Нууц үг"
           isRequired
-          width={270}
           icon={LockPasswordIcon}
           value={values.password}
           onChangeText={handleChange('password')}
@@ -164,7 +160,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
           label="Нууц үг давтан оруулна уу!"
           placeholder="Нууц үг давтан оруулна уу!"
           isRequired
-          width={270}
           icon={LockPasswordIcon}
           value={values.passwordConfirmation}
           onBlur={handleBlur('passwordConfirmation')}
@@ -183,7 +178,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         />
         <Button
           title="Бүртгүүлэх"
-          width={180}
           loading={loading}
           onPress={handleSubmit}
         />

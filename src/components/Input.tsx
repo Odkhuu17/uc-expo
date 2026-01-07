@@ -25,6 +25,7 @@ interface Props extends TextInputProps {
   icon?: IconSvgElement;
   size?: keyof Theme['button'];
   ref?: React.Ref<TextInput>;
+  disabled?: boolean;
 }
 
 const Input = ({
@@ -35,6 +36,7 @@ const Input = ({
   isRequired,
   keyboardAvoiding,
   size = 'm',
+  disabled,
   ...textInputProps
 }: Props) => {
   const theme = useTheme();
@@ -49,6 +51,8 @@ const Input = ({
         ...theme.textVariants[getTextVariant()],
       } as TextStyle,
       [css.input],
+      { backgroundColor: disabled ? theme.colors.grey2 : 'transparent' },
+      { color: disabled ? theme.colors.grey5 : theme.colors.black },
       ...hookStyle,
     ],
     [],

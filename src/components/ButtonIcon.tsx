@@ -9,7 +9,8 @@ interface Props {
   size?: keyof Theme['button'];
   loading?: boolean;
   icon: IconSvgElement;
-  color?: 'primary' | 'secondary' | 'white';
+  shape?: 'circle' | 'square';
+  color?: 'primary' | 'secondary' | 'white' | 'error' | 'success' | 'grey4';
   variant?: 'text' | 'outlined' | 'contained';
 }
 
@@ -20,6 +21,7 @@ const ButtonIcon = ({
   size = 'm',
   loading,
   icon,
+  shape = 'circle',
 }: Props) => {
   const theme = useTheme();
 
@@ -45,7 +47,7 @@ const ButtonIcon = ({
         borderWidth={1}
         borderColor={getBorderColor()}
         backgroundColor={getBackgroundColor()}
-        borderRadius="full"
+        borderRadius={shape === 'circle' ? 'full' : 's'}
         alignItems="center"
         height={theme.button[size]}
         width={theme.button[size]}

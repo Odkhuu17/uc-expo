@@ -72,7 +72,7 @@ const SingleOrder = ({ item, children }: Props) => {
       <TouchableOpacity onPress={onNavigateToDetail}>
         <BoxContainer
           borderWidth={1}
-          borderColor={isRent ? 'rent' : 'delivery'}
+          borderColor="border"
           overflow="hidden"
           gap="s"
         >
@@ -82,11 +82,9 @@ const SingleOrder = ({ item, children }: Props) => {
             alignItems="center"
           >
             <Box flex={1}>
-              {!isRent && (
-                <Text color="primary" variant="title">
-                  {item?.packageType}
-                </Text>
-              )}
+              <Text color={isRent ? 'rent' : 'primary'} variant="title">
+                {isRent ? item?.carType : item?.packageType}
+              </Text>
             </Box>
             <Label
               text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}

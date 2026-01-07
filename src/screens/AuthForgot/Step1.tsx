@@ -43,7 +43,6 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
         label="Утасны дугаар"
         placeholder="Утасны дугаар"
         keyboardType="number-pad"
-        width={270}
         icon={CallIcon}
         value={values.login}
         onBlur={handleBlur('login')}
@@ -52,7 +51,6 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
       />
       <Button
         title="Нууц үг сэргээх"
-        width={180}
         loading={loading}
         onPress={handleSubmit}
       />

@@ -57,11 +57,16 @@ const ModalMsgContent = ({
               onPress={handleClose}
               title="Хаах"
               variant={handleConfirm ? 'outlined' : undefined}
+              size="sm"
             />
           </Box>
           {handleConfirm && (
             <Box flex={1}>
-              <Button onPress={handleConfirm} title={handleConfirmTitle} />
+              <Button
+                onPress={handleConfirm}
+                title={handleConfirmTitle}
+                size="sm"
+              />
             </Box>
           )}
         </Box>

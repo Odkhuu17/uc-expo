@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 import { Button, ContentScrollable, FitImage } from '@/components';
-import { Box } from '@/components/Theme';
+import { Box, Text } from '@/components/Theme';
 
 interface Props {
   setIsRent: Dispatch<SetStateAction<boolean>>;
@@ -22,7 +22,8 @@ const Step1 = ({ setIsRent, setStep }: Props) => {
 
   return (
     <ContentScrollable edges={['bottom']}>
-      <Box flex={1} alignItems="center" justifyContent="center">
+      <Box flex={1} alignItems="center" justifyContent="center" gap="xl3">
+        <Text variant="title">Үйлчилгээний төрөл сонгох</Text>
         <Box gap="xl3" alignItems="center">
           <Box gap="xl">
             <TouchableOpacity onPress={onPress1}>

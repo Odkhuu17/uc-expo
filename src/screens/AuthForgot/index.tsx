@@ -29,7 +29,6 @@ const AuthForgot = () => {
             key={2}
             flex={2}
             gap="m"
-            alignItems="center"
             justifyContent="center"
           >
             <Step2
@@ -48,7 +47,6 @@ const AuthForgot = () => {
             key={3}
             flex={2}
             gap="m"
-            alignItems="center"
             justifyContent="center"
           >
             <Step3 phoneNumber={phoneNumber} token={token} />
@@ -62,7 +60,6 @@ const AuthForgot = () => {
             key={1}
             flex={2}
             gap="m"
-            alignItems="center"
             justifyContent="center"
           >
             <Step1 setStep={setStep} setPhoneNumber={setPhoneNumber} />

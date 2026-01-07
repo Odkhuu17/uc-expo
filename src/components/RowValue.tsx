@@ -10,8 +10,15 @@ interface Props {
 
 const RowValue = ({ label, value, children }: Props) => {
   return (
-    <Box flexDirection="row" gap="s" justifyContent="space-between" alignItems="center">
-      <Text variant="body2">{label}</Text>
+    <Box
+      flexDirection="row"
+      gap="s"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Box flex={1}>
+        <Text variant="body2">{label}</Text>
+      </Box>
       {children || (
         <Box flex={1}>
           <Text variant="label" textAlign="right">

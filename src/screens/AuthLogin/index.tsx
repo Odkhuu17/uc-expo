@@ -95,12 +95,11 @@ const AuthLogin = ({ navigation }: Props) => {
           handlePressBack={handlePressBack}
         />
         <ContentScrollable edges={['bottom']}>
-          <Box gap="m" alignItems="center" flex={2} justifyContent="center">
+          <Box gap="m" flex={2} justifyContent="center">
             <Input
               label="Утасны дугаар"
               placeholder="Утасны дугаар"
               keyboardType="number-pad"
-              width={270}
               icon={CallIcon}
               value={values.username}
               onChangeText={handleChange('username')}
@@ -113,7 +112,6 @@ const AuthLogin = ({ navigation }: Props) => {
               ref={passwordInputRef}
               label="Нууц үг"
               placeholder="Нууц үг"
-              width={270}
               icon={LockPasswordIcon}
               value={values.password}
               onChangeText={handleChange('password')}
@@ -123,7 +121,7 @@ const AuthLogin = ({ navigation }: Props) => {
               returnKeyType="go"
               onSubmitEditing={handleSubmit}
             />
-            <Box alignItems="flex-end" justifyContent="flex-end" width={270}>
+            <Box alignItems="flex-end" justifyContent="flex-end">
               <Button
                 title="Нууц үг сэргээх"
                 onPress={handlePressForgot}
@@ -134,13 +132,11 @@ const AuthLogin = ({ navigation }: Props) => {
             <Button
               title="Нэвтрэх"
               onPress={handleSubmit}
-              width={190}
               loading={isSubmitting}
             />
             <Button
               title="Бүртгүүлэх"
               onPress={handlePressRegister}
-              width={190}
               variant="text"
             />
           </Box>

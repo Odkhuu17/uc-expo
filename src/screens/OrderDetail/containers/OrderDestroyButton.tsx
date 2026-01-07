@@ -1,8 +1,9 @@
 import { Alert } from 'react-native';
 
-import { Button } from '@/components';
+import { Button, ButtonIcon } from '@/components';
 import { useOrderDestroyMutation } from '@/gql/mutations/orderDestroy.generated';
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
+import { Delete03Icon } from '@hugeicons/core-free-icons';
 
 interface Props {
   order: GetOrderDetailQuery['order'];
@@ -33,9 +34,10 @@ const OrderDestroyButton = ({ order }: Props) => {
   };
 
   return (
-    <Button
+    <ButtonIcon
+      shape="square"
+      icon={Delete03Icon}
       color="error"
-      title="Устгах"
       loading={orderDestroyLoading}
       onPress={onPressDelete}
     />

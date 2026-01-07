@@ -13,6 +13,7 @@ import {
   ContentScrollable,
   RowValue,
   Label,
+  ButtonIcon,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
@@ -28,6 +29,13 @@ import OrderRequestButton from './containers/OrderRequestButton';
 import { INavigationProps } from '@/navigations';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import OrderDetailRent from './components/OrderDetailRent';
+import InputLabel from '@/components/InputLabel';
+import {
+  ArrowRight,
+  ArrowRight01Icon,
+  CircleArrowRight01Icon,
+  PencilEdit01Icon,
+} from '@hugeicons/core-free-icons';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -116,12 +124,16 @@ const OrderDetail = ({ navigation, route }: Props) => {
           ) : (
             <Box gap="m">
               {hasImages && (
-                <BoxContainer flexDirection="row" alignItems="center">
+                <BoxContainer gap="s">
+                  <InputLabel label="Зураг, бичлэг" />
                   <ScrollView
                     showsHorizontalScrollIndicator={false}
                     horizontal
                     contentContainerStyle={styles.scrollView}
                   >
+                    {data?.order?.video && (
+                      <OrderDetailVideo video={data?.order?.video} />
+                    )}
                     {data?.order?.images?.map((image, index) => (
                       <TouchableOpacity key={index} onPress={onShowImageView}>
                         <Box
@@ -140,11 +152,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                   </ScrollView>
                 </BoxContainer>
               )}
-              {data?.order?.video && (
-                <BoxContainer>
-                  <OrderDetailVideo video={data?.order?.video} />
-                </BoxContainer>
-              )}
+
               {data?.order?.audio && (
                 <BoxContainer>
                   <OrderDetailAudio audio={data?.order?.audio} />
@@ -158,27 +166,24 @@ const OrderDetail = ({ navigation, route }: Props) => {
               {data?.order?.my &&
                 mode === 'shipper' &&
                 data?.order?.status !== 'accepted' && (
-                  <>
-                    <Button
-                      title={`Захиалгын хүсэлтүүд (${
-                        data?.order?.deliveryRequests?.totalCount || 0
-                      })`}
-                      color={isRent ? 'rent' : 'delivery'}
-                      onPress={onPressRequests}
+                  <Box flexDirection="row" gap="s">
+                    <ButtonIcon
+                      shape="square"
+                      icon={PencilEdit01Icon}
+                      color="grey4"
+                      onPress={onPressEdit}
                     />
-                    <Box flexDirection="row" gap="s">
-                      <Box flex={1}>
-                        <Button
-                          color="success"
-                          title="Засах"
-                          onPress={onPressEdit}
-                        />
-                      </Box>
-                      <Box flex={1}>
-                        <OrderDestroyButton order={data?.order} />
-                      </Box>
+                    <OrderDestroyButton order={data?.order} />
+                    <Box flex={1}>
+                      <Button
+                        title={`Захиалгын хүсэлтүүд (${
+                          data?.order?.deliveryRequests?.totalCount || 0
+                        })`}
+                        color={isRent ? 'rent' : 'delivery'}
+                        onPress={onPressRequests}
+                      />
                     </Box>
-                  </>
+                  </Box>
                 )}
               {mode === 'shipper' && data?.order?.acceptedDeliveryRequest && (
                 <BoxContainer gap="m">

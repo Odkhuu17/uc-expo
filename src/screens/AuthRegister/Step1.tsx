@@ -56,23 +56,17 @@ const Step1 = ({ setStep, setPhoneNumber }: Props) => {
 
   return (
     <>
-      <Box flex={2} gap="m" alignItems="center" justifyContent="center">
+      <Box flex={2} gap="m" justifyContent="center">
         <Input
           label="Утасны дугаар"
           placeholder="Утасны дугаар"
-          width={270}
           keyboardType="number-pad"
           icon={CallIcon}
           value={values.login}
           onChangeText={handleChange('login')}
           error={errors.login ? errors.login : undefined}
         />
-        <Button
-          title="Бүртгүүлэх"
-          width={180}
-          loading={loading}
-          onPress={handleSubmit}
-        />
+        <Button title="Бүртгүүлэх" loading={loading} onPress={handleSubmit} />
       </Box>
       <Box flex={1} />
     </>

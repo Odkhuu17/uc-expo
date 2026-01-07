@@ -22,6 +22,7 @@ const useSoundRecord = ({ setAudio, number }: Props) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [recordTime, setRecordTime] = useState('00:00:00');
+  const isRecordingRef = useState(false)[0]; // Ref to track recording state synchronously
 
   const onStartRecord = async () => {
     try {
@@ -67,8 +68,25 @@ const useSoundRecord = ({ setAudio, number }: Props) => {
   };
 
   const startRecording = async () => {
+    // Prevent multiple simultaneous recording attempts
+    if (isLoading || isRecording) {
+      console.log('Recording already in progress or starting');
+      return;
+    }
+
     setIsLoading(true);
     try {
+      // Clean up any existing recording session first
+      try {
+        await Sound.stopRecorder();
+        Sound.removeRecordBackListener();
+        // Add a small delay to ensure cleanup is complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (cleanupError) {
+        // Ignore cleanup errors - recorder might not be running
+      }
+
+      // Start fresh recording
       await Sound.startRecorder();
       Sound.addRecordBackListener(e => {
         setRecordTime(Sound.mmssss(Math.floor(e.currentPosition)));
@@ -76,12 +94,18 @@ const useSoundRecord = ({ setAudio, number }: Props) => {
       setIsRecording(true);
     } catch (error) {
       console.error('Failed to start recording:', error);
+      Alert.alert('Алдаа', 'Дуу бичих эхлүүлэхэд алдаа гарлаа. Дахин оролдоно уу.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const onStopRecord = async () => {
+    if (!isRecording) {
+      console.log('No recording in progress to stop');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const result = await Sound.stopRecorder();
@@ -94,8 +118,10 @@ const useSoundRecord = ({ setAudio, number }: Props) => {
       });
       setAudio(data?.attachOrderAudio?.audio || null);
       setIsRecording(false);
+      setRecordTime('00:00:00');
     } catch (error) {
       console.error('Failed to stop recording:', error);
+      setIsRecording(false);
     } finally {
       setIsLoading(false);
     }

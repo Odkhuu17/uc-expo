@@ -1,7 +1,7 @@
-import { TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Button, Container, Content, HeaderLogo } from '@/components';
-import { Box } from '@/components/Theme';
+import { Container, Content, HeaderLogo } from '@/components';
+import { Box, Text } from '@/components/Theme';
 import { useAppDispatch } from '@/redux/hooks';
 import generalSlice from '@/redux/slices/general';
 import SingleButton from './SingleButton';
@@ -31,20 +31,32 @@ const AuthChooseType = ({ navigation }: Props) => {
         <Box gap="xl" alignItems="center" flex={1} justifyContent="center">
           <TouchableOpacity onPress={handlePressDriver}>
             <SingleButton img={require('@/assets/images/driver.png')}>
-              <Button
-                title="Жолооч"
-                onPress={handlePressDriver}
-                color="delivery"
-              />
+              <Box
+                backgroundColor="secondary"
+                px="l"
+                py="m"
+                borderRadius="full"
+                style={css.button}
+              >
+                <Text variant="title" color="white">
+                  Жолооч
+                </Text>
+              </Box>
             </SingleButton>
           </TouchableOpacity>
           <TouchableOpacity onPress={handlePressShipper}>
             <SingleButton img={require('@/assets/images/shipper.png')}>
-              <Button
-                title="Ачаа илгээгч"
-                onPress={handlePressShipper}
-                color="delivery"
-              />
+              <Box
+                backgroundColor="secondary"
+                px="l"
+                py="m"
+                borderRadius="full"
+                style={css.button}
+              >
+                <Text variant="title" color="white">
+                  Ачаа илгээгч
+                </Text>
+              </Box>
             </SingleButton>
           </TouchableOpacity>
         </Box>
@@ -52,5 +64,11 @@ const AuthChooseType = ({ navigation }: Props) => {
     </Container>
   );
 };
+
+const css = StyleSheet.create({
+  button: {
+    marginTop: -10,
+  },
+});
 
 export default AuthChooseType;

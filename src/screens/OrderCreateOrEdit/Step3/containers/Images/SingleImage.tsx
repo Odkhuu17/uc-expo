@@ -34,13 +34,26 @@ const SingleImage = ({ number, imageObject, setImageObjects }: Props) => {
         source={{ uri: getImageUrl(imageObject?.url || '') }}
         style={css.image}
       />
-      <Box position="absolute" top={theme.spacing.s} right={theme.spacing.s}>
-        <ButtonIcon
-          variant="contained"
-          icon={Delete03Icon}
-          loading={loading}
-          onPress={onDeleteImage}
-        />
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        backgroundColor="backdrop"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box position="absolute">
+          <ButtonIcon
+            size="sm"
+            color="white"
+            variant="outlined"
+            icon={Delete03Icon}
+            loading={loading}
+            onPress={onDeleteImage}
+          />
+        </Box>
       </Box>
     </Box>
   );

@@ -73,7 +73,7 @@ const Button = ({
           borderWidth={variant === 'outlined' ? 1 : 0}
           borderColor={getBorderColor()}
           backgroundColor={getBackgroundColor()}
-          borderRadius="full"
+          borderRadius="s"
           alignItems="center"
           height={theme.button[size]}
           justifyContent="center"

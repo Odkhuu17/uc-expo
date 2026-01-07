@@ -9,7 +9,8 @@ import React, {
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { useInfiniteHits } from 'react-instantsearch-core';
-import { Image, Modal, StyleSheet } from 'react-native';
+import { Image, Modal } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 
 import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
@@ -112,6 +113,20 @@ const Step2 = ({
       location: { latitude: 47.92123, longitude: 106.918556 },
     },
   });
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(async info => {
+      console.log(info, 'geo info');
+
+      refetch({
+        query: '',
+        location: {
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        },
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (!origin) {
@@ -386,6 +401,7 @@ const Step2 = ({
         isRent={isRent}
         mapRef={mapRef}
       />
+      {console.log(destination, '1212123')}
       <LocationModal
         ref={destinationModalRef}
         setLocation={setDestination}

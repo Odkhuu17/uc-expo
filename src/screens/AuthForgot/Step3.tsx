@@ -62,7 +62,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         label="Нууц үг"
         placeholder="Нууц үг"
         isRequired
-        width={270}
         icon={LockPasswordIcon}
         value={values.password}
         onBlur={handleBlur('password')}
@@ -79,7 +78,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         placeholder="Нууц үг давтан оруулна уу!"
         isRequired
         ref={passwordRepeatRef}
-        width={270}
         icon={LockPasswordIcon}
         value={values.passwordConfirmation}
         onBlur={handleBlur('passwordConfirmation')}
@@ -95,7 +93,6 @@ const Step3 = ({ phoneNumber, token }: Props) => {
       />
       <Button
         title="Нууц үг сэргээх"
-        width={180}
         loading={loading}
         onPress={handleSubmit}
       />

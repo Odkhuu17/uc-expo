@@ -46,7 +46,7 @@ const Step2 = ({ phoneNumber, setToken, token, setStep }: Props) => {
 
   return (
     <>
-      <Box flex={2} alignItems="center" justifyContent="center" gap="m">
+      <Box flex={2} justifyContent="center" gap="m">
         <InputOtp
           otp={token}
           setOtp={setToken}

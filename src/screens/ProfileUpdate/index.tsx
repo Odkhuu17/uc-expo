@@ -1,8 +1,12 @@
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
-import { PencilEdit01Icon, UserIcon } from '@hugeicons/core-free-icons';
+import {
+  Camera01Icon,
+  PencilEdit01Icon,
+  UserIcon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 
 import {
@@ -40,6 +44,18 @@ const ProfileUpdate = ({ navigation }: Props) => {
   const theme = useTheme();
   const { onPickImage } = useImagePick({ setImage: setAvatar });
 
+  useEffect(() => {
+    updateUser({
+      variables: {
+        avatar: avatar ? imageToFile(avatar) : undefined,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        registerNum: values.registerNum,
+        id: user?.id!,
+      },
+    });
+  }, [avatar]);
+
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({
       initialValues: {
@@ -51,7 +67,6 @@ const ProfileUpdate = ({ navigation }: Props) => {
       onSubmit: async () => {
         await updateUser({
           variables: {
-            avatar: avatar ? imageToFile(avatar) : undefined,
             firstName: values.firstName,
             lastName: values.lastName,
             registerNum: values.registerNum,
@@ -98,12 +113,10 @@ const ProfileUpdate = ({ navigation }: Props) => {
                     p="xs"
                     backgroundColor="white"
                     borderRadius="full"
-                    borderWidth={2}
+                    borderWidth={1}
+                    borderColor="border"
                   >
-                    <HugeiconsIcon
-                      icon={PencilEdit01Icon}
-                      size={theme.icon.m}
-                    />
+                    <HugeiconsIcon icon={Camera01Icon} color={theme.colors.grey4} size={theme.icon.m} />
                   </Box>
                 </TouchableOpacity>
               </Box>
@@ -112,6 +125,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
           <ContentScrollable edges={['bottom']}>
             <Box gap="m">
               <Input
+                disabled={user?.verified}
                 label="Овог"
                 placeholder="Овог"
                 editable={!user?.verified}
@@ -125,6 +139,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
                 }
               />
               <Input
+                disabled={user?.verified}
                 label="Нэр"
                 placeholder="Нэр"
                 editable={!user?.verified}
@@ -138,6 +153,7 @@ const ProfileUpdate = ({ navigation }: Props) => {
                 }
               />
               <Input
+                disabled={user?.verified}
                 label="Регистрийн дугаар"
                 placeholder="Регистрийн дугаар"
                 editable={!user?.verified}
@@ -150,11 +166,13 @@ const ProfileUpdate = ({ navigation }: Props) => {
                     : undefined
                 }
               />
-              <Button
-                title="Шинэчлэх"
-                onPress={handleSubmit}
-                loading={loading}
-              />
+              {!user?.verified && (
+                <Button
+                  title="Шинэчлэх"
+                  onPress={handleSubmit}
+                  loading={loading}
+                />
+              )}
             </Box>
           </ContentScrollable>
         </Container>

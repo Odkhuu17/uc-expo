@@ -85,6 +85,8 @@ const ProfileScreen = ({ navigation }: Props) => {
               icon={CallIcon}
               onPress={onPressContact}
             />
+          </BoxContainer>
+          <BoxContainer gap="m">
             <SingleMenu
               title="Үйлчилгээний нөхцөл"
               icon={Book02Icon}
@@ -94,7 +96,7 @@ const ProfileScreen = ({ navigation }: Props) => {
         </Box>
       </ContentScrollable>
       <BottomContainer noInsets>
-        <Button title="Гарах" onPress={onLogout} variant="outlined" />
+        <Button title="Системээс гарах" onPress={onLogout} variant="outlined" />
       </BottomContainer>
     </Container>
   );
