@@ -1,6 +1,6 @@
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Dispatch, SetStateAction } from 'react';
-import { Alert, Keyboard } from 'react-native';
+import { Alert, Keyboard, Platform } from 'react-native';
 import {
   check,
   request,
@@ -18,7 +18,13 @@ interface Props {
 const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
   const checkAndRequestCameraPermission = async (): Promise<boolean> => {
     Keyboard.dismiss();
-    const permission = PERMISSIONS.IOS.CAMERA;
+    const permission = Platform.select({
+      ios: PERMISSIONS.IOS.CAMERA,
+      android: PERMISSIONS.ANDROID.CAMERA,
+    });
+
+    if (!permission) return false;
+
     const result = await check(permission);
 
     if (result === RESULTS.GRANTED) {
@@ -41,7 +47,18 @@ const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
 
   const checkAndRequestPhotoLibraryPermission = async (): Promise<boolean> => {
     Keyboard.dismiss();
-    const permission = PERMISSIONS.IOS.PHOTO_LIBRARY;
+    
+    let permission;
+    if (Platform.OS === 'ios') {
+      permission = PERMISSIONS.IOS.PHOTO_LIBRARY;
+    } else if (Platform.OS === 'android') {
+      permission = Number(Platform.Version) >= 33 
+        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+    }
+
+    if (!permission) return false;
+
     const result = await check(permission);
 
     if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {

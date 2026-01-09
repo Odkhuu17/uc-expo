@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { check, PERMISSIONS } from 'react-native-permissions';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 
 import { useAppDispatch } from '@/redux/hooks';
 import settingsSlice from '@/redux/slices/settings';
@@ -15,13 +15,20 @@ const useLocationPermission = () => {
         appState.current.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
-        check(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
-          dispatch(
-            settingsSlice.actions.changeLocationPermission(
-              result === 'granted',
-            ),
-          );
+        const permission = Platform.select({
+          ios: PERMISSIONS.IOS.LOCATION_ALWAYS,
+          android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
         });
+
+        if (permission) {
+          check(permission).then(result => {
+            dispatch(
+              settingsSlice.actions.changeLocationPermission(
+                result === 'granted',
+              ),
+            );
+          });
+        }
       }
       appState.current = nextAppState;
     });
