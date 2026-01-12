@@ -116,8 +116,6 @@ const Step2 = ({
 
   useEffect(() => {
     Geolocation.getCurrentPosition(async info => {
-      console.log(info, 'geo info');
-
       refetch({
         query: '',
         location: {
@@ -401,7 +399,6 @@ const Step2 = ({
         isRent={isRent}
         mapRef={mapRef}
       />
-      {console.log(destination, '1212123')}
       <LocationModal
         ref={destinationModalRef}
         setLocation={setDestination}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671545264664",
+    "project_id": "uc-rn-8bcdd",
+    "storage_bucket": "uc-rn-8bcdd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671545264664:android:9dc04b842824d05934916d",
+        "android_client_info": {
+          "package_name": "com.unlimitedcarrier.uc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkHW8soP-bdlbJ1QTfMXfNnfLRPD6TpAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

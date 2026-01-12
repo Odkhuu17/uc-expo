@@ -80,8 +80,6 @@ const SingleTruck = ({ item, refetch }: Props) => {
     navigation.navigate('TruckSubscription', { truckId: item?.id });
   };
 
-  console.log('item truck', item);
-
   return (
     <TouchableOpacity onPress={onPress}>
       <BoxContainer gap="m">

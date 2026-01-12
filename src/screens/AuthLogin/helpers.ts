@@ -7,11 +7,11 @@ import constants from '@/constants';
 
 export const login = async (username: string, password: string) => {
   const authHeader = Buffer.from(
-    `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
+    `${constants.OAUTH_CLIENT_ID}:${constants.OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
   const { data } = await axios.post(
-    `${Config.API_URL}/oauth/token`,
+    `${constants.API_URL}/oauth/token`,
     {
       grant_type: 'password',
       username: username,

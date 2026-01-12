@@ -205,8 +205,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
       const values = rentFormik.values;
 
       if (orderNumber) {
-        console.log(createOrderData?.createOrder?.id || data?.order?.id!);
-
         await updateOrder({
           variables: {
             input: {

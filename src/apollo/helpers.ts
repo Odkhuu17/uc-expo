@@ -11,12 +11,12 @@ export const refreshAccessToken = async (): Promise<string> => {
   });
 
   const authHeader = await Buffer.from(
-    `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
+    `${constants.OAUTH_CLIENT_ID}:${constants.OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
   if (!credentials) {
     const { data } = await axios.post(
-      `${Config.API_URL}/oauth/token`,
+      `${constants.API_URL}/oauth/token`,
       {
         grant_type: 'client_credentials',
         scope: 'public',
@@ -33,13 +33,11 @@ export const refreshAccessToken = async (): Promise<string> => {
       service: constants.keyChainAuthServiceKey,
     });
 
-    console.log(data?.access_token, data?.refresh_token, '1st');
-
     return data.access_token;
   }
 
   const { data } = await axios.post(
-    `${Config.API_URL}/oauth/token`,
+    `${constants.API_URL}/oauth/token`,
     {
       grant_type: 'refresh_token',
       refresh_token: credentials.username,
@@ -51,8 +49,6 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
     },
   );
-
-  console.log(data?.refresh_token, data?.access_token, '2nd');
 
   await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
     service: constants.keyChainAuthServiceKey,

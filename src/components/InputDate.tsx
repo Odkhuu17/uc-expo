@@ -1,6 +1,7 @@
-import { Keyboard, Pressable, ViewStyle } from 'react-native';
+import { Keyboard, Platform, Pressable, ViewStyle } from 'react-native';
 import { IconSvgElement } from '@hugeicons/react-native';
 import DateTimePicker, {
+  DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -50,6 +51,13 @@ const InputDate = ({
   const onOpen = () => {
     Keyboard.dismiss();
     ref.current?.present();
+
+    DateTimePickerAndroid.open({
+      value: pickerValue,
+      onChange: onChangeDate,
+      mode: mode,
+      is24Hour: true,
+    });
   };
 
   const onClose = () => {
@@ -112,21 +120,23 @@ const InputDate = ({
           </InputContainer>
         </Pressable>
       </Box>
-      <ModalBottomSheet ref={ref} snapPoints={snapPoints} enableDynamicSizing>
-        <BottomSheetView>
-          <Box backgroundColor="white" alignItems="center">
-            <DateTimePicker
-              value={pickerValue}
-              display="spinner"
-              onChange={onChangeDate}
-              mode={mode}
-            />
-          </Box>
-          <BottomContainer>
-            <Button title="Хаах" onPress={onClose} />
-          </BottomContainer>
-        </BottomSheetView>
-      </ModalBottomSheet>
+      {Platform.OS === 'ios' && (
+        <ModalBottomSheet ref={ref} snapPoints={snapPoints} enableDynamicSizing>
+          <BottomSheetView>
+            <Box backgroundColor="white" alignItems="center">
+              <DateTimePicker
+                value={pickerValue}
+                display="spinner"
+                onChange={onChangeDate}
+                mode={mode}
+              />
+            </Box>
+            <BottomContainer>
+              <Button title="Хаах" onPress={onClose} />
+            </BottomContainer>
+          </BottomSheetView>
+        </ModalBottomSheet>
+      )}
     </>
   );
 };

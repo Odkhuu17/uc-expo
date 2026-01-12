@@ -1,68 +1,82 @@
-import { useEffect, useRef, useState } from 'react';
-import Sound from 'react-native-sound';
+import { useEffect, useState } from 'react';
+import Sound from 'react-native-nitro-sound';
 
 const useSound = (filename: string) => {
-  const sound = useRef<Sound | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [durationSec, setDurationSec] = useState(0);
   const [currentTimeSec, setCurrentTimeSec] = useState(0);
 
   useEffect(() => {
-    sound.current = new Sound(filename, Sound.MAIN_BUNDLE, error => {
-      if (error) {
-        console.log('Error loading sound:', error);
-        return;
-      }
-      const duration = sound.current?.getDuration();
+    // Preload to get duration
+    const preload = async () => {
+      try {
+        let duration = 0;
+        
+        // Add listener to capture duration
+        Sound.addPlayBackListener((e) => {
+          duration = e.duration / 1000;
+          setDurationSec(e.duration / 1000);
+          setCurrentTimeSec(e.currentPosition / 1000);
+        });
 
-      if (typeof duration === 'number' && !Number.isNaN(duration)) {
-        setDurationSec(duration);
+        // Start and immediately pause to load metadata
+        await Sound.startPlayer(filename);
+        
+        // Wait a bit for the listener to fire and get duration
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        await Sound.pausePlayer();
+        setIsLoaded(true);
+      } catch (error) {
+        console.log('Error preloading:', error);
+        setIsLoaded(true);
       }
+    };
 
-      setIsLoaded(true);
-    });
+    preload();
 
     return () => {
-      sound.current?.release();
+      try {
+        Sound.stopPlayer();
+        Sound.removePlayBackListener();
+        Sound.removePlaybackEndListener();
+      } catch (e) {
+        // ignore cleanup errors
+      }
     };
   }, [filename]);
 
-  // Poll current time every 0.5s while playing.
-  useEffect(() => {
-    if (!isPlaying) return;
-    let cancelled = false;
-    const id = setInterval(() => {
-      sound.current?.getCurrentTime(seconds => {
-        if (cancelled) return;
-        if (typeof seconds === 'number' && !Number.isNaN(seconds)) {
-          setCurrentTimeSec(seconds);
-        }
-      });
-    }, 500);
+  const play = async () => {
+    if (!isLoaded) return;
 
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, [isPlaying]);
-
-  const play = () => {
-    if (sound.current && isLoaded) {
-      sound.current.play(success => {
+    try {
+      Sound.addPlaybackEndListener(() => {
         setIsPlaying(false);
-        // Ensure UI snaps to the end (or current duration) when playback completes.
-        if (success) setCurrentTimeSec(durationSec);
       });
+
+      // Try to resume first, if it fails, restart from beginning
+      try {
+        await Sound.resumePlayer();
+      } catch (resumeError) {
+        // Player was stopped, need to restart
+        await Sound.startPlayer(filename);
+      }
+      
       setIsPlaying(true);
+    } catch (error) {
+      console.log('Error playing audio:', error);
     }
   };
 
-  const stop = () => {
-    if (sound.current) {
-      sound.current.stop();
+  const stop = async () => {
+    try {
+      await Sound.pausePlayer();
+      await Sound.seekToPlayer(0);
       setIsPlaying(false);
       setCurrentTimeSec(0);
+    } catch (error) {
+      console.log('Error stopping audio:', error);
     }
   };
 
@@ -73,7 +87,6 @@ const useSound = (filename: string) => {
     isPlaying,
     durationSec,
     currentTimeSec,
-    sound,
   };
 };
 

@@ -38,7 +38,7 @@ const useClient = () => {
       console.log(credentials);
 
       const authHeader = await Buffer.from(
-        `${Config.OAUTH_CLIENT_ID}:${Config.OAUTH_CLIENT_SECRET}`,
+        `${constants.OAUTH_CLIENT_ID}:${constants.OAUTH_CLIENT_SECRET}`,
       ).toString('base64');
 
       return {
@@ -117,7 +117,7 @@ const useClient = () => {
     });
 
     const uploadLink = new UploadHttpLink({
-      uri: `${Config.API_URL}/graphql`,
+      uri: `${constants.API_URL}/graphql`,
       isExtractableFile: (
         value: any,
       ): value is { uri: string; name: string; type: string } => {

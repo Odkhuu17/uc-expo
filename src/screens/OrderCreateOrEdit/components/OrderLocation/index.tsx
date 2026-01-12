@@ -39,7 +39,6 @@ const OrderLocation = ({
           />
           {!isRent && onPressDestination && (
             <>
-            {console.log('destination', destination)}
               <Box width="100%" height={1} backgroundColor="border" my="s" />
               <SingleLocation
                 loading={loading}

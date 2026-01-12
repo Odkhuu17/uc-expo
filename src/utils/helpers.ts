@@ -3,6 +3,7 @@ import { createNumberMask } from 'react-native-mask-input';
 import { Region } from 'react-native-maps';
 
 import { rentCarTypes } from '@/constants/transportTypes';
+import constants from '@/constants';
 
 export const moneyFormat = (
   amount: number | string,
@@ -31,7 +32,7 @@ export const formatDuration = (durationMillis?: number | null) => {
 };
 
 export const getImageUrl = (url: string) => {
-  return `${Config.API_URL}${url}`;
+  return `${constants.API_URL}${url}`;
 };
 
 export const isRentOrder = (carType?: string) => {

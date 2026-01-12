@@ -11,7 +11,6 @@ interface Props {
 }
 
 const OrderDetailDelivery = ({ order }: Props) => {
-  console.log(order, 'order---delivery');
   return (
     <>
       <BoxContainer gap="s">

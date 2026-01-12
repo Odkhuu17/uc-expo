@@ -63,8 +63,6 @@ const TrackTruck = ({ route }: Props) => {
           },
         });
 
-        console.log(region)
-
         // mapRef?.current?.animateToRegion(region, 350);
       } else if (origin && destination) {
         const region = getMapRegion({
