@@ -8,11 +8,11 @@ import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export const theme = createTheme({
   colors: {
+    primary: '#d71616',
     bg: '#EAEAEA',
     border: '#e0e0e0',
     error: '#d50000',
     success: '#00c853',
-    primary: '#1265FF',
     primaryLight: '#8dc1fc',
     pending: '#ffab00',
     secondary: '#429AFF',

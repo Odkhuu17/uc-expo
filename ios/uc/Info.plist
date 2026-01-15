@@ -58,15 +58,17 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera.</string>
+	<string>We need camera access to let you take photos of delivery items.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app uses your location to provide delivery and tracking services.</string>
+	<string>We need your location to calculate accurate delivery routes and distances, show your real-time position to customers during delivery, and provide location-based order notifications.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses your location while you use the app.</string>
+	<string>We need your location to calculate accurate delivery routes and distances, and show your real-time position to customers during active deliveries.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs access to the microphone to record audio for job postings.</string>
+	<string>We need microphone access to let you record voice notes for delivery instructions.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to your photo library.</string>
+	<string>We need photo library access to let you select and upload images for delivery documentation.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use tracking to monitor where your delivery is, and improve our delivery matching system to better serve you.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -80,6 +82,11 @@
 		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
