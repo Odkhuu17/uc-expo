@@ -8,7 +8,7 @@ import { ImageStyle, TextStyle, ViewStyle } from 'react-native';
 
 export const theme = createTheme({
   colors: {
-    primary: '#d71616',
+    primary: '#1265FF',
     bg: '#EAEAEA',
     border: '#e0e0e0',
     error: '#d50000',
