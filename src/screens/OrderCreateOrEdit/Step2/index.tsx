@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
-import { useInfiniteHits } from 'react-instantsearch-core';
+import { useInfiniteHits, useRefinementList } from 'react-instantsearch-core';
 import { Image, Modal, Platform } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -235,11 +235,40 @@ const Step2 = ({
     destinationModalRef.current?.present();
   };
 
-  // const { items, isLastPage, showMore } = useInfiniteHits({
-  //   escapeHTML: false,
-  // });
+  const { items, isLastPage, showMore } = useInfiniteHits({
+    escapeHTML: false,
+  });
 
-  console.log(!!(!isRent && origin), origin, 'sdssdsd');
+  // Use refinement list to filter by taxon name
+  const { items: taxonFacets, refine: refineTaxon } = useRefinementList({
+    attribute: 'taxon.name',
+    operator: 'or', // Use OR operator for multiple selections
+  });
+
+  // Sync selectedCarTypes with refinement list
+  useEffect(() => {
+    // Get currently refined items
+    const currentRefined = taxonFacets
+      .filter(facet => facet.isRefined)
+      .map(facet => facet.value);
+
+    // Find items to add (in selectedCarTypes but not refined)
+    const toAdd = selectedCarTypes.filter(
+      type => !currentRefined.includes(type),
+    );
+
+    // Find items to remove (refined but not in selectedCarTypes)
+    const toRemove = currentRefined.filter(
+      type => !selectedCarTypes.includes(type),
+    );
+
+    // Apply changes only if needed (batch updates in single render)
+    if (toAdd.length > 0 || toRemove.length > 0) {
+      [...toAdd, ...toRemove].forEach(name => {
+        refineTaxon(name);
+      });
+    }
+  }, [selectedCarTypes]); // Use join to avoid array reference changes
 
   return (
     <>
@@ -254,11 +283,7 @@ const Step2 = ({
         }}
         onRegionChangeComplete={onRegionChangeComplete}
       >
-        {/* {items?.map(item => {
-          if (!selectedCarTypes?.includes(item?.taxon?.name)) {
-            return null;
-          }
-
+        {items?.map(item => {
           return (
             <Marker
               key={item?.id}
@@ -268,8 +293,8 @@ const Step2 = ({
               }}
             >
               <Box
-                width={50}
-                height={50}
+                width={40}
+                height={40}
                 borderRadius="full"
                 overflow="hidden"
                 backgroundColor="white"
@@ -291,7 +316,7 @@ const Step2 = ({
               </Box>
             </Marker>
           );
-        })} */}
+        })}
         {!isRent && origin && destination && (
           <MapDirections
             origin={{

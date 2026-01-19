@@ -8,6 +8,14 @@ const sk = new Searchkit({
   search_settings: {
     search_attributes: [''],
     result_attributes: ['*'],
+    facet_attributes: [
+      {
+        attribute: 'taxon.name',
+        field: 'taxon.name.keyword',
+        type: 'string',
+      },
+    ],
+    geo_attribute: 'location',
     sorting: {
       default: {
         field: 'tracked_at',
