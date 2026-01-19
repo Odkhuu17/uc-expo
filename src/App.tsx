@@ -37,28 +37,26 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <InstantSearch indexName="supp_trucks" searchClient={searchClient}>
-        <GestureHandlerRootView>
-          <SafeAreaProvider>
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <ThemeProvider theme={theme}>
-                  <BottomSheetModalProvider>
-                    <NavigationContainer>
-                      <ApolloProvider>
-                        <AppNavigator />
-                      </ApolloProvider>
-                    </NavigationContainer>
-                  </BottomSheetModalProvider>
-                </ThemeProvider>
-              </PersistGate>
-            </Provider>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-        <ReducedMotionConfig mode={ReduceMotion.Never} />
-      </InstantSearch>
-    </>
+    <InstantSearch indexName="supp_trucks" searchClient={searchClient}>
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <ThemeProvider theme={theme}>
+                <BottomSheetModalProvider>
+                  <NavigationContainer>
+                    <ApolloProvider>
+                      <AppNavigator />
+                    </ApolloProvider>
+                  </NavigationContainer>
+                </BottomSheetModalProvider>
+              </ThemeProvider>
+            </PersistGate>
+          </Provider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+      <ReducedMotionConfig mode={ReduceMotion.Never} />
+    </InstantSearch>
   );
 };
 

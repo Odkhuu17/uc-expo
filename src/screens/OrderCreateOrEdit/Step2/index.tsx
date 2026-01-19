@@ -9,7 +9,7 @@ import React, {
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { useInfiniteHits } from 'react-instantsearch-core';
-import { Image, Modal } from 'react-native';
+import { Image, Modal, Platform } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
 import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
@@ -235,9 +235,11 @@ const Step2 = ({
     destinationModalRef.current?.present();
   };
 
-  const { items, isLastPage, showMore } = useInfiniteHits({
-    escapeHTML: false,
-  });
+  // const { items, isLastPage, showMore } = useInfiniteHits({
+  //   escapeHTML: false,
+  // });
+
+  console.log(!!(!isRent && origin), origin, 'sdssdsd');
 
   return (
     <>
@@ -252,7 +254,7 @@ const Step2 = ({
         }}
         onRegionChangeComplete={onRegionChangeComplete}
       >
-        {items?.map(item => {
+        {/* {items?.map(item => {
           if (!selectedCarTypes?.includes(item?.taxon?.name)) {
             return null;
           }
@@ -289,7 +291,7 @@ const Step2 = ({
               </Box>
             </Marker>
           );
-        })}
+        })} */}
         {!isRent && origin && destination && (
           <MapDirections
             origin={{
@@ -309,7 +311,7 @@ const Step2 = ({
               longitude: origin?._source?.location?.lon || 0,
             }}
           >
-            <MapPin title="Очиж авах хаяг" />
+            {Platform.OS === 'ios' && <MapPin title="Очиж авах хаяг" />}
           </Marker>
         )}
         {!isRent && destination && (
@@ -319,7 +321,7 @@ const Step2 = ({
               longitude: destination?._source?.location?.lon || 0,
             }}
           >
-            <MapPin title="Хүргэх хаяг" />
+            {Platform.OS === 'ios' && <MapPin title="Хүргэх хаяг" />}
           </Marker>
         )}
       </MapView>

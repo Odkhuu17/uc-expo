@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as Keychain from 'react-native-keychain';
 import { Buffer } from 'buffer';
-import Config from 'react-native-config';
+import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, API_URL } from '@env';
 
 import constants from '@/constants';
 
@@ -11,12 +11,12 @@ export const refreshAccessToken = async (): Promise<string> => {
   });
 
   const authHeader = await Buffer.from(
-    `${constants.OAUTH_CLIENT_ID}:${constants.OAUTH_CLIENT_SECRET}`,
+    `${OAUTH_CLIENT_ID}:${OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
   if (!credentials) {
     const { data } = await axios.post(
-      `${constants.API_URL}/oauth/token`,
+      `${API_URL}/oauth/token`,
       {
         grant_type: 'client_credentials',
         scope: 'public',
@@ -37,7 +37,7 @@ export const refreshAccessToken = async (): Promise<string> => {
   }
 
   const { data } = await axios.post(
-    `${constants.API_URL}/oauth/token`,
+    `${API_URL}/oauth/token`,
     {
       grant_type: 'refresh_token',
       refresh_token: credentials.username,

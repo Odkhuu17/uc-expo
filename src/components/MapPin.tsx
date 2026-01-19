@@ -13,7 +13,7 @@ const MapPin = ({ title }: Props) => {
     <Box
       pointerEvents="none"
       flex={1}
-      height={PIN_HEIGHT}
+      height={PIN_HEIGHT + (title ? TITLE_HEIGHT : 0)}
       style={{
         transform: [{ translateY: -PIN_HEIGHT / 2 - TITLE_HEIGHT / 2 }],
       }}

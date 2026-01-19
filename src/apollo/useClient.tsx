@@ -11,13 +11,13 @@ import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 import { useMemo } from 'react';
 import * as Keychain from 'react-native-keychain';
 import { Buffer } from 'buffer';
-import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
 
 import { refreshAccessToken } from './helpers';
 import constants from '@/constants';
 import { INavigation } from '@/navigations';
 import useLogout from '@/hooks/useLogout';
+import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, API_URL } from '@env';
 
 export let apolloClient: ApolloClient | null = null;
 
@@ -35,10 +35,8 @@ const useClient = () => {
         service: constants.keyChainAuthServiceKey,
       });
 
-      console.log(credentials);
-
       const authHeader = await Buffer.from(
-        `${constants.OAUTH_CLIENT_ID}:${constants.OAUTH_CLIENT_SECRET}`,
+        `${OAUTH_CLIENT_ID}:${OAUTH_CLIENT_SECRET}`,
       ).toString('base64');
 
       return {
@@ -84,7 +82,6 @@ const useClient = () => {
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
         return new Observable(observer => {
-          console.log('jhgrbergbergber', error);
           refreshAccessToken()
             .then(newToken => {
               // Update the operation context with the new token
@@ -105,7 +102,6 @@ const useClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(async refreshError => {
-              console.log('985y5486uy54896uy4598u65', error);
               await logout();
               observer.error(refreshError);
             });
@@ -117,7 +113,7 @@ const useClient = () => {
     });
 
     const uploadLink = new UploadHttpLink({
-      uri: `${constants.API_URL}/graphql`,
+      uri: `${API_URL}/graphql`,
       isExtractableFile: (
         value: any,
       ): value is { uri: string; name: string; type: string } => {

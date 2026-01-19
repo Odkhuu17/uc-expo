@@ -1,8 +1,7 @@
 import MapViewDirections from 'react-native-maps-directions';
-import Config from 'react-native-config';
 
 import { Theme, useTheme } from './Theme';
-import constants from '@/constants';
+import { GOOGLE_MAPS_API_KEY } from '@env';
 
 interface Props {
   origin: {
@@ -31,7 +30,7 @@ const MapDirections = ({ origin, destination, color = 'primary' }: Props) => {
       }}
       strokeWidth={4}
       strokeColor={theme.colors[color]}
-      apikey={constants.GOOGLE_MAPS_API_KEY || ''}
+      apikey={GOOGLE_MAPS_API_KEY || ''}
     />
   );
 };
