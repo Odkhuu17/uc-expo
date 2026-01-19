@@ -32,3 +32,4 @@ export { default as MapDirections } from './MapDirections';
 export { default as InputOtp } from './InputOtp';
 export { default as RowValue } from './RowValue';
 export { default as RowValueCall } from './RowValueCall';
+export { default as Terms } from './Terms';

@@ -9,12 +9,13 @@ import {
 } from '@hugeicons/core-free-icons';
 import { TextInput } from 'react-native';
 
-import { Button, ModalMsg } from '@/components';
+import { Button, Checkbox, ModalMsg } from '@/components';
 import Input from '@/components/Input';
 import { useAppSelector } from '@/redux/hooks';
 import { INavigation } from '@/navigations';
 import { useAuthRegisterMutation } from '@/gql/mutations/authRegister.generated';
 import { Box } from '@/components/Theme';
+import TermsModal from './TermsModal';
 
 interface Props {
   phoneNumber: string;
@@ -43,6 +44,8 @@ const Step3 = ({ phoneNumber, token }: Props) => {
   const navigation = useNavigation<INavigation>();
   const { mode } = useAppSelector(state => state.general);
   const refs = useRef<TextInput[]>([]);
+  const [termsModal, setTermsModal] = useState(false);
+  const [confirmedTerms, setConfirmedTerms] = useState(false);
 
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({
@@ -56,6 +59,14 @@ const Step3 = ({ phoneNumber, token }: Props) => {
       },
       validationSchema: schema,
       onSubmit: async () => {
+        if (!confirmedTerms) {
+          navigation.navigate('MsgModal', {
+            type: 'error',
+            msg: 'Та үйлчилгээний нөхцөлүүдийг зөвшөөрнө үү!',
+          });
+          return;
+        }
+
         await authRegister({
           variables: {
             firstName: values.firstname,
@@ -80,6 +91,16 @@ const Step3 = ({ phoneNumber, token }: Props) => {
   const handleCloseSuccessModal = () => {
     setSuccessModal(false);
     navigation.navigate('AuthLogin');
+  };
+
+  const acceptTerms = () => {
+    setTermsModal(false);
+    setConfirmedTerms(true);
+  };
+
+  const unacceptTerms = () => {
+    setTermsModal(false);
+    setConfirmedTerms(false);
   };
 
   return (
@@ -176,6 +197,13 @@ const Step3 = ({ phoneNumber, token }: Props) => {
               : undefined
           }
         />
+        <Box flexDirection="row" alignItems="center">
+          <Checkbox
+            label="Үйлчилгээний нөхцөлийг зөвшөөрч байна"
+            value={confirmedTerms}
+            onChange={() => setTermsModal(true)}
+          />
+        </Box>
         <Button title="Бүртгүүлэх" loading={loading} onPress={handleSubmit} />
       </Box>
       <ModalMsg
@@ -183,6 +211,11 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         msg="Та амжилттай бүртгүүллээ"
         handleClose={handleCloseSuccessModal}
         visible={successModal}
+      />
+      <TermsModal
+        visible={termsModal}
+        handleClose={unacceptTerms}
+        handleConfirm={acceptTerms}
       />
     </>
   );

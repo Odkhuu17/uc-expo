@@ -3,7 +3,7 @@ import { CallIcon, LockPasswordIcon } from '@hugeicons/core-free-icons';
 import * as yup from 'yup';
 import { INavigationProps } from '@/navigations';
 import { TextInput } from 'react-native';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import * as Keychain from 'react-native-keychain';
 
 import {
@@ -37,6 +37,7 @@ const AuthLogin = ({ navigation }: Props) => {
   const [getMe] = useGetMeLazyQuery();
   const dispatch = useAppDispatch();
   const passwordInputRef = useRef<TextInput | null>(null);
+  const [confirmedTerms, setConfirmedTerms] = useState(false);
 
   const { handleSubmit, values, errors, handleChange, isSubmitting } =
     useFormik({
@@ -119,7 +120,7 @@ const AuthLogin = ({ navigation }: Props) => {
               secureTextEntry
               editable={!isSubmitting}
               returnKeyType="go"
-              onSubmitEditing={handleSubmit}
+              onSubmitEditing={() => handleSubmit()}
             />
             <Box alignItems="flex-end" justifyContent="flex-end">
               <Button

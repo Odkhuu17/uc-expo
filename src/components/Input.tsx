@@ -37,6 +37,7 @@ const Input = ({
   keyboardAvoiding,
   size = 'm',
   disabled,
+  ref,
   ...textInputProps
 }: Props) => {
   const theme = useTheme();
@@ -72,6 +73,7 @@ const Input = ({
         ) : (
           <TextInput
             {...textInputProps}
+            ref={ref}
             style={style}
             placeholderTextColor={theme.colors.grey3}
           />
