@@ -42,6 +42,13 @@ const SingleOrder = ({ item, children }: Props) => {
   const isRent = isRentOrder(item?.carType);
 
   const onNavigateToDetail = () => {
+    if (item?.status === 'pending') {
+      return navigation.navigate('MsgModal', {
+        type: 'error',
+        msg: 'Дууссан захиалга байна.',
+      });
+    }
+
     if (mode === 'shipper') {
       if (item?.my) {
         return navigation.navigate('OrderDetail', { number: item?.number! });
@@ -82,14 +89,24 @@ const SingleOrder = ({ item, children }: Props) => {
             alignItems="center"
           >
             <Box flex={1}>
-              <Text color={isRent ? 'rent' : 'primary'} variant="title">
+              <Text
+                color={isRent ? 'rent' : 'primary'}
+                variant="title"
+                textDecorationLine={
+                  item?.status === 'pending' ? 'line-through' : 'none'
+                }
+              >
                 {isRent ? item?.carType : item?.packageType}
               </Text>
             </Box>
-            <Label
-              text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
-              backgroundColor={isRent ? 'rent' : 'delivery'}
-            />
+            {item?.status === 'pending' ? (
+              <Label text="Идэвхгүй" backgroundColor="grey2" />
+            ) : (
+              <Label
+                text={isRent ? 'Техник түрээс' : 'Ачаа тээвэр'}
+                backgroundColor={isRent ? 'rent' : 'delivery'}
+              />
+            )}
           </Box>
           <Box flexDirection="row" alignItems="center" gap="s">
             <Box

@@ -1018,7 +1018,7 @@ export type OrderFilter = {
   receiverName?: InputMaybe<StringFilter>;
   senderMobile?: InputMaybe<StringFilter>;
   senderName?: InputMaybe<StringFilter>;
-  status?: InputMaybe<StringFilter>;
+  status?: InputMaybe<EnumStringFilter>;
   taxon?: InputMaybe<TaxonFilter>;
   title?: InputMaybe<StringFilter>;
   travelAt?: InputMaybe<DateFilter>;
@@ -1067,8 +1067,14 @@ export type PaymentEdge = {
 };
 
 export type PaymentFilter = {
+  amount?: InputMaybe<IntFilter>;
   createdAt?: InputMaybe<DateFilter>;
   id?: InputMaybe<IdFilter>;
+  number?: InputMaybe<StringFilter>;
+  paymentMethod?: InputMaybe<PaymentMethodFilter>;
+  referenceNo?: InputMaybe<StringFilter>;
+  status?: InputMaybe<EnumStringFilter>;
+  subscription?: InputMaybe<SubscriptionFilter>;
   updatedAt?: InputMaybe<DateFilter>;
 };
 
