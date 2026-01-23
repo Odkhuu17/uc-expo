@@ -302,6 +302,7 @@ const Step2 = ({
               latitude: origin?.lat || 0,
               longitude: origin?.lng || 0,
             }}
+            title="Очиж авах хаяг"
           >
             {Platform.OS === 'ios' && <MapPin title="Очиж авах хаяг" />}
           </Marker>
@@ -312,6 +313,7 @@ const Step2 = ({
               latitude: destination?.lat || 0,
               longitude: destination?.lng || 0,
             }}
+            title="Хүргэх хаяг"
           >
             {Platform.OS === 'ios' && <MapPin title="Хүргэх хаяг" />}
           </Marker>

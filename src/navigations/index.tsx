@@ -87,14 +87,24 @@ const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!isAuthenticated ? (
-        <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Group
+          screenOptions={{
+            headerShown: false,
+            ...TransitionPresets.SlideFromRightIOS,
+          }}
+        >
           <Stack.Screen name="AuthChooseType" component={AuthChooseType} />
           <Stack.Screen name="AuthLogin" component={AuthLogin} />
           <Stack.Screen name="AuthRegister" component={AuthRegister} />
           <Stack.Screen name="AuthForgot" component={AuthForgot} />
         </Stack.Group>
       ) : (
-        <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Group
+          screenOptions={{
+            headerShown: false,
+            ...TransitionPresets.SlideFromRightIOS,
+          }}
+        >
           <Stack.Screen name="Tabs" component={Tabs} />
           <Stack.Screen name="OrderDetail" component={OrderDetail} />
           <Stack.Screen name="Contact" component={Contact} />
