@@ -4,7 +4,13 @@ import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
 
-import { Container, Loader, ModalMsg, HeaderNormal } from '@/components';
+import {
+  Container,
+  Loader,
+  ModalMsg,
+  HeaderNormal,
+  CustomKeyboardAvoidingView,
+} from '@/components';
 import { Box } from '@/components/Theme';
 import { isRentOrder } from '@/utils/helpers';
 import Step1 from './Step1';
@@ -19,9 +25,10 @@ import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import { useGetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
 import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
-import { SearchAddressQuery } from '@/gql/queries/searchAddressQuery.generated';
 import { ImageObject } from '@/gql/graphql';
 import { usePublishOrderMutation } from '@/gql/mutations/orderPublish.generated';
+import { useSearchAddressLazyQuery } from '@/gql/queries/searchAddressQuery.generated';
+import Geolocation from '@react-native-community/geolocation';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -86,21 +93,23 @@ const OrderCreate = ({ navigation, route }: Props) => {
   const [imageObjects, setImageObjects] = useState<ImageObject[]>([]);
   const [video, setVideo] = useState<string | null>(null);
   const [audio, setAudio] = useState<string | null>(null);
-  const [selectedLocation, setSelectedOption] = useState<
-    'origin' | 'destination'
-  >('origin');
-  const [origin, setOrigin] = useState<
-    NonNullable<SearchAddressQuery['searchAddress']>[0] | null
-  >(null);
-  const [destination, setDestination] = useState<
-    NonNullable<SearchAddressQuery['searchAddress']>[0] | null
-  >(null);
   const [createdOrigin, setCreatedOrigin] = useState<NonNullable<
     AddressCreateMutation['createAddress']
   > | null>(null);
   const [createdDestination, setCreatedDestination] = useState<NonNullable<
     AddressCreateMutation['createAddress']
   > | null>(null);
+  const [origin, setOrigin] = useState<{
+    lat: number;
+    lng: number;
+    address: string;
+  }>();
+  const [destination, setDestination] = useState<{
+    lat: number;
+    lng: number;
+    address: string;
+  }>();
+
   const { data: taxonsData } = useGetTaxonsQuery();
 
   const [createOrder, { data: createOrderData }] = useOrderCreateMutation();
@@ -111,6 +120,8 @@ const OrderCreate = ({ navigation, route }: Props) => {
     variables: { number: String(number) },
     skip: !number,
   });
+
+  const [searchAddress, { loading }] = useSearchAddressLazyQuery();
 
   const deliveryFormik = useFormik({
     initialValues: {
@@ -134,6 +145,13 @@ const OrderCreate = ({ navigation, route }: Props) => {
     validationSchema: deliverySchema,
     onSubmit: async () => {
       const values = deliveryFormik.values;
+
+      if (imageObjects.length === 0) {
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: 'Та зураг оруулна уу!',
+        });
+      }
 
       if (orderNumber) {
         await updateOrder({
@@ -159,6 +177,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
               receiverMobile: values.receiverMobile,
               senderName: values.senderName,
               senderMobile: values.senderMobile,
+              status: 'accepted',
             },
           },
         });
@@ -203,6 +222,13 @@ const OrderCreate = ({ navigation, route }: Props) => {
     onSubmit: async () => {
       const values = rentFormik.values;
 
+      if (imageObjects.length === 0) {
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: 'Та зураг оруулна уу!',
+        });
+      }
+
       if (orderNumber) {
         await updateOrder({
           variables: {
@@ -221,6 +247,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
                 additionalInfo: values.additionalInfo,
                 additionalAddress: values.additionalAddress,
               },
+              status: 'accepted',
             },
           },
         });
@@ -268,10 +295,35 @@ const OrderCreate = ({ navigation, route }: Props) => {
   };
 
   useEffect(() => {
-    if (isRent) {
-      setSelectedOption('origin');
+    initOrigin();
+  }, []);
+
+  const initOrigin = async () => {
+    try {
+      Geolocation.getCurrentPosition(async info => {
+        console.log('info', info);
+        const { data } = await searchAddress({
+          variables: {
+            query: '',
+            location: {
+              latitude: info.coords.latitude,
+              longitude: info.coords.longitude,
+            },
+          },
+        });
+
+        if (data?.searchAddress?.[0]) {
+          setOrigin({
+            lat: info.coords.latitude,
+            lng: info.coords.longitude,
+            address: data?.searchAddress?.[0]?._source.nameMn || '',
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error sending location:', error);
     }
-  }, [isRent]);
+  };
 
   useEffect(() => {
     if (data) {
@@ -344,56 +396,62 @@ const OrderCreate = ({ navigation, route }: Props) => {
             createdDestination={createdDestination}
             setCreatedOrigin={setCreatedOrigin}
             setCreatedDestination={setCreatedDestination}
-            selectedLocation={selectedLocation}
-            setSelectedLocation={setSelectedOption}
             setStep={setStep}
-            isRent={isRent}
             origin={origin}
-            setOrigin={setOrigin}
             destination={destination}
+            setOrigin={setOrigin}
             setDestination={setDestination}
+            isRent={isRent}
           />
         </AnimatedBox>
       );
     } else {
       return (
-        <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
-          {isRent ? (
-            <RentStep3
-              orderNumber={orderNumber!}
-              setSelectedLocation={setSelectedOption}
-              createdOrigin={createdOrigin}
-              createdDestination={createdDestination}
-              formik={rentFormik}
-              setStep={setStep}
-              number={number}
-              setImageObjects={setImageObjects}
-              imageObjects={imageObjects}
-              video={video}
-              setVideo={setVideo}
-              audio={audio}
-              setAudio={setAudio}
-              taxonsData={taxonsData?.taxons}
-            />
-          ) : (
-            <DeliveryStep3
-              orderNumber={orderNumber!}
-              setSelectedLocation={setSelectedOption}
-              createdOrigin={createdOrigin}
-              createdDestination={createdDestination}
-              formik={deliveryFormik}
-              setStep={setStep}
-              number={number}
-              setImageObjects={setImageObjects}
-              imageObjects={imageObjects}
-              video={video}
-              setVideo={setVideo}
-              audio={audio}
-              setAudio={setAudio}
-              taxonsData={taxonsData?.taxons}
-            />
-          )}
-        </AnimatedBox>
+        <CustomKeyboardAvoidingView>
+          <AnimatedBox entering={FadeIn} exiting={FadeOut} key={3} flex={1}>
+            {isRent ? (
+              <RentStep3
+                orderNumber={orderNumber!}
+                createdOrigin={createdOrigin}
+                createdDestination={createdDestination}
+                formik={rentFormik}
+                setStep={setStep}
+                number={number}
+                setImageObjects={setImageObjects}
+                imageObjects={imageObjects}
+                video={video}
+                setVideo={setVideo}
+                audio={audio}
+                setAudio={setAudio}
+                taxonsData={taxonsData?.taxons}
+                origin={origin}
+                setOrigin={setOrigin}
+                isRent={isRent}
+              />
+            ) : (
+              <DeliveryStep3
+                orderNumber={orderNumber!}
+                createdOrigin={createdOrigin}
+                createdDestination={createdDestination}
+                formik={deliveryFormik}
+                setStep={setStep}
+                number={number}
+                setImageObjects={setImageObjects}
+                imageObjects={imageObjects}
+                video={video}
+                setVideo={setVideo}
+                audio={audio}
+                setAudio={setAudio}
+                taxonsData={taxonsData?.taxons}
+                origin={origin}
+                destination={destination}
+                setOrigin={setOrigin}
+                setDestination={setDestination}
+                isRent={isRent}
+              />
+            )}
+          </AnimatedBox>
+        </CustomKeyboardAvoidingView>
       );
     }
   };

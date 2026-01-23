@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import MapView, { Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
@@ -7,16 +7,24 @@ import { ArrowLeft01Icon, Location04Icon } from '@hugeicons/core-free-icons';
 
 import { Button, MapPin, Marquee } from '@/components';
 import { Box, Text, useTheme } from '@/components/Theme';
-import {
-  SearchAddressQuery,
-  useSearchAddressLazyQuery,
-} from '@/gql/queries/searchAddressQuery.generated';
+import { useSearchAddressLazyQuery } from '@/gql/queries/searchAddressQuery.generated';
 
 interface Props {
   title: string;
-  location: NonNullable<SearchAddressQuery['searchAddress']>[0] | null;
+  location?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
   setLocation: Dispatch<
-    SetStateAction<NonNullable<SearchAddressQuery['searchAddress']>[0] | null>
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
   >;
   setShowChooseFromMap: Dispatch<SetStateAction<boolean>>;
 }
@@ -29,9 +37,7 @@ const ChooseFromMap = ({
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const [localLocation, setLocalLocation] = useState<
-    NonNullable<SearchAddressQuery['searchAddress']>[0] | null
-  >(location);
+
   const [searchAddress, { loading }] = useSearchAddressLazyQuery();
 
   const onRegionChangeComplete = async (region: Region) => {
@@ -46,21 +52,15 @@ const ChooseFromMap = ({
     });
 
     if (data?.searchAddress?.[0]) {
-      setLocalLocation({
-        ...data?.searchAddress?.[0],
-        _source: {
-          ...data?.searchAddress?.[0]?._source,
-          location: {
-            lat: region.latitude,
-            lon: region.longitude,
-          },
-        },
+      setLocation({
+        lat: region.latitude,
+        lng: region.longitude,
+        address: data?.searchAddress?.[0]?._source.nameMn || '',
       });
     }
   };
 
   const onSubmit = async () => {
-    setLocation(localLocation);
     setShowChooseFromMap(false);
   };
 
@@ -69,8 +69,8 @@ const ChooseFromMap = ({
       <MapView
         style={css.map}
         initialRegion={{
-          latitude: location?._source?.location?.lat || 47.92123,
-          longitude: location?._source?.location?.lon || 106.918556,
+          latitude: location?.lat || 47.92123,
+          longitude: location?.lng || 106.918556,
           latitudeDelta: 0.03,
           longitudeDelta: 0.03,
         }}
@@ -137,7 +137,7 @@ const ChooseFromMap = ({
                 <Box flex={1} gap="xs">
                   <Marquee duration={5000}>
                     <Text paddingRight="xl" variant="body2" color="grey4">
-                      {localLocation?._source?.nameFullMn || ''}
+                      {location?.address || ''}
                     </Text>
                   </Marquee>
                 </Box>

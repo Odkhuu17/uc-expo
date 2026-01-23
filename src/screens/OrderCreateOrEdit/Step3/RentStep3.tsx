@@ -15,19 +15,18 @@ import {
   BoxContainer,
   Button,
   Checkbox,
-  CustomKeyboardAvoidingView,
   Input,
   InputDate,
   ContentScrollable,
   Select,
   InputTextArea,
   InputMask,
+  BottomContainer,
 } from '@/components';
 import { Box } from '@/components/Theme';
 import { rentCarTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
 import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
-import { OrderLocation } from '../components';
 import InputImage from './containers/InputImage';
 import Images from './containers/Images';
 import InputVideo from './containers/InputVideo';
@@ -36,9 +35,10 @@ import { ImageObject } from '@/gql/graphql';
 import InputLabel from '@/components/InputLabel';
 import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 import useSoundRecord from '@/hooks/useSoundRecord';
+import OrderLocationContainer from '../components/OrderLocationContainer';
+import SingleLocation from '../containers/SingleLocation';
 
 interface Props {
-  setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
   createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
   createdDestination?: NonNullable<
     CreateAddressMutation['createAddress']
@@ -54,10 +54,25 @@ interface Props {
   number?: string | null;
   orderNumber: string;
   taxonsData?: GetTaxonsQuery['taxons'];
+  origin?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+  setOrigin: Dispatch<
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
+  >;
+  isRent?: boolean;
 }
 
 const RentStep3 = ({
-  setSelectedLocation,
   createdOrigin,
   createdDestination,
   audio,
@@ -71,6 +86,9 @@ const RentStep3 = ({
   number,
   orderNumber,
   taxonsData,
+  isRent,
+  origin,
+  setOrigin,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -86,11 +104,6 @@ const RentStep3 = ({
     setFieldValue,
     isSubmitting,
   } = formik;
-
-  const onPressOrigin = () => {
-    setStep(2);
-    setSelectedLocation('origin');
-  };
 
   const onChangeCarType = (value: string) => {
     setFieldValue('carType', value);
@@ -123,14 +136,18 @@ const RentStep3 = ({
   };
 
   return (
-    <CustomKeyboardAvoidingView>
+    <>
       <ContentScrollable edges={[]} onScroll={onScroll}>
         <Box gap="s">
-          <OrderLocation
-            isRent
-            origin={createdOrigin?.address1}
-            destination={createdDestination?.address1}
-            onPressOrigin={onPressOrigin}
+          <OrderLocationContainer
+            location1={
+              <SingleLocation
+                setLocation={setOrigin}
+                location={origin}
+                isRent={isRent}
+                title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'}
+              />
+            }
           />
           <BoxContainer gap="m">
             <InputLabel label="Зураг" />
@@ -307,14 +324,14 @@ const RentStep3 = ({
           </BoxContainer>
         </Box>
       </ContentScrollable>
-      <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
+      <BottomContainer listenKeyboard>
         <Button
           title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}
           onPress={handleSubmit}
           loading={isSubmitting}
         />
-      </Box>
-    </CustomKeyboardAvoidingView>
+      </BottomContainer>
+    </>
   );
 };
 

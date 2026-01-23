@@ -1,57 +1,32 @@
+import { ReactNode } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Location05Icon } from '@hugeicons/core-free-icons';
 
 import { Box, useTheme } from '@/components/Theme';
-import SingleLocation from './SingleLocation';
 import { BoxContainer } from '@/components';
 
 interface Props {
-  isRent?: boolean;
-  selected?: 'origin' | 'destination';
-  origin?: string;
-  destination?: string;
-  onPressOrigin: () => void;
-  onPressDestination?: () => void;
-  loading?: boolean;
+  location1: ReactNode;
+  location2?: ReactNode;
 }
 
-const OrderLocation = ({
-  selected,
-  origin,
-  destination,
-  onPressOrigin,
-  onPressDestination,
-  loading,
-  isRent,
-}: Props) => {
+const OrderLocationContainer = ({ location1, location2 }: Props) => {
   const theme = useTheme();
 
   return (
     <BoxContainer borderWidth={2} borderColor="primary">
       <Box flexDirection="row" alignItems="center" gap="s">
         <Box flex={1}>
-          <SingleLocation
-            loading={loading}
-            onPress={onPressOrigin}
-            location={origin}
-            selected={selected === 'origin'}
-            title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'}
-          />
-          {!isRent && onPressDestination && (
+          {location1}
+          {location2 && (
             <>
               <Box width="100%" height={1} backgroundColor="border" my="s" />
-              <SingleLocation
-                loading={loading}
-                onPress={onPressDestination}
-                location={destination}
-                selected={selected === 'destination'}
-                title="Хүргэх хаяг"
-              />
+              {location2}
             </>
           )}
         </Box>
         <Box alignItems="center" gap="xs" py="m">
-          {!isRent && (
+          {location2 && (
             <>
               <Box
                 height={15}
@@ -70,4 +45,4 @@ const OrderLocation = ({
   );
 };
 
-export default OrderLocation;
+export default OrderLocationContainer;

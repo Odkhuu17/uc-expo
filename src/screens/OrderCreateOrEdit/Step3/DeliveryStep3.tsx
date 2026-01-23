@@ -15,19 +15,18 @@ import {
   BoxContainer,
   Button,
   Checkbox,
-  CustomKeyboardAvoidingView,
   Input,
   ContentScrollable,
   Select,
   InputDate,
   InputMask,
   InputTextArea,
+  BottomContainer,
 } from '@/components';
 import { Box, Text } from '@/components/Theme';
 import { deliveryCarTypes, packageTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
 import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
-import { OrderLocation } from '../components';
 import { ImageObject } from '@/gql/graphql';
 import InputImage from './containers/InputImage';
 import Images from './containers/Images';
@@ -35,9 +34,10 @@ import InputVideo from './containers/InputVideo';
 import InputAudio from './containers/InputAudio';
 import { GetTaxonsQuery } from '@/gql/queries/getTaxons.generated';
 import useSoundRecord from '@/hooks/useSoundRecord';
+import OrderLocationContainer from '../components/OrderLocationContainer';
+import SingleLocation from '../containers/SingleLocation';
 
 interface Props {
-  setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
   createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
   createdDestination?: NonNullable<
     CreateAddressMutation['createAddress']
@@ -53,12 +53,40 @@ interface Props {
   number?: string;
   orderNumber: string;
   taxonsData?: GetTaxonsQuery['taxons'];
+  origin?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+  destination?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+  setOrigin: Dispatch<
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
+  >;
+  setDestination: Dispatch<
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
+  >;
+  isRent?: boolean;
 }
 
 const DeliveryStep3 = ({
-  setSelectedLocation,
-  createdOrigin,
-  createdDestination,
   audio,
   imageObjects,
   video,
@@ -70,6 +98,11 @@ const DeliveryStep3 = ({
   number,
   orderNumber,
   taxonsData,
+  origin,
+  destination,
+  setOrigin,
+  setDestination,
+  isRent,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
@@ -87,16 +120,6 @@ const DeliveryStep3 = ({
     setFieldValue,
     isSubmitting,
   } = formik;
-
-  const onPressOrigin = () => {
-    setStep(2);
-    setSelectedLocation('origin');
-  };
-
-  const onPressDestination = () => {
-    setStep(2);
-    setSelectedLocation('destination');
-  };
 
   const onChangeCarType = (value: string) => {
     setFieldValue('carType', value);
@@ -124,14 +147,26 @@ const DeliveryStep3 = ({
   };
 
   return (
-    <CustomKeyboardAvoidingView>
+    <>
       <ContentScrollable edges={[]} onScroll={onScroll}>
         <Box gap="s">
-          <OrderLocation
-            origin={createdOrigin?.address1}
-            destination={createdDestination?.address1}
-            onPressOrigin={onPressOrigin}
-            onPressDestination={onPressDestination}
+          <OrderLocationContainer
+            location1={
+              <SingleLocation
+                setLocation={setOrigin}
+                location={origin}
+                isRent={isRent}
+                title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'}
+              />
+            }
+            location2={
+              <SingleLocation
+                setLocation={setDestination}
+                location={destination}
+                isRent={isRent}
+                title="Хүргэх хаяг"
+              />
+            }
           />
           <BoxContainer gap="m">
             <Text variant="label">Зураг</Text>
@@ -387,14 +422,14 @@ const DeliveryStep3 = ({
           </BoxContainer>
         </Box>
       </ContentScrollable>
-      <Box px="m" style={{ paddingBottom: insets.bottom + theme.spacing.m }}>
+      <BottomContainer listenKeyboard>
         <Button
           title={number ? 'Захиалга засах' : 'Захиалга үүсгэх'}
           onPress={handleSubmit}
           loading={isSubmitting}
         />
-      </Box>
-    </CustomKeyboardAvoidingView>
+      </BottomContainer>
+    </>
   );
 };
 

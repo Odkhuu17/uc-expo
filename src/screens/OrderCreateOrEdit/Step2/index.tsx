@@ -1,4 +1,3 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import React, {
   Dispatch,
   SetStateAction,
@@ -9,39 +8,25 @@ import React, {
 import MapView, { Marker, Region } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { useInfiniteHits, useRefinementList } from 'react-instantsearch-core';
-import { Image, Modal, Platform } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import { Image, Platform } from 'react-native';
 
 import { BottomContainer, Button, MapDirections, MapPin } from '@/components';
 import { Box, makeStyles, useTheme } from '@/components/Theme';
 import { rentCarTypes, deliveryCarTypes } from '@/constants/transportTypes';
-import { CarTypes, ChooseFromMap } from './components';
+import CarTypes from './components/CarTypes';
 import {
   AddressCreateMutation,
   useAddressCreateMutation,
 } from '@/gql/mutations/addressCreate.generated';
-import {
-  AddressSearchQuery,
-  useAddressSearchQuery,
-} from '@/gql/queries/addressSearch.generated';
 import { INavigation } from '@/navigations';
-import { OrderLocation } from '../components';
-import LocationModal from './containers/LocationModal';
+import OrderLocationContainer from '../components/OrderLocationContainer';
+import SingleLocation from '../containers/SingleLocation';
 import { getMapRegion } from '@/utils/helpers';
+import { useAddressSearchLazyQuery } from '@/gql/queries/addressSearch.generated';
 
 interface Props {
   isRent?: boolean;
   setStep: Dispatch<SetStateAction<number>>;
-  origin: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
-  setOrigin: Dispatch<
-    SetStateAction<NonNullable<AddressSearchQuery['searchAddress']>[0] | null>
-  >;
-  destination: NonNullable<AddressSearchQuery['searchAddress']>[0] | null;
-  setDestination: Dispatch<
-    SetStateAction<NonNullable<AddressSearchQuery['searchAddress']>[0] | null>
-  >;
-  selectedLocation: 'origin' | 'destination';
-  setSelectedLocation: Dispatch<SetStateAction<'origin' | 'destination'>>;
   setCreatedOrigin: Dispatch<
     SetStateAction<NonNullable<AddressCreateMutation['createAddress']> | null>
   >;
@@ -52,6 +37,36 @@ interface Props {
   createdDestination?: NonNullable<
     AddressCreateMutation['createAddress']
   > | null;
+  origin?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+  destination?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+  setOrigin: Dispatch<
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
+  >;
+  setDestination: Dispatch<
+    SetStateAction<
+      | {
+          lat: number;
+          lng: number;
+          address: string;
+        }
+      | undefined
+    >
+  >;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -76,24 +91,17 @@ const useStyles = makeStyles(theme => ({
 const Step2 = ({
   isRent,
   setStep,
-  selectedLocation,
-  setSelectedLocation,
   origin,
-  setOrigin,
   destination,
+  setOrigin,
   setDestination,
   setCreatedOrigin,
   setCreatedDestination,
-  createdOrigin,
-  createdDestination,
 }: Props) => {
   const theme = useTheme();
   const navigation = useNavigation<INavigation>();
   const styles = useStyles();
-  const originModalRef = useRef<BottomSheetModal | null>(null);
-  const destinationModalRef = useRef<BottomSheetModal | null>(null);
   const mapRef = useRef<MapView | null>(null);
-  const [showChooseFromMap, setShowChooseFromMap] = useState(false);
   const [selectedCarTypes, setSelectedCarTypes] = useState<string[]>(
     isRent
       ? rentCarTypes.map(ct => ct.name)
@@ -103,137 +111,7 @@ const Step2 = ({
   const [createAddress, { loading: createLoading }] =
     useAddressCreateMutation();
 
-  const {
-    data: searchData,
-    loading: searchLoading,
-    refetch,
-  } = useAddressSearchQuery({
-    variables: {
-      query: '',
-      location: { latitude: 47.92123, longitude: 106.918556 },
-    },
-  });
-
-  useEffect(() => {
-    Geolocation.getCurrentPosition(async info => {
-      refetch({
-        query: '',
-        location: {
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-        },
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!origin) {
-      setOrigin(searchData?.searchAddress?.[0] || null);
-    }
-  }, [searchData]);
-
-  useEffect(() => {
-    if (!isRent) {
-      if (origin && destination && !showChooseFromMap) {
-        const region = getMapRegion({
-          origin: {
-            latitude: origin?._source?.location?.lat || 47.92123,
-            longitude: origin?._source?.location?.lon || 106.918556,
-          },
-          destination: {
-            latitude: destination?._source?.location?.lat || 47.92123,
-            longitude: destination?._source?.location?.lon || 106.918556,
-          },
-        });
-
-        mapRef?.current?.animateToRegion(region, 350);
-      } else if (origin) {
-        const originCoordinate = {
-          latitude: origin?._source?.location?.lat || 47.92123,
-          longitude: origin?._source?.location?.lon || 106.918556,
-        };
-
-        mapRef?.current?.animateToRegion({
-          ...originCoordinate,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        });
-      }
-    }
-  }, [origin, destination, mapRef, showChooseFromMap, isRent]);
-
-  const onRegionChangeComplete = async (region: Region) => {
-    if (isRent) {
-      const { data } = await refetch({
-        query: '',
-        location: {
-          latitude: region.latitude,
-          longitude: region.longitude,
-        },
-      });
-      setOrigin(data?.searchAddress?.[0] || null);
-      setCreatedOrigin(null);
-    }
-  };
-
-  const onSubmit = async () => {
-    if (!origin) {
-      return navigation.navigate('MsgModal', {
-        type: 'error',
-        msg: isRent
-          ? 'Та ажиллах байршлаа оруулна уу!'
-          : 'Та очиж авах хаягаа оруулна уу!',
-      });
-    } else if (!isRent && !destination) {
-      return navigation.navigate('MsgModal', {
-        type: 'error',
-        msg: 'Та хүргэх хаягаа оруулна уу!',
-      });
-    }
-
-    const originQuarterId = origin?.quarter?.id || '';
-    const originDistrictId = origin?.quarter?.district?.id || '';
-    const originStateId = origin?.quarter?.district?.state?.id || '';
-
-    const destinationQuarterId = destination?.quarter?.id || '';
-    const destinationDistrictId = destination?.quarter?.district?.id || '';
-    const destinationStateId = destination?.quarter?.district?.state?.id || '';
-
-    const { data: originData } = await createAddress({
-      variables: {
-        address1: origin?._source?.nameFullMn || '',
-        location: {
-          latitude: origin?._source?.location?.lat || 0,
-          longitude: origin?._source?.location?.lon || 0,
-        },
-        sdq: [originStateId, originDistrictId, originQuarterId],
-      },
-    });
-
-    const { data: destinationData } = await createAddress({
-      variables: {
-        address1: destination?._source?.nameFullMn || '',
-        location: {
-          latitude: destination?._source?.location?.lat || 0,
-          longitude: destination?._source?.location?.lon || 0,
-        },
-        sdq: [destinationStateId, destinationDistrictId, destinationQuarterId],
-      },
-    });
-    setCreatedOrigin(originData?.createAddress || null);
-    setCreatedDestination(destinationData?.createAddress || null);
-    setStep(3);
-  };
-
-  const onPressOrigin = () => {
-    setSelectedLocation('origin');
-    originModalRef.current?.present();
-  };
-
-  const onPressDestination = () => {
-    setSelectedLocation('destination');
-    destinationModalRef.current?.present();
-  };
+  const [searchData, { loading }] = useAddressSearchLazyQuery();
 
   const { items, isLastPage, showMore } = useInfiniteHits({
     escapeHTML: false,
@@ -269,6 +147,95 @@ const Step2 = ({
       });
     }
   }, [selectedCarTypes]); // Use join to avoid array reference changes
+
+  useEffect(() => {
+    if (!isRent) {
+      if (origin && destination) {
+        const region = getMapRegion({
+          origin: {
+            latitude: origin?.lat || 47.92123,
+            longitude: origin?.lng || 106.918556,
+          },
+          destination: {
+            latitude: destination?.lat || 47.92123,
+            longitude: destination?.lng || 106.918556,
+          },
+        });
+
+        mapRef?.current?.animateToRegion(region, 350);
+      } else if (origin) {
+        const originCoordinate = {
+          latitude: origin?.lat || 47.92123,
+          longitude: origin?.lng || 106.918556,
+        };
+
+        mapRef?.current?.animateToRegion({
+          ...originCoordinate,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        });
+      }
+    }
+  }, [origin, destination, mapRef, isRent]);
+
+  const onSubmit = async () => {
+    if (!origin) {
+      return navigation.navigate('MsgModal', {
+        type: 'error',
+        msg: isRent
+          ? 'Та ажиллах байршлаа оруулна уу!'
+          : 'Та очиж авах хаягаа оруулна уу!',
+      });
+    } else if (!isRent && !destination) {
+      return navigation.navigate('MsgModal', {
+        type: 'error',
+        msg: 'Та хүргэх хаягаа оруулна уу!',
+      });
+    }
+
+    const { data: originData } = await createAddress({
+      variables: {
+        address1: origin?.address || '',
+        location: {
+          latitude: origin?.lat || 0,
+          longitude: origin?.lng || 0,
+        },
+      },
+    });
+
+    const { data: destinationData } = await createAddress({
+      variables: {
+        address1: destination?.address || '',
+        location: {
+          latitude: destination?.lat || 0,
+          longitude: destination?.lng || 0,
+        },
+      },
+    });
+    setCreatedOrigin(originData?.createAddress || null);
+    setCreatedDestination(destinationData?.createAddress || null);
+    setStep(3);
+  };
+
+  const onRegionChangeComplete = async (region: Region) => {
+    if (isRent) {
+      const { data } = await searchData({
+        variables: {
+          query: '',
+          location: {
+            latitude: region.latitude,
+            longitude: region.longitude,
+          },
+        },
+      });
+
+      setOrigin({
+        lat: region.latitude,
+        lng: region.longitude,
+        address: data?.searchAddress?.[0]?._source.nameMn || '',
+      });
+    }
+  };
 
   return (
     <>
@@ -320,20 +287,20 @@ const Step2 = ({
         {!isRent && origin && destination && (
           <MapDirections
             origin={{
-              latitude: origin?._source?.location?.lat || 0,
-              longitude: origin?._source?.location?.lon || 0,
+              latitude: origin?.lat || 0,
+              longitude: origin?.lng || 0,
             }}
             destination={{
-              latitude: destination?._source?.location?.lat || 0,
-              longitude: destination?._source?.location?.lon || 0,
+              latitude: destination?.lat || 0,
+              longitude: destination?.lng || 0,
             }}
           />
         )}
         {!isRent && origin && (
           <Marker
             coordinate={{
-              latitude: origin?._source?.location?.lat || 0,
-              longitude: origin?._source?.location?.lon || 0,
+              latitude: origin?.lat || 0,
+              longitude: origin?.lng || 0,
             }}
           >
             {Platform.OS === 'ios' && <MapPin title="Очиж авах хаяг" />}
@@ -342,8 +309,8 @@ const Step2 = ({
         {!isRent && destination && (
           <Marker
             coordinate={{
-              latitude: destination?._source?.location?.lat || 0,
-              longitude: destination?._source?.location?.lon || 0,
+              latitude: destination?.lat || 0,
+              longitude: destination?.lng || 0,
             }}
           >
             {Platform.OS === 'ios' && <MapPin title="Хүргэх хаяг" />}
@@ -376,22 +343,26 @@ const Step2 = ({
         <Box bottom={0} position="absolute" left={0} right={0}>
           <BottomContainer>
             <Box gap="m">
-              <OrderLocation
-                isRent={isRent}
-                origin={
-                  createdOrigin
-                    ? createdOrigin.address1
-                    : origin?._source?.nameFullMn
+              <OrderLocationContainer
+                location1={
+                  <SingleLocation
+                    loading={loading}
+                    setLocation={setOrigin}
+                    location={origin}
+                    isRent={isRent}
+                    title={isRent ? 'Ажиллах байршил' : 'Очиж авах хаяг'}
+                  />
                 }
-                destination={
-                  createdDestination
-                    ? createdDestination.address1
-                    : destination?._source?.nameFullMn
+                location2={
+                  isRent ? undefined : (
+                    <SingleLocation
+                      setLocation={setDestination}
+                      location={destination}
+                      title="Хүргэх хаяг"
+                      isRent={isRent}
+                    />
+                  )
                 }
-                selected={selectedLocation}
-                onPressOrigin={onPressOrigin}
-                onPressDestination={onPressDestination}
-                loading={searchLoading}
               />
               <Button
                 loading={createLoading}
@@ -402,38 +373,6 @@ const Step2 = ({
           </BottomContainer>
         </Box>
       </Box>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={showChooseFromMap}
-      >
-        <ChooseFromMap
-          title={
-            selectedLocation === 'origin' ? 'Очиж авах хаяг' : 'Хүргэх хаяг'
-          }
-          location={selectedLocation === 'origin' ? origin : destination}
-          setLocation={
-            selectedLocation === 'origin' ? setOrigin : setDestination
-          }
-          setShowChooseFromMap={setShowChooseFromMap}
-        />
-      </Modal>
-      <LocationModal
-        ref={originModalRef}
-        setLocation={setOrigin}
-        location={origin}
-        setShowChooseFromMap={setShowChooseFromMap}
-        isRent={isRent}
-        mapRef={mapRef}
-      />
-      <LocationModal
-        ref={destinationModalRef}
-        setLocation={setDestination}
-        location={destination}
-        setShowChooseFromMap={setShowChooseFromMap}
-        isRent={isRent}
-        mapRef={mapRef}
-      />
     </>
   );
 };
