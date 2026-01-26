@@ -2386,6 +2386,7 @@ export type CreateModelInput = {
 };
 
 export type CreateOrderInput = {
+  audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
@@ -2393,6 +2394,7 @@ export type CreateOrderInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
+  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
   packageDimensions?: InputMaybe<Scalars['String']['input']>;
@@ -2411,6 +2413,7 @@ export type CreateOrderInput = {
   travelDuration?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
   vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
+  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type CreatePaymentInput = {
@@ -2735,6 +2738,7 @@ export type UpdateModelInput = {
 };
 
 export type UpdateOrderInput = {
+  audio?: InputMaybe<Scalars['Upload']['input']>;
   carType?: InputMaybe<Scalars['String']['input']>;
   carWeight?: InputMaybe<Scalars['String']['input']>;
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
@@ -2743,6 +2747,7 @@ export type UpdateOrderInput = {
   destination?: InputMaybe<AddressInput>;
   destinationId?: InputMaybe<Scalars['ID']['input']>;
   id: Scalars['ID']['input'];
+  images?: InputMaybe<Array<Scalars['Upload']['input']>>;
   origin?: InputMaybe<AddressInput>;
   originId?: InputMaybe<Scalars['ID']['input']>;
   packageDimensions?: InputMaybe<Scalars['String']['input']>;
@@ -2760,6 +2765,7 @@ export type UpdateOrderInput = {
   travelDistance?: InputMaybe<Scalars['String']['input']>;
   travelDuration?: InputMaybe<Scalars['String']['input']>;
   vatIncluded?: InputMaybe<Scalars['Boolean']['input']>;
+  video?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type UpdatePaymentMethodInput = {

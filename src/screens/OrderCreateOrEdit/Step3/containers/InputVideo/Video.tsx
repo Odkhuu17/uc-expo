@@ -74,7 +74,7 @@ const VideoComp = ({ video }: Props) => {
           <Video
             ref={videoRef}
             style={css.video}
-            source={{ uri: getImageUrl(video) }}
+            source={{ uri: video }}
             paused={true}
             controls={false}
             muted
@@ -119,7 +119,7 @@ const VideoComp = ({ video }: Props) => {
                 <Video
                   ref={modalVideoRef}
                   style={css.modalVideo}
-                  source={{ uri: getImageUrl(video) }}
+                  source={{ uri: video }}
                   paused={modalPaused}
                   resizeMode="contain"
                   playInBackground={false}

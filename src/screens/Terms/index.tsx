@@ -1,6 +1,11 @@
-import { Container, HeaderNormal, ContentScrollable } from '@/components';
+import {
+  Container,
+  HeaderNormal,
+  ContentScrollable,
+  Terms,
+} from '@/components';
 
-const Terms = () => {
+const TermsScreen = () => {
   return (
     <Container>
       <HeaderNormal title="Үйлчилгээний нөхцөл" hasBack />
@@ -11,4 +16,4 @@ const Terms = () => {
   );
 };
 
-export default Terms;
+export default TermsScreen;

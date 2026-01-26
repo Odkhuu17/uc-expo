@@ -14,6 +14,7 @@ interface Props {
   setImage: Dispatch<SetStateAction<string | null>>;
   onlyCamera?: boolean;
   isRequired?: boolean;
+  cropping?: boolean;
 }
 
 const InputImage = ({
@@ -22,9 +23,10 @@ const InputImage = ({
   label,
   onlyCamera,
   isRequired,
+  cropping,
 }: Props) => {
   const theme = useTheme();
-  const { onPickImage } = useImagePick({ setImage, onlyCamera });
+  const { onPickImage } = useImagePick({ setImage, onlyCamera, cropping });
 
   const onDeleteImage = () => {
     setImage(null);

@@ -3,6 +3,7 @@ import { Image, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import dayjs from 'dayjs';
 import { RefreshControl } from 'react-native-gesture-handler';
+import { PencilEdit01Icon } from '@hugeicons/core-free-icons';
 
 import {
   BoxContainer,
@@ -17,7 +18,7 @@ import {
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
-import { getImageUrl, isRentOrder, moneyFormat } from '@/utils/helpers';
+import { isRentOrder, moneyFormat } from '@/utils/helpers';
 import {
   OrderDetailAudio,
   OrderDetailDelivery,
@@ -30,12 +31,6 @@ import { INavigationProps } from '@/navigations';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import OrderDetailRent from './components/OrderDetailRent';
 import InputLabel from '@/components/InputLabel';
-import {
-  ArrowRight,
-  ArrowRight01Icon,
-  CircleArrowRight01Icon,
-  PencilEdit01Icon,
-} from '@hugeicons/core-free-icons';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -63,6 +58,8 @@ const OrderDetail = ({ navigation, route }: Props) => {
       number,
     },
   });
+
+  console.log(data);
 
   const isRent = isRentOrder(data?.order?.carType);
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
@@ -142,10 +139,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
                           borderColor="border"
                           overflow="hidden"
                         >
-                          <Image
-                            source={{ uri: getImageUrl(image) }}
-                            style={styles.img}
-                          />
+                          <Image source={{ uri: image }} style={styles.img} />
                         </Box>
                       </TouchableOpacity>
                     ))}
@@ -262,7 +256,6 @@ const OrderDetail = ({ navigation, route }: Props) => {
                       {data?.order?.origin && (
                         <Box flex={1}>
                           <Button
-                            color={isRent ? 'rent' : 'delivery'}
                             title={isRent ? 'Ажиллах байршил' : 'Авах байршил'}
                             onPress={onPressOriginLocation}
                           />
@@ -271,7 +264,6 @@ const OrderDetail = ({ navigation, route }: Props) => {
                       {data?.order?.destination && !isRent && (
                         <Box flex={1}>
                           <Button
-                            color="delivery"
                             title="Хүргэх байршил"
                             onPress={onPressDestinationLocation}
                           />
@@ -287,9 +279,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
       </Container>
       {hasImages && (
         <ImageView
-          images={
-            data?.order?.images?.map(img => ({ uri: getImageUrl(img) })) || []
-          }
+          images={data?.order?.images?.map(img => ({ uri: img })) || []}
           imageIndex={0}
           visible={isImageViewVisible}
           onRequestClose={onHideImageView}

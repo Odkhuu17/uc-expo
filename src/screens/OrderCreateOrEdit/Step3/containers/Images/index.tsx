@@ -13,6 +13,8 @@ interface Props {
 }
 
 const Images = ({ number, imageObjects, setImageObjects }: Props) => {
+  console.log(imageObjects);
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <Box flexDirection="row" gap="m" pl="m">

@@ -1,7 +1,5 @@
-import { useTheme } from '@shopify/restyle';
 import { useFormik } from 'formik';
 import { Dispatch, SetStateAction, useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CalendarSetting01Icon,
   ContainerTruck01Icon,
@@ -26,7 +24,6 @@ import {
 import { Box } from '@/components/Theme';
 import { rentCarTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
-import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
 import InputImage from './containers/InputImage';
 import Images from './containers/Images';
 import InputVideo from './containers/InputVideo';
@@ -39,10 +36,6 @@ import OrderLocationContainer from '../components/OrderLocationContainer';
 import SingleLocation from '../containers/SingleLocation';
 
 interface Props {
-  createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
-  createdDestination?: NonNullable<
-    CreateAddressMutation['createAddress']
-  > | null;
   audio: string | null;
   imageObjects: ImageObject[];
   video: string | null;
@@ -50,7 +43,6 @@ interface Props {
   setImageObjects: Dispatch<SetStateAction<ImageObject[]>>;
   setVideo: Dispatch<SetStateAction<string | null>>;
   formik: ReturnType<typeof useFormik<any>>;
-  setStep: Dispatch<SetStateAction<number>>;
   number?: string | null;
   orderNumber: string;
   taxonsData?: GetTaxonsQuery['taxons'];
@@ -73,13 +65,10 @@ interface Props {
 }
 
 const RentStep3 = ({
-  createdOrigin,
-  createdDestination,
   audio,
   imageObjects,
   video,
   formik,
-  setStep,
   setAudio,
   setImageObjects,
   setVideo,
@@ -90,8 +79,6 @@ const RentStep3 = ({
   origin,
   setOrigin,
 }: Props) => {
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
   const refs = useRef<(TextInput | null)[]>([]);
 
   const {

@@ -5,6 +5,9 @@ import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, API_URL } from '@env';
 
 import constants from '@/constants';
 
+  console.log(API_URL, 'asofjsffwefwef')
+
+
 export const refreshAccessToken = async (): Promise<string> => {
   const credentials = await Keychain.getGenericPassword({
     service: constants.keyChainAuthServiceKey,
@@ -14,7 +17,13 @@ export const refreshAccessToken = async (): Promise<string> => {
     `${OAUTH_CLIENT_ID}:${OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
+  console.log(API_URL, 'asofjsffwefwef')
+
+  console.log(credentials, 'credentialscredentialscredentials')
+
   if (!credentials) {
+    console.log('No credentials found, fetching new access token', credentials);
+
     const { data } = await axios.post(
       `${API_URL}/oauth/token`,
       {
@@ -29,12 +38,16 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
     );
 
+    console.log('Fetched new access token using client credentials', data);
+
     await Keychain.setGenericPassword(data?.access_token, data?.access_token, {
       service: constants.keyChainAuthServiceKey,
     });
 
     return data.access_token;
   }
+
+  console.log('Refreshing access token using refresh token', credentials);
 
   const { data } = await axios.post(
     `${API_URL}/oauth/token`,

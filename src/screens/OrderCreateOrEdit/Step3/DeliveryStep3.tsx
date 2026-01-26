@@ -1,8 +1,6 @@
-import { useTheme } from '@shopify/restyle';
 import { useFormik } from 'formik';
 import { Dispatch, SetStateAction, useRef } from 'react';
 import { TextInput } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CalendarDownload01Icon,
   Clock01Icon,
@@ -26,7 +24,6 @@ import {
 import { Box, Text } from '@/components/Theme';
 import { deliveryCarTypes, packageTypes } from '@/constants/transportTypes';
 import { moneyMask } from '@/utils/helpers';
-import { CreateAddressMutation } from '@/gql/mutations/createAddress.generated';
 import { ImageObject } from '@/gql/graphql';
 import InputImage from './containers/InputImage';
 import Images from './containers/Images';
@@ -38,10 +35,6 @@ import OrderLocationContainer from '../components/OrderLocationContainer';
 import SingleLocation from '../containers/SingleLocation';
 
 interface Props {
-  createdOrigin?: NonNullable<CreateAddressMutation['createAddress']> | null;
-  createdDestination?: NonNullable<
-    CreateAddressMutation['createAddress']
-  > | null;
   audio: string | null;
   imageObjects: ImageObject[];
   video: string | null;
@@ -49,7 +42,6 @@ interface Props {
   setImageObjects: Dispatch<SetStateAction<ImageObject[]>>;
   setVideo: Dispatch<SetStateAction<string | null>>;
   formik: ReturnType<typeof useFormik<any>>;
-  setStep: Dispatch<SetStateAction<number>>;
   number?: string;
   orderNumber: string;
   taxonsData?: GetTaxonsQuery['taxons'];
@@ -91,7 +83,6 @@ const DeliveryStep3 = ({
   imageObjects,
   video,
   formik,
-  setStep,
   setAudio,
   setImageObjects,
   setVideo,
@@ -104,8 +95,6 @@ const DeliveryStep3 = ({
   setDestination,
   isRent,
 }: Props) => {
-  const insets = useSafeAreaInsets();
-  const theme = useTheme();
   const refs = useRef<(TextInput | null)[]>([]);
   const { isRecording, isLoading, recordTime, onToggleRecord, onStopRecord } =
     useSoundRecord({ setAudio, number: number || orderNumber });

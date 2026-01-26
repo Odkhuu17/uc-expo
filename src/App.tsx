@@ -17,6 +17,7 @@ import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
 import { InstantSearch } from 'react-instantsearch-core';
 import searchClient from './utils/searchkit';
+import CheckUpdate from './containers/CheckUpdate';
 
 Appearance.setColorScheme('light');
 
@@ -64,6 +65,7 @@ const App = () => {
                   <NavigationContainer>
                     <ApolloProvider>
                       <AppNavigator />
+                      <CheckUpdate />
                     </ApolloProvider>
                   </NavigationContainer>
                 </BottomSheetModalProvider>

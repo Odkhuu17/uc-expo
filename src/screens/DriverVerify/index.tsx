@@ -63,12 +63,14 @@ const DriverVerify = ({ navigation }: Props) => {
             image={passportFront}
             setImage={setPassportFront}
             label="Иргэний үнэмлэхний зураг (Урд тал)"
+            cropping
           />
           <InputImage
             isRequired
             image={passportBack}
             setImage={setPassportBack}
             label="Иргэний үнэмлэхний зураг (Ар тал)"
+            cropping
           />
           <InputImage
             isRequired

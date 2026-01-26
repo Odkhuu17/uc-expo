@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Delete03Icon, PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
 
-import { getImageUrl } from '@/utils/helpers';
 import { Box, Text } from '@/components/Theme';
 import { ButtonIcon } from '@/components';
 import useSound from '@/hooks/useSound';
@@ -17,7 +16,7 @@ const Player = ({ audio, number, setAudio }: Props) => {
   const [destroyOrderAudio, { loading: destroying }] =
     useDestroyOrderAudioMutation();
   const { play, stop, isLoaded, isPlaying, durationSec, currentTimeSec } =
-    useSound(getImageUrl(audio));
+    useSound(audio);
 
   const onDestroyAudio = async () => {
     await destroyOrderAudio({ variables: { number } });

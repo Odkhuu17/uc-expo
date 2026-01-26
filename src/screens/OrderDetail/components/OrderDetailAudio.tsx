@@ -1,7 +1,6 @@
 import React from 'react';
 import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons';
 
-import { getImageUrl } from '@/utils/helpers';
 import { Box, Text } from '@/components/Theme';
 import { ButtonIcon } from '@/components';
 import useSound from '@/hooks/useSound';
@@ -12,7 +11,7 @@ interface Props {
 
 const Player = ({ audio }: Props) => {
   const { play, stop, isLoaded, isPlaying, durationSec, currentTimeSec } =
-    useSound(getImageUrl(audio));
+    useSound(audio);
 
   const onTogglePlay = () => {
     isPlaying ? stop() : play();

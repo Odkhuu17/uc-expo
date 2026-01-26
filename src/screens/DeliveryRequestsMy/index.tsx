@@ -6,15 +6,12 @@ import {
   Empty,
   Loader,
   HeaderNormal,
-  Label,
 } from '@/components';
-import SingleOrder from '@/containers/SingleOrder';
 import {
   GetMyDeliveryRequestsQuery,
   useGetMyDeliveryRequestsQuery,
 } from '@/gql/queries/getMyDeliveryRequests.generated';
-import { Box, Text } from '@/components/Theme';
-import { moneyFormat } from '@/utils/helpers';
+import SingleOrderRequest from './SingleOrderRequest';
 
 const DeliveryRequestsMy = () => {
   const [isRefetching, setIsRefetching] = useState(false);
@@ -86,47 +83,7 @@ const DeliveryRequestsMy = () => {
       GetMyDeliveryRequestsQuery['me']
     >['deliveryRequests']['edges'][0]['node'];
   }) => {
-    return (
-      <>
-        <SingleOrder item={item?.order}>
-          <Box gap="s" pt="s" borderTopWidth={1} borderColor="border">
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Text variant="body2">Миний үнэ</Text>
-              <Text fontWeight={600} variant="body2">
-                {moneyFormat(item?.price || '')}
-              </Text>
-            </Box>
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Text variant="body2">Төлөв</Text>
-              <Label
-                backgroundColor={
-                  item?.status === 'pending'
-                    ? 'pending'
-                    : item?.status === 'accepted'
-                    ? 'success'
-                    : 'error'
-                }
-                text={
-                  item?.status === 'pending'
-                    ? 'Хүлээгдэж байна'
-                    : item?.status === 'accepted'
-                    ? 'Баталгаажсан'
-                    : 'Идэвхгүй'
-                }
-              />
-            </Box>
-          </Box>
-        </SingleOrder>
-      </>
-    );
+    return <SingleOrderRequest item={item?.order} />;
   };
 
   const renderFooter = () => {

@@ -98,8 +98,6 @@ const CustomImage = ({
 
   const imageSource = typeof source === 'string' ? { uri: source } : source;
 
-  console.log(finalDimensions.height, finalDimensions.width);
-
   return (
     <Image
       source={imageSource}

@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
+import Geolocation from '@react-native-community/geolocation';
 
 import {
   Container,
@@ -28,7 +29,6 @@ import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { ImageObject } from '@/gql/graphql';
 import { usePublishOrderMutation } from '@/gql/mutations/orderPublish.generated';
 import { useSearchAddressLazyQuery } from '@/gql/queries/searchAddressQuery.generated';
-import Geolocation from '@react-native-community/geolocation';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -177,7 +177,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
               receiverMobile: values.receiverMobile,
               senderName: values.senderName,
               senderMobile: values.senderMobile,
-              status: 'accepted',
             },
           },
         });
@@ -247,7 +246,6 @@ const OrderCreate = ({ navigation, route }: Props) => {
                 additionalInfo: values.additionalInfo,
                 additionalAddress: values.additionalAddress,
               },
-              status: 'accepted',
             },
           },
         });
@@ -412,10 +410,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
             {isRent ? (
               <RentStep3
                 orderNumber={orderNumber!}
-                createdOrigin={createdOrigin}
-                createdDestination={createdDestination}
                 formik={rentFormik}
-                setStep={setStep}
                 number={number}
                 setImageObjects={setImageObjects}
                 imageObjects={imageObjects}
@@ -431,10 +426,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
             ) : (
               <DeliveryStep3
                 orderNumber={orderNumber!}
-                createdOrigin={createdOrigin}
-                createdDestination={createdDestination}
                 formik={deliveryFormik}
-                setStep={setStep}
                 number={number}
                 setImageObjects={setImageObjects}
                 imageObjects={imageObjects}

@@ -2,7 +2,7 @@ import { Image, StyleSheet } from 'react-native';
 import { Delete03Icon } from '@hugeicons/core-free-icons';
 import { Dispatch, SetStateAction } from 'react';
 
-import { Box, useTheme } from '@/components/Theme';
+import { Box } from '@/components/Theme';
 import { ButtonIcon } from '@/components';
 import { getImageUrl } from '@/utils/helpers';
 import { useDestroyOrderImageMutation } from '@/gql/mutations/destroyOrderImage.generated';
@@ -15,7 +15,6 @@ interface Props {
 }
 
 const SingleImage = ({ number, imageObject, setImageObjects }: Props) => {
-  const theme = useTheme();
   const [destroyOrderImage, { loading }] = useDestroyOrderImageMutation();
 
   const onDeleteImage = async () => {
@@ -31,7 +30,7 @@ const SingleImage = ({ number, imageObject, setImageObjects }: Props) => {
   return (
     <Box width={100} height={100} overflow="hidden" borderRadius="s">
       <Image
-        source={{ uri: getImageUrl(imageObject?.url || '') }}
+        source={{ uri: getImageUrl(imageObject?.url) }}
         style={css.image}
       />
       <Box

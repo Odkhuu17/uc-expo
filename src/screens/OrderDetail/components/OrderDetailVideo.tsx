@@ -7,14 +7,10 @@ import Video, {
   type OnProgressData,
   type OnLoadData,
 } from 'react-native-video';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ButtonIcon } from '@/components';
+import { ButtonIcon, Loader } from '@/components';
 import { Box, Text } from '@/components/Theme';
-import { getImageUrl } from '@/utils/helpers';
 
 interface Props {
   video: string;
@@ -32,6 +28,8 @@ const VideoComp = ({ video }: Props) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [startedPlay, setStartedPlay] = useState(false);
 
   const onPlay = () => {
     setShowOverlay(false);
@@ -45,6 +43,8 @@ const VideoComp = ({ video }: Props) => {
     setModalVisible(false);
     setShowOverlay(true);
     setCurrentTime(0);
+    setStartedPlay(false);
+    setIsBuffering(false);
   };
 
   const togglePlayPause = () => {
@@ -67,6 +67,30 @@ const VideoComp = ({ video }: Props) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const onBuffer = (buffer: { isBuffering: boolean }) => {
+    setIsBuffering(buffer.isBuffering);
+    console.log('Buffering:', buffer.isBuffering);
+  };
+
+  const onProgress = (data: OnProgressData) => {
+    if (!isSeeking) {
+      setCurrentTime(data.currentTime);
+    }
+
+    if (!startedPlay) {
+      setStartedPlay(true);
+    }
+
+    if (data?.playableDuration < data?.currentTime) {
+      setIsBuffering(false);
+    }
+  };
+
+  const onLoad = (data: OnLoadData) => {
+    console.log('Video loaded:', data);
+    setDuration(data.duration);
+  };
+
   return (
     <>
       <Box flex={1}>
@@ -74,7 +98,7 @@ const VideoComp = ({ video }: Props) => {
           <Video
             ref={videoRef}
             style={css.video}
-            source={{ uri: getImageUrl(video) }}
+            source={{ uri: video }}
             paused={true}
             controls={false}
             muted
@@ -116,25 +140,35 @@ const VideoComp = ({ video }: Props) => {
             </Box>
             <Box flex={1}>
               {modalVisible && (
-                <Video
-                  ref={modalVideoRef}
-                  style={css.modalVideo}
-                  source={{ uri: getImageUrl(video) }}
-                  paused={modalPaused}
-                  resizeMode="contain"
-                  playInBackground={false}
-                  playWhenInactive={false}
-                  onLoad={(data: OnLoadData) => {
-                    setDuration(data.duration);
-                  }}
-                  onProgress={(data: OnProgressData) => {
-                    if (!isSeeking) {
-                      setCurrentTime(data.currentTime);
-                    }
-                  }}
-                  onEnd={onClose}
-                  onError={onClose}
-                />
+                <>
+                  <Video
+                    ref={modalVideoRef}
+                    style={css.modalVideo}
+                    source={{ uri: video }}
+                    paused={modalPaused}
+                    resizeMode="contain"
+                    playInBackground={false}
+                    playWhenInactive={false}
+                    onLoad={onLoad}
+                    onBuffer={onBuffer}
+                    onProgress={onProgress}
+                    onEnd={onClose}
+                    onError={onClose}
+                  />
+                  {(!startedPlay || isBuffering) && (
+                    <Box
+                      position="absolute"
+                      top={0}
+                      left={0}
+                      right={0}
+                      bottom={0}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Loader />
+                    </Box>
+                  )}
+                </>
               )}
             </Box>
 
@@ -145,6 +179,7 @@ const VideoComp = ({ video }: Props) => {
                   icon={modalPaused ? PlayIcon : PauseIcon}
                   onPress={togglePlayPause}
                   color="white"
+                  loading={!startedPlay}
                 />
                 <Text variant="body3" color="white">
                   {formatTime(currentTime)}

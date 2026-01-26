@@ -33,3 +33,4 @@ export { default as InputOtp } from './InputOtp';
 export { default as RowValue } from './RowValue';
 export { default as RowValueCall } from './RowValueCall';
 export { default as Terms } from './Terms';
+export { default as SingleOrderBody } from './SingleOrderBody';

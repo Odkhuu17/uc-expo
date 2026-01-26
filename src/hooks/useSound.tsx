@@ -12,21 +12,28 @@ const useSound = (filename: string) => {
     const preload = async () => {
       try {
         let duration = 0;
-        
+
         // Add listener to capture duration
-        Sound.addPlayBackListener((e) => {
+        Sound.addPlayBackListener(e => {
           duration = e.duration / 1000;
           setDurationSec(e.duration / 1000);
           setCurrentTimeSec(e.currentPosition / 1000);
         });
 
+        // Set volume to 0 before starting to prevent audio from playing
+
         // Start and immediately pause to load metadata
         await Sound.startPlayer(filename);
-        
+        await Sound.setVolume(0);
+
         // Wait a bit for the listener to fire and get duration
         await new Promise(resolve => setTimeout(resolve, 100));
-        
+
         await Sound.pausePlayer();
+
+        // Restore volume to full
+        await Sound.setVolume(1);
+
         setIsLoaded(true);
       } catch (error) {
         console.log('Error preloading:', error);
@@ -62,7 +69,7 @@ const useSound = (filename: string) => {
         // Player was stopped, need to restart
         await Sound.startPlayer(filename);
       }
-      
+
       setIsPlaying(true);
     } catch (error) {
       console.log('Error playing audio:', error);

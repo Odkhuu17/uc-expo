@@ -1,4 +1,5 @@
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import { Dispatch, SetStateAction } from 'react';
 import { Alert, Keyboard, Platform } from 'react-native';
 import {
@@ -13,9 +14,15 @@ interface Props {
   setImage: Dispatch<SetStateAction<string | null>>;
   onlyCamera?: boolean;
   cameraType?: 'front' | 'back';
+  cropping?: boolean;
 }
 
-const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
+const useImagePick = ({
+  setImage,
+  onlyCamera,
+  cameraType = 'back',
+  cropping,
+}: Props) => {
   const checkAndRequestCameraPermission = async (): Promise<boolean> => {
     Keyboard.dismiss();
     const permission = Platform.select({
@@ -47,14 +54,15 @@ const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
 
   const checkAndRequestPhotoLibraryPermission = async (): Promise<boolean> => {
     Keyboard.dismiss();
-    
+
     let permission;
     if (Platform.OS === 'ios') {
       permission = PERMISSIONS.IOS.PHOTO_LIBRARY;
     } else if (Platform.OS === 'android') {
-      permission = Number(Platform.Version) >= 33 
-        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+      permission =
+        Number(Platform.Version) >= 33
+          ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+          : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
     }
 
     if (!permission) return false;
@@ -105,26 +113,44 @@ const useImagePick = ({ setImage, onlyCamera, cameraType = 'back' }: Props) => {
     const hasPermission = await checkAndRequestCameraPermission();
     if (!hasPermission) return;
 
-    const result = await launchCamera({
-      mediaType: 'photo',
-      cameraType,
-      quality: 0.5,
-    });
-    if (result.assets && result.assets.length > 0) {
-      setImage(result.assets[0].uri || null);
+    try {
+      const result = await ImagePicker.openCamera({
+        width: 1000,
+        height: 1000,
+        mediaType: 'photo',
+        cameraType,
+        quality: 0.8,
+        compressImageQuality: 1,
+        cropping: cropping || false,
+        freeStyleCropEnabled: true,
+      });
+
+      if (result) {
+        setImage(result.path || null);
+      }
+    } catch (error) {
+      console.log('Camera launch error:', error);
     }
   };
 
   const onLauncImageLibrary = async () => {
     const hasPermission = await checkAndRequestPhotoLibraryPermission();
     if (!hasPermission) return;
-
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 0.5,
-    });
-    if (result.assets && result.assets.length > 0) {
-      setImage(result.assets[0].uri || null);
+    try {
+      const result = await ImagePicker.openPicker({
+        mediaType: 'photo',
+        quality: 0.8,
+        width: 1000,
+        height: 1000,
+        compressImageQuality: 1,
+        cropping: cropping || false,
+        freeStyleCropEnabled: true,
+      });
+      if (result) {
+        setImage(result.path || null);
+      }
+    } catch (error) {
+      console.log('Image library launch error:', error);
     }
   };
 

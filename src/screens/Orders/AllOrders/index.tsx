@@ -7,7 +7,7 @@ import {
   GetOrdersQuery,
   useGetOrdersQuery,
 } from '@/gql/queries/getOrders.generated';
-import SingleOrder from '@/containers/SingleOrder';
+import SingleOrder from './SingleOrder';
 
 const AllOrders = () => {
   const [isRefetching, setIsRefetching] = useState(false);
