@@ -3,7 +3,11 @@ import Searchkit from 'searchkit';
 
 const sk = new Searchkit({
   connection: {
-    host: `https://elastic:ph58b4d26fb4a@es.caak.mn/supp_trucks`,
+    host: 'https://es.caak.mn/supp_trucks',
+    auth: {
+      username: 'elastic',
+      password: 'ph58b4d26fb4a',
+    },
   },
   search_settings: {
     search_attributes: [''],

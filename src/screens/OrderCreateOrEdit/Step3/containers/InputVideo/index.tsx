@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Alert, TouchableOpacity } from 'react-native';
+import { Alert, Platform, TouchableOpacity } from 'react-native';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Delete03Icon, PlusSignIcon } from '@hugeicons/core-free-icons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -35,7 +35,10 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
   const theme = useTheme();
 
   const checkAndRequestCameraPermission = async (): Promise<boolean> => {
-    const permission = PERMISSIONS.IOS.CAMERA;
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CAMERA
+        : PERMISSIONS.ANDROID.CAMERA;
     const result = await check(permission);
 
     if (result === RESULTS.GRANTED) {
@@ -57,7 +60,12 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
   };
 
   const checkAndRequestPhotoLibraryPermission = async (): Promise<boolean> => {
-    const permission = PERMISSIONS.IOS.PHOTO_LIBRARY;
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.PHOTO_LIBRARY
+        : Number(Platform.Version) >= 33
+        ? PERMISSIONS.ANDROID.READ_MEDIA_VIDEO
+        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
     const result = await check(permission);
 
     if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
@@ -122,6 +130,8 @@ const InputVideo = ({ video, setVideo, label, isRequired, number }: Props) => {
 
   const onLauncImageLibrary = async () => {
     const hasPermission = await checkAndRequestPhotoLibraryPermission();
+
+    console.log(hasPermission, '12312312');
     if (!hasPermission) return;
 
     const result = await launchImageLibrary({

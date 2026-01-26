@@ -1,10 +1,12 @@
 import { Alert } from 'react-native';
+import { Delete03Icon } from '@hugeicons/core-free-icons';
+import { useNavigation } from '@react-navigation/native';
 
-import { Button, ButtonIcon } from '@/components';
+import { ButtonIcon } from '@/components';
 import { useOrderDestroyMutation } from '@/gql/mutations/orderDestroy.generated';
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
-import { Delete03Icon } from '@hugeicons/core-free-icons';
-
+import { INavigation } from '@/navigations';
+import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
 interface Props {
   order: GetOrderDetailQuery['order'];
 }
@@ -12,6 +14,8 @@ interface Props {
 const OrderDestroyButton = ({ order }: Props) => {
   const [orderDestroy, { loading: orderDestroyLoading }] =
     useOrderDestroyMutation();
+
+  const navigation = useNavigation<INavigation>();
 
   const onPressDelete = () => {
     Alert.alert(
@@ -25,8 +29,19 @@ const OrderDestroyButton = ({ order }: Props) => {
         {
           text: 'Устгах',
           style: 'destructive',
-          onPress: () => {
-            orderDestroy({ variables: { id: order?.id || '' } });
+          onPress: async () => {
+            await orderDestroy({
+              variables: { id: order?.id || '' },
+              refetchQueries: [
+                {
+                  query: GetOrdersDocument,
+                  variables: { first: 10 },
+                },
+                'GetOrdersMy',
+              ],
+            });
+
+            navigation.goBack();
           },
         },
       ],

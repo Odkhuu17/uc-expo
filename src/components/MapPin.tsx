@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import { FitImage } from '@/components';
 import { Box, Text } from '@/components/Theme';
 
@@ -11,18 +13,14 @@ interface Props {
 const MapPin = ({ title }: Props) => {
   return (
     <Box
-      pointerEvents="none"
-      flex={1}
-      height={PIN_HEIGHT + (title ? TITLE_HEIGHT : 0)}
-      style={{
-        transform: [{ translateY: -PIN_HEIGHT / 2 - TITLE_HEIGHT / 2 }],
-      }}
       alignItems="center"
       justifyContent="center"
+      flex={1}
+      pointerEvents={Platform.OS === 'ios' ? 'none' : 'auto'}
     >
       {title ? (
         <Box
-          height={25}
+          height={TITLE_HEIGHT}
           backgroundColor="primary"
           borderRadius="m"
           px="s"
@@ -33,12 +31,13 @@ const MapPin = ({ title }: Props) => {
           </Text>
         </Box>
       ) : (
-        <Box height={25} />
+        <Box height={TITLE_HEIGHT} />
       )}
       <FitImage
         source={require('assets/images/map_pin.png')}
         height={PIN_HEIGHT}
       />
+      <Box height={PIN_HEIGHT / 2 + TITLE_HEIGHT / 2} />
     </Box>
   );
 };

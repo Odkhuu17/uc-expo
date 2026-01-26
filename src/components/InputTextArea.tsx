@@ -36,6 +36,7 @@ const InputTextArea = ({
   const style = useMemo(
     () => [
       {
+        textAlignVertical: 'top',
         padding: theme.spacing.s,
         height: '100%',
         ...theme.textVariants[getTextVariant()],

@@ -113,7 +113,7 @@ const Step2 = ({
 
   const [searchData, { loading }] = useAddressSearchLazyQuery();
 
-  const { items, isLastPage, showMore } = useInfiniteHits({
+  const { items } = useInfiniteHits({
     escapeHTML: false,
   });
 
@@ -237,6 +237,8 @@ const Step2 = ({
     }
   };
 
+  console.log(origin)
+
   return (
     <>
       <MapView
@@ -263,7 +265,6 @@ const Step2 = ({
                 width={40}
                 height={40}
                 borderRadius="full"
-                overflow="hidden"
                 backgroundColor="white"
                 borderWidth={2}
                 borderColor="primary"
@@ -299,12 +300,12 @@ const Step2 = ({
         {!isRent && origin && (
           <Marker
             coordinate={{
-              latitude: origin?.lat || 0,
-              longitude: origin?.lng || 0,
+              latitude: origin?.lat || 47.92123,
+              longitude: origin?.lng || 106.918556,
             }}
             title="Очиж авах хаяг"
           >
-            {Platform.OS === 'ios' && <MapPin title="Очиж авах хаяг" />}
+            <MapPin title="Очиж авах хаяг" />
           </Marker>
         )}
         {!isRent && destination && (

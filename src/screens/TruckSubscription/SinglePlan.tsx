@@ -83,17 +83,21 @@ const SinglePlan = ({ node, truckId }: Props) => {
                 <TouchableOpacity
                   key={index}
                   onPress={async () => {
-                    const supported = await Linking.canOpenURL(bank.link);
+                    try {
+                      const supported = await Linking.canOpenURL(bank.link);
 
-                    if (supported) {
-                      await Linking.openURL(bank.link).catch(e =>
-                        console.log(e),
-                      );
-                    } else {
-                      Alert.alert(
-                        'Алдаа',
-                        `Танд ${bank.name} апп байхгүй байна.`,
-                      );
+                      if (supported) {
+                        await Linking.openURL(bank.link).catch(e =>
+                          console.log(e),
+                        );
+                      } else {
+                        Alert.alert(
+                          'Алдаа',
+                          `Танд ${bank.name} апп байхгүй байна.`,
+                        );
+                      }
+                    } catch (err) {
+                      console.error('An error occurred with Linking: ', err);
                     }
                   }}
                 >

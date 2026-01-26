@@ -29,6 +29,7 @@ import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { ImageObject } from '@/gql/graphql';
 import { usePublishOrderMutation } from '@/gql/mutations/orderPublish.generated';
 import { useSearchAddressLazyQuery } from '@/gql/queries/searchAddressQuery.generated';
+import { Keyboard } from 'react-native';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -200,6 +201,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
         });
       }
       setSuccessModal(true);
+      Keyboard.dismiss();
     },
   });
 
@@ -269,6 +271,7 @@ const OrderCreate = ({ navigation, route }: Props) => {
         });
       }
       setSuccessModal(true);
+      Keyboard.dismiss();
     },
   });
 

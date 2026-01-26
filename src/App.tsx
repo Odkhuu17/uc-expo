@@ -10,12 +10,12 @@ import { OneSignal, LogLevel } from 'react-native-onesignal';
 import { Appearance, Platform } from 'react-native';
 import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 import { request, PERMISSIONS } from 'react-native-permissions';
+import { InstantSearch } from 'react-instantsearch-core';
 
 import { theme } from '@/components/Theme';
 import ApolloProvider from '@/apollo/Provider';
 import { persistor, store } from '@/redux/store.instance';
 import AppNavigator from './navigations';
-import { InstantSearch } from 'react-instantsearch-core';
 import searchClient from './utils/searchkit';
 import CheckUpdate from './containers/CheckUpdate';
 

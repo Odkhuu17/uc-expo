@@ -59,8 +59,6 @@ const OrderDetail = ({ navigation, route }: Props) => {
     },
   });
 
-  console.log(data);
-
   const isRent = isRentOrder(data?.order?.carType);
   const hasImages = data?.order?.images && data?.order?.images.length > 0;
 

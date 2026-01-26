@@ -17,7 +17,7 @@ export const refreshAccessToken = async (): Promise<string> => {
     `${OAUTH_CLIENT_ID}:${OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
-  console.log(API_URL, 'asofjsffwefwef')
+  console.log(API_URL, 'asofjsffwefwef', authHeader)
 
   console.log(credentials, 'credentialscredentialscredentials')
 

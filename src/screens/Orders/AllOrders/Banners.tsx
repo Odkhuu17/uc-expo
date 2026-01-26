@@ -13,7 +13,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Box } from '@/components/Theme';
-import { getImageUrl } from '@/utils/helpers';
 import { useGetBannersQuery } from '@/gql/queries/getBanners.generated';
 
 const BANNER_HEIGHT = 180;
@@ -49,6 +48,8 @@ const Banners = () => {
     setWidth(e.nativeEvent.layout.width);
   };
 
+  console.log(data?.banners);
+
   return (
     <Box onLayout={onLayout}>
       <Animated.ScrollView
@@ -72,7 +73,7 @@ const Banners = () => {
               backgroundColor="grey4"
             >
               <Image
-                source={{ uri: getImageUrl(banner.image || '') }}
+                source={{ uri: banner.image }}
                 style={css.img}
                 resizeMode="cover"
               />
