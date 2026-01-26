@@ -15,7 +15,6 @@ const MapPin = ({ title }: Props) => {
     <Box
       alignItems="center"
       justifyContent="center"
-      flex={1}
       pointerEvents={Platform.OS === 'ios' ? 'none' : 'auto'}
     >
       {title ? (
@@ -37,7 +36,7 @@ const MapPin = ({ title }: Props) => {
         source={require('assets/images/map_pin.png')}
         height={PIN_HEIGHT}
       />
-      <Box height={PIN_HEIGHT / 2 + TITLE_HEIGHT / 2} />
+      <Box height={PIN_HEIGHT / 2} />
     </Box>
   );
 };
