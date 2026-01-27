@@ -7,6 +7,7 @@ import { useOrderDestroyMutation } from '@/gql/mutations/orderDestroy.generated'
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import { INavigation } from '@/navigations';
 import { GetOrdersDocument } from '@/gql/queries/getOrders.generated';
+
 interface Props {
   order: GetOrderDetailQuery['order'];
 }

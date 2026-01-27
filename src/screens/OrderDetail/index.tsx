@@ -31,6 +31,7 @@ import { INavigationProps } from '@/navigations';
 import { useGetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 import OrderDetailRent from './components/OrderDetailRent';
 import InputLabel from '@/components/InputLabel';
+import OrderCloseButton from './containers/OrderCloseButton';
 
 const useStyles = makeStyles(theme => ({
   img: {
@@ -155,6 +156,9 @@ const OrderDetail = ({ navigation, route }: Props) => {
               ) : (
                 <OrderDetailDelivery order={data?.order} />
               )}
+              {data?.order?.my &&
+                data?.order?.status === 'accepted' &&
+                mode === 'shipper' && <OrderCloseButton order={data?.order} />}
               {data?.order?.my &&
                 mode === 'shipper' &&
                 data?.order?.status !== 'accepted' && (

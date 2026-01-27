@@ -1,5 +1,9 @@
 import { Alert, RefreshControl } from 'react-native';
-import { Book02Icon, CallIcon } from '@hugeicons/core-free-icons';
+import {
+  Book02Icon,
+  CallIcon,
+  Notification02Icon,
+} from '@hugeicons/core-free-icons';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -57,6 +61,10 @@ const ProfileScreen = ({ navigation }: Props) => {
     navigation.navigate('Terms');
   };
 
+  const onPressNotifications = () => {
+    navigation.navigate('Notifications');
+  };
+
   useFocusEffect(
     useCallback(() => {
       getMe();
@@ -80,14 +88,21 @@ const ProfileScreen = ({ navigation }: Props) => {
               <UserVerify userData={userData?.me} refetch={getMe} />
             </BoxContainer>
             <UserTrucks userData={userData?.me} />
-            <BoxContainer gap="m">
+            <BoxContainer>
+              <SingleMenu
+                title="Мэдэгдлүүд"
+                icon={Notification02Icon}
+                onPress={onPressNotifications}
+              />
+            </BoxContainer>
+            <BoxContainer>
               <SingleMenu
                 title="Холбоо барих"
                 icon={CallIcon}
                 onPress={onPressContact}
               />
             </BoxContainer>
-            <BoxContainer gap="m">
+            <BoxContainer>
               <SingleMenu
                 title="Үйлчилгээний нөхцөл"
                 icon={Book02Icon}

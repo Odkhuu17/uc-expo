@@ -188,6 +188,27 @@ export type Country = BaseModelInterface & {
   updatedAt: Scalars['ISO8601DateTime']['output'];
 };
 
+export type Dashboard = {
+  __typename?: 'Dashboard';
+  chartData: Array<DashboardChartData>;
+  recentOrders: Array<Order>;
+  recentPayments: Array<Payment>;
+  totalOrders: Scalars['Int']['output'];
+  totalPayments: Scalars['Int']['output'];
+  totalRevenue: Scalars['Float']['output'];
+  totalSubscriptions: Scalars['Int']['output'];
+  totalTrucks: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+};
+
+export type DashboardChartData = {
+  __typename?: 'DashboardChartData';
+  month: Scalars['String']['output'];
+  orders: Scalars['Int']['output'];
+  payments: Scalars['Int']['output'];
+  revenue: Scalars['Float']['output'];
+};
+
 export type DateFilter = {
   eq?: InputMaybe<Scalars['String']['input']>;
   gt?: InputMaybe<Scalars['String']['input']>;
@@ -1161,6 +1182,7 @@ export type Query = {
   banner?: Maybe<Banner>;
   banners: BannerConnection;
   country: Country;
+  dashboard: Dashboard;
   deliveryRequest?: Maybe<DeliveryRequest>;
   deliveryRequests: DeliveryRequestConnection;
   devices: DeviceConnection;
@@ -1253,6 +1275,12 @@ export type QueryBannersArgs = {
 
 export type QueryCountryArgs = {
   iso: Scalars['String']['input'];
+};
+
+
+export type QueryDashboardArgs = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
 };
 
 

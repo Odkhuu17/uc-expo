@@ -29,6 +29,7 @@ import useFeedLocation from '@/hooks/useFeedLocation';
 import useLinkDevice from '@/hooks/useLinkDevice';
 import useUpdateUser from '@/hooks/useUpdateUser';
 import useLocationPermission from '@/hooks/useLocationPermission';
+import Notifications from '@/screens/Notifications';
 
 export type TAppRoutes = {
   AuthChooseType: undefined;
@@ -64,6 +65,7 @@ export type TAppRoutes = {
     number: string;
   };
   DriverVerify: undefined;
+  Notifications: undefined;
 };
 
 export interface INavigationProps<RouteName extends keyof TAppRoutes> {
@@ -123,6 +125,7 @@ const AppNavigator = () => {
           />
           <Stack.Screen name="OrderRequests" component={OrderRequests} />
           <Stack.Screen name="DriverVerify" component={DriverVerify} />
+          <Stack.Screen name="Notifications" component={Notifications} />
         </Stack.Group>
       )}
       <Stack.Group

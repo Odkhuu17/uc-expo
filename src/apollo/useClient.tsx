@@ -21,8 +21,6 @@ import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, API_URL } from '@env';
 
 export let apolloClient: ApolloClient | null = null;
 
-console.log(1231);
-
 const useClient = () => {
   const navigation = useNavigation<INavigation>();
   const { logout } = useLogout();

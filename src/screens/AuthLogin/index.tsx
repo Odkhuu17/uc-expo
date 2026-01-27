@@ -18,6 +18,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import authSlice from '@/redux/slices/auth';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { login } from './helpers';
+import { isSensorAvailable } from '@sbaiahmed1/react-native-biometrics';
 
 const schema = yup.object().shape({
   username: yup
@@ -35,6 +36,7 @@ const AuthLogin = ({ navigation }: Props) => {
   const [getMe] = useGetMeLazyQuery();
   const dispatch = useAppDispatch();
   const passwordInputRef = useRef<TextInput | null>(null);
+  
 
   const { handleSubmit, values, errors, handleChange, isSubmitting } =
     useFormik({

@@ -1,0 +1,7 @@
+mutation CloseOrder($mobile: String!, $number: String!) {
+  closeOrder(input: { mobile: $mobile, number: $number }) {
+    id
+    number
+    status
+  }
+}
