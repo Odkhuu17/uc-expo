@@ -6,7 +6,7 @@ import constants from '@/constants';
 import { API_URL, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET } from '@env';
 
 export const login = async (username: string, password: string) => {
-  const authHeader = Buffer.from(
+  const authHeader = await Buffer.from(
     `${OAUTH_CLIENT_ID}:${OAUTH_CLIENT_SECRET}`,
   ).toString('base64');
 
@@ -21,7 +21,8 @@ export const login = async (username: string, password: string) => {
     { headers: { Authorization: `Basic ${authHeader}` } },
   );
 
-  //ene iluu yum shig sanagdsaj bn
+  console.log(data?.refresh_token, data?.access_token, '123123123');
+
   await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
     service: constants.keyChainAuthServiceKey,
   });

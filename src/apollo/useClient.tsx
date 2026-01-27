@@ -21,6 +21,8 @@ import { OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, API_URL } from '@env';
 
 export let apolloClient: ApolloClient | null = null;
 
+console.log(1231);
+
 const useClient = () => {
   const navigation = useNavigation<INavigation>();
   const { logout } = useLogout();
@@ -81,9 +83,16 @@ const useClient = () => {
 
     const resetToken = new ErrorLink(({ error, operation, forward }) => {
       if (ServerError.is(error) && error.statusCode === 401) {
+        console.log('401 error detected, attempting to refresh token');
         return new Observable(observer => {
           refreshAccessToken()
             .then(newToken => {
+              console.log(newToken, 'newTokennnewToken');
+
+              console.log(
+                operation.query,
+                'operation.operationNameoperation.operationName',
+              );
               // Update the operation context with the new token
               operation.setContext(({ headers = {} }) => ({
                 headers: {
@@ -102,6 +111,7 @@ const useClient = () => {
               return () => subscription.unsubscribe();
             })
             .catch(async refreshError => {
+              console.log(refreshError, 'refreshErrorrefreshError');
               await logout();
               observer.error(refreshError);
             });

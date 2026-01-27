@@ -19,7 +19,7 @@ export const refreshAccessToken = async (): Promise<string> => {
 
   console.log(API_URL, 'asofjsffwefwef', authHeader)
 
-  console.log(credentials, 'credentialscredentialscredentials')
+  console.log(credentials, 'credentialscredentialscredentials1')
 
   if (!credentials) {
     console.log('No credentials found, fetching new access token', credentials);
@@ -62,6 +62,8 @@ export const refreshAccessToken = async (): Promise<string> => {
       },
     },
   );
+
+  console.log('Refreshed access token', data);
 
   await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
     service: constants.keyChainAuthServiceKey,

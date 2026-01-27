@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import {
+  Alert,
   Image,
   LayoutChangeEvent,
+  Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
@@ -63,23 +65,49 @@ const Banners = () => {
         onMomentumScrollEnd={handleScroll}
         scrollEventThrottle={16}
       >
-        {data?.banners?.nodes?.map(banner => (
-          <TouchableOpacity key={banner.id} activeOpacity={0.9}>
-            <Box
-              width={width}
-              height={BANNER_HEIGHT}
-              borderRadius="m"
-              overflow="hidden"
-              backgroundColor="grey4"
+        {data?.banners?.nodes?.map(banner => {
+          const onPress = async () => {
+            if (banner.permalink) {
+              try {
+                const supported = await Linking.canOpenURL(banner.permalink);
+
+                if (supported) {
+                  await Linking.openURL(banner.permalink).catch(e =>
+                    console.log(e),
+                  );
+                } else {
+                  console.log(
+                    `Don't know how to open URI: ${banner.permalink}`,
+                  );
+                }
+              } catch (err) {
+                console.log('An error occurred with Linking: ', err);
+              }
+            }
+          };
+
+          return (
+            <TouchableOpacity
+              key={banner.id}
+              activeOpacity={0.9}
+              onPress={onPress}
             >
-              <Image
-                source={{ uri: banner.image }}
-                style={css.img}
-                resizeMode="cover"
-              />
-            </Box>
-          </TouchableOpacity>
-        ))}
+              <Box
+                width={width}
+                height={BANNER_HEIGHT}
+                borderRadius="m"
+                overflow="hidden"
+                backgroundColor="grey4"
+              >
+                <Image
+                  source={{ uri: banner.image }}
+                  style={css.img}
+                  resizeMode="cover"
+                />
+              </Box>
+            </TouchableOpacity>
+          );
+        })}
       </Animated.ScrollView>
       {data?.banners?.totalCount && data?.banners?.totalCount > 1 && (
         <Box

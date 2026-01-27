@@ -258,6 +258,7 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
                 />
                 <InputImage
                   label="Машины гэрчилгээ"
+                  cropping
                   image={passport}
                   setImage={setPassport}
                 />
