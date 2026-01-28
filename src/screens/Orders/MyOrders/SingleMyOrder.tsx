@@ -45,10 +45,14 @@ const SingleMyOrder = ({ item }: Props) => {
             />
           </Box>
           <SingleOrderBody item={item} />
-          {item?.status === 'accepted' ? (
+          {item?.status === 'accepted' || item?.status === 'completed' ? (
             <Box alignItems="center" flexDirection="row">
               <Text variant="body2">Төлөв: </Text>
-              <Label text="Баталгаажсан" backgroundColor="success" />
+              {item?.status === 'accepted' ? (
+                <Label text="Баталгаажсан" backgroundColor="success" />
+              ) : (
+                <Label text="Дууссан" backgroundColor="error" />
+              )}
             </Box>
           ) : (
             <Box alignItems="center" flexDirection="row">

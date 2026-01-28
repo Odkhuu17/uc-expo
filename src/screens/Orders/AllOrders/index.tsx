@@ -72,22 +72,24 @@ const AllOrders = () => {
   };
 
   return (
-    <CustomFlatList
-      ListHeaderComponent={<Banners />}
-      data={orders}
-      loading={loading}
-      refreshing={isRefetching}
-      onRefresh={onRefresh}
-      renderItem={renderItem}
-      ListEmptyComponent={
-        <Empty
-          title="Захиалга олдсонгүй"
-          description="Одоогоор захиалга үүсээгүй байна."
-        />
-      }
-      onEndReached={onLoadMore}
-      ListFooterComponent={renderFooter}
-    />
+    <>
+      <CustomFlatList
+        ListHeaderComponent={<Banners />}
+        data={orders}
+        loading={loading}
+        refreshing={isRefetching}
+        onRefresh={onRefresh}
+        renderItem={renderItem}
+        ListEmptyComponent={
+          <Empty
+            title="Захиалга олдсонгүй"
+            description="Одоогоор захиалга үүсээгүй байна."
+          />
+        }
+        onEndReached={onLoadMore}
+        ListFooterComponent={renderFooter}
+      />
+    </>
   );
 };
 

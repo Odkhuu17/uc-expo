@@ -88,13 +88,13 @@ const ProfileScreen = ({ navigation }: Props) => {
               <UserVerify userData={userData?.me} refetch={getMe} />
             </BoxContainer>
             <UserTrucks userData={userData?.me} />
-            <BoxContainer>
+            {/* <BoxContainer>
               <SingleMenu
                 title="Мэдэгдлүүд"
                 icon={Notification02Icon}
                 onPress={onPressNotifications}
               />
-            </BoxContainer>
+            </BoxContainer> */}
             <BoxContainer>
               <SingleMenu
                 title="Холбоо барих"

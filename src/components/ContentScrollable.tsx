@@ -19,12 +19,12 @@ const ContentScrollable = ({
   ...props
 }: Props) => {
   return (
-    <SafeAreaView style={css.container} edges={edges}>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={css.contentContainer}
-        {...props}
-      >
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={css.contentContainer}
+      {...props}
+    >
+      <SafeAreaView style={css.container} edges={edges}>
         <Box
           flex={1}
           px={noHSpace ? undefined : 'm'}
@@ -32,8 +32,8 @@ const ContentScrollable = ({
         >
           {children}
         </Box>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

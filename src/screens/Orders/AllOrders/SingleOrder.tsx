@@ -67,13 +67,15 @@ const SingleOrder = ({ item, children }: Props) => {
                 color={isRent ? 'rent' : 'primary'}
                 variant="title"
                 textDecorationLine={
-                  item?.status === 'accepted' ? 'line-through' : 'none'
+                  item?.status === 'accepted' || item?.status === 'completed'
+                    ? 'line-through'
+                    : 'none'
                 }
               >
                 {isRent ? item?.carType : item?.packageType}
               </Text>
             </Box>
-            {item?.status === 'accepted' ? (
+            {item?.status === 'accepted' || item?.status === 'completed' ? (
               <Label text="Идэвхгүй" backgroundColor="grey2" />
             ) : (
               <Label

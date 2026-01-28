@@ -15,7 +15,6 @@ import {
 import { Box } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
 import { INavigation } from '@/navigations';
-import useLogout from '@/hooks/useLogout';
 import { useCloseOrderMutation } from '@/gql/mutations/closeOrder.generated';
 import { GetOrderDetailQuery } from '@/gql/queries/getOrderDetail.generated';
 
@@ -36,11 +35,9 @@ const OrderCloseButton = ({ order }: Props) => {
   const [successModal, setSuccessModal] = useState(false);
   const ref = useRef<BottomSheetModal | null>(null);
   const snapPoints = useMemo(() => [], []);
-  const { logout } = useLogout();
   const navigation = useNavigation<INavigation>();
 
   const onCloseSuccessModal = () => {
-    logout();
     ref.current?.dismiss();
     setSuccessModal(false);
   };
@@ -62,7 +59,7 @@ const OrderCloseButton = ({ order }: Props) => {
       if (values?.mobile === user?.mobile) {
         await closeOrder({
           variables: {
-            mobile: values.mobile,
+            status: 'completed',
             number: order?.number || '',
           },
         }).finally(() => {

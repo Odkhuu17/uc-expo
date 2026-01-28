@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as yup from 'yup';
 import Geolocation from '@react-native-community/geolocation';
+import { Keyboard } from 'react-native';
 
 import {
   Container,
@@ -29,7 +30,6 @@ import { GetOrdersMyDocument } from '@/gql/queries/getOrdersMy.generated';
 import { ImageObject } from '@/gql/graphql';
 import { usePublishOrderMutation } from '@/gql/mutations/orderPublish.generated';
 import { useSearchAddressLazyQuery } from '@/gql/queries/searchAddressQuery.generated';
-import { Keyboard } from 'react-native';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

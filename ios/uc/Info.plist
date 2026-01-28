@@ -59,6 +59,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need camera access to let you take photos of delivery items.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Secure and fast access through biometric authentication.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need your location to calculate accurate delivery routes and distances, show your real-time position to customers during delivery, and provide location-based order notifications.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -4,18 +4,20 @@ import * as yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import {
   IdentityCardIcon,
+  Location05Icon,
   LockPasswordIcon,
   UserListIcon,
 } from '@hugeicons/core-free-icons';
 import { TextInput } from 'react-native';
 
-import { Button, Checkbox, ModalMsg } from '@/components';
+import { Button, Checkbox, ModalMsg, Select } from '@/components';
 import Input from '@/components/Input';
 import { useAppSelector } from '@/redux/hooks';
 import { INavigation } from '@/navigations';
 import { useAuthRegisterMutation } from '@/gql/mutations/authRegister.generated';
 import { Box } from '@/components/Theme';
 import TermsModal from './TermsModal';
+import { useGetCountryQuery } from '@/gql/queries/getCountry.generated';
 
 interface Props {
   phoneNumber: string;
@@ -32,6 +34,9 @@ const schema = yup.object().shape({
     .required('Энэ талбар хоосон байна!')
     .matches(/^[А-Яа-яӨөҮүЁё\s]+$/, 'Зөвхөн кирилл үсэг оруулна уу!'),
   registerNum: yup.string().required('Энэ талбар хоосон байна!'),
+  // selectedCountry: yup.string().required('Энэ талбар хоосон байна!'),
+  // selectedDistrict: yup.string().required('Энэ талбар хоосон байна!'),
+  // selectedQuarter: yup.string().required('Энэ талбар хоосон байна!'),
   password: yup.string().required('Энэ талбар хоосон байна!'),
   passwordConfirmation: yup
     .string()
@@ -46,6 +51,7 @@ const Step3 = ({ phoneNumber, token }: Props) => {
   const refs = useRef<TextInput[]>([]);
   const [termsModal, setTermsModal] = useState(false);
   const [confirmedTerms, setConfirmedTerms] = useState(false);
+  const { data } = useGetCountryQuery();
 
   const { handleSubmit, values, errors, touched, handleBlur, handleChange } =
     useFormik({
@@ -56,6 +62,9 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         passwordConfirmation: '',
         token: '',
         registerNum: '',
+        // selectedCountry: '',
+        // selectedDistrict: '',
+        // selectedQuarter: '',
       },
       validationSchema: schema,
       onSubmit: async () => {
@@ -81,6 +90,21 @@ const Step3 = ({ phoneNumber, token }: Props) => {
         setSuccessModal(true);
       },
     });
+
+  // const districtOptions = data?.country?.sdq
+  //   ?.find(i => i.label === values.selectedCountry)
+  //   ?.children?.map(p => ({
+  //     label: p.label,
+  //     value: p.label,
+  //   }));
+
+  // const quarterOptions = data?.country?.sdq
+  //   ?.find(i => i.label === values.selectedCountry)
+  //   ?.children?.find(i => i.label === values.selectedDistrict)
+  //   ?.children?.map(p => ({
+  //     label: p.label,
+  //     value: p.label,
+  //   }));
 
   const handleSubmitEditing = (index: number) => {
     if (refs.current[index + 1]) {
@@ -160,6 +184,51 @@ const Step3 = ({ phoneNumber, token }: Props) => {
               : undefined
           }
         />
+        {/* <Select
+          isRequired
+          label="Хот/Аймаг"
+          icon={Location05Icon}
+          placeholder="Хот/Аймаг"
+          options={data?.country?.sdq?.map(p => ({
+            label: p.label,
+            value: p.label,
+          }))}
+          selectedOption={values.selectedCountry}
+          setSelectedOption={handleChange('selectedCountry')}
+          error={
+            touched.selectedCountry && errors.selectedCountry
+              ? errors.selectedCountry
+              : undefined
+          }
+        />
+        <Select
+          isRequired
+          label="Дүүрэг/Сум"
+          icon={Location05Icon}
+          placeholder="Дүүрэг/Сум"
+          options={districtOptions}
+          selectedOption={values.selectedDistrict}
+          setSelectedOption={handleChange('selectedDistrict')}
+          error={
+            touched.selectedDistrict && errors.selectedDistrict
+              ? errors.selectedDistrict
+              : undefined
+          }
+        />
+        <Select
+          isRequired
+          label="Хороо/Баг"
+          icon={Location05Icon}
+          placeholder="Хороо/Баг"
+          options={quarterOptions}
+          selectedOption={values.selectedQuarter}
+          setSelectedOption={handleChange('selectedQuarter')}
+          error={
+            touched.selectedQuarter && errors.selectedQuarter
+              ? errors.selectedQuarter
+              : undefined
+          }
+        /> */}
         <Input
           label="Нууц үг"
           placeholder="Нууц үг"

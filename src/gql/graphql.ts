@@ -919,6 +919,7 @@ export type Notification = BaseModelInterface & {
   createdAt: Scalars['ISO8601DateTime']['output'];
   event: NotificationEvent;
   id: Scalars['ID']['output'];
+  message?: Maybe<Scalars['String']['output']>;
   read: Scalars['Boolean']['output'];
   readAt: Scalars['ISO8601DateTime']['output'];
   recipient: User;
@@ -960,6 +961,8 @@ export type Order = BaseModelInterface & {
   audio?: Maybe<Scalars['String']['output']>;
   carType?: Maybe<Scalars['String']['output']>;
   carWeight?: Maybe<Scalars['String']['output']>;
+  closedBy?: Maybe<User>;
+  comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['ISO8601DateTime']['output'];
   data: Scalars['JSON']['output'];
   deliveryRequests: DeliveryRequestConnection;
@@ -2341,8 +2344,9 @@ export type CheckPaymentInput = {
 
 export type CloseOrderInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  mobile: Scalars['String']['input'];
+  comment?: InputMaybe<Scalars['String']['input']>;
   number: Scalars['String']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateAddressInput = {
@@ -2378,11 +2382,10 @@ export type CreateBannerInput = {
 
 export type CreateDeliveryRequestInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  driverId?: InputMaybe<Scalars['ID']['input']>;
   orderId: Scalars['ID']['input'];
-  price: Scalars['String']['input'];
-  skipSubscription?: InputMaybe<Scalars['Boolean']['input']>;
+  price?: InputMaybe<Scalars['String']['input']>;
   travelAt?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
+  truckId?: InputMaybe<Scalars['ID']['input']>;
   userId?: InputMaybe<Scalars['ID']['input']>;
 };
 

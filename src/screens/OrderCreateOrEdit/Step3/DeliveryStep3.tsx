@@ -137,7 +137,7 @@ const DeliveryStep3 = ({
 
   return (
     <>
-      <ContentScrollable edges={[]} onScroll={onScroll}>
+      <ContentScrollable edges={['bottom']} onScroll={onScroll}>
         <Box gap="s">
           <OrderLocationContainer
             location1={

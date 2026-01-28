@@ -74,6 +74,8 @@ const SingleOrderRequest = ({ item }: Props) => {
                   ? 'Хүлээгдэж байна'
                   : item?.status === 'accepted'
                   ? 'Баталгаажсан'
+                  : item?.status === 'completed'
+                  ? 'Дууссан'
                   : 'Идэвхгүй'
               }
             />

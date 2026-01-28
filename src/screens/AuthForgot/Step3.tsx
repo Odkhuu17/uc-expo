@@ -3,12 +3,12 @@ import { useRef, useState } from 'react';
 import * as yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import { LockPasswordIcon } from '@hugeicons/core-free-icons';
+import { TextInput } from 'react-native';
 
 import { Button, ModalMsg } from '@/components';
 import Input from '@/components/Input';
 import { INavigation } from '@/navigations';
 import { useResetPasswordMutation } from '@/gql/mutations/resetPassword.generated';
-import { TextInput } from 'react-native';
 
 interface Props {
   phoneNumber: string;

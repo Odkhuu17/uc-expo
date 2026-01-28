@@ -56,7 +56,7 @@ const DriverVerify = ({ navigation }: Props) => {
   return (
     <Container>
       <HeaderNormal title="Баталгаажуулалт" hasBack />
-      <ContentScrollable edges={[]}>
+      <ContentScrollable edges={['bottom']}>
         <Box gap="m">
           <InputImage
             isRequired

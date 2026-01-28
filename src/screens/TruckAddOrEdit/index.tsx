@@ -158,7 +158,7 @@ const TruckAddOrEdit = ({ navigation, route }: Props) => {
       <Container>
         <CustomKeyboardAvoidingView>
           <HeaderNormal title="Машин нэмэх" hasBack />
-          <ContentScrollable edges={[]}>
+          <ContentScrollable edges={['bottom']}>
             {taxonsLoading || trucksLoading ? (
               <Loader />
             ) : (

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Image, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import dayjs from 'dayjs';
-import { RefreshControl } from 'react-native-gesture-handler';
+import { RefreshControl } from 'react-native';
 import { PencilEdit01Icon } from '@hugeicons/core-free-icons';
 
 import {
@@ -15,6 +15,7 @@ import {
   RowValue,
   Label,
   ButtonIcon,
+  Warning,
 } from '@/components';
 import { Box, makeStyles } from '@/components/Theme';
 import { useAppSelector } from '@/redux/hooks';
@@ -145,7 +146,6 @@ const OrderDetail = ({ navigation, route }: Props) => {
                   </ScrollView>
                 </BoxContainer>
               )}
-
               {data?.order?.audio && (
                 <BoxContainer>
                   <OrderDetailAudio audio={data?.order?.audio} />
@@ -161,7 +161,8 @@ const OrderDetail = ({ navigation, route }: Props) => {
                 mode === 'shipper' && <OrderCloseButton order={data?.order} />}
               {data?.order?.my &&
                 mode === 'shipper' &&
-                data?.order?.status !== 'accepted' && (
+                data?.order?.status !== 'accepted' &&
+                data?.order?.status !== 'completed' && (
                   <Box flexDirection="row" gap="s">
                     <ButtonIcon
                       shape="square"
@@ -206,11 +207,13 @@ const OrderDetail = ({ navigation, route }: Props) => {
                     label="Утасны дугаар"
                     value={data?.order?.acceptedDeliveryRequest?.user?.mobile}
                   />
-                  <Button
-                    title={isRent ? 'Техник хянах' : 'Ачаа хянах'}
-                    onPress={onPressTrack}
-                    color={isRent ? 'rent' : 'delivery'}
-                  />
+                  {data?.order?.status !== 'completed' && (
+                    <Button
+                      title={isRent ? 'Техник хянах' : 'Ачаа хянах'}
+                      onPress={onPressTrack}
+                      color={isRent ? 'rent' : 'delivery'}
+                    />
+                  )}
                 </BoxContainer>
               )}
               {mode === 'driver' && data?.order?.myRequest && (
@@ -247,33 +250,41 @@ const OrderDetail = ({ navigation, route }: Props) => {
               )}
               {mode === 'driver' && (
                 <>
-                  {data?.order?.status !== 'accepted' ? (
+                  {data?.order?.status !== 'accepted' &&
+                  data?.order?.status !== 'completed' ? (
                     <OrderRequestButton
                       data={data?.order}
                       refetch={refetch}
                       isRent={isRent}
                     />
                   ) : (
-                    <Box flexDirection="row" gap="m">
-                      {data?.order?.origin && (
-                        <Box flex={1}>
-                          <Button
-                            title={isRent ? 'Ажиллах байршил' : 'Авах байршил'}
-                            onPress={onPressOriginLocation}
-                          />
-                        </Box>
-                      )}
-                      {data?.order?.destination && !isRent && (
-                        <Box flex={1}>
-                          <Button
-                            title="Хүргэх байршил"
-                            onPress={onPressDestinationLocation}
-                          />
-                        </Box>
-                      )}
-                    </Box>
+                    data?.order?.status !== 'completed' && (
+                      <Box flexDirection="row" gap="m">
+                        {data?.order?.origin && (
+                          <Box flex={1}>
+                            <Button
+                              title={
+                                isRent ? 'Ажиллах байршил' : 'Авах байршил'
+                              }
+                              onPress={onPressOriginLocation}
+                            />
+                          </Box>
+                        )}
+                        {data?.order?.destination && !isRent && (
+                          <Box flex={1}>
+                            <Button
+                              title="Хүргэх байршил"
+                              onPress={onPressDestinationLocation}
+                            />
+                          </Box>
+                        )}
+                      </Box>
+                    )
                   )}
                 </>
+              )}
+              {data?.order?.status === 'completed' && (
+                <Warning type="warning" description="Захиалга дууссан байна!" />
               )}
             </Box>
           )}

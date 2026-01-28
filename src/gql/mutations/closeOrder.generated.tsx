@@ -1,27 +1,27 @@
 import type * as Types from '../graphql';
 
 import { gql } from '@apollo/client';
+import { OrderFragmentFragmentDoc } from '../fragments/order.generated';
 import type * as ApolloReactCommon from '@apollo/client';
 import * as ApolloReactHooks from '@apollo/client/react';
 const defaultOptions = {} as const;
 export type CloseOrderMutationVariables = Types.Exact<{
-  mobile: Types.Scalars['String']['input'];
   number: Types.Scalars['String']['input'];
+  status?: Types.InputMaybe<Types.Scalars['String']['input']>;
+  comment?: Types.InputMaybe<Types.Scalars['String']['input']>;
 }>;
 
 
-export type CloseOrderMutation = { __typename?: 'Mutation', closeOrder?: { __typename?: 'Order', id: string, number?: string, status?: string } };
+export type CloseOrderMutation = { __typename?: 'Mutation', closeOrder?: { __typename?: 'Order', id: string, number?: string, title?: string, status?: string, published?: boolean, my?: boolean, requested?: boolean, packageType?: string, price?: number, carType?: string, carWeight?: string, senderName?: string, senderMobile?: string, receiverName?: string, receiverMobile?: string, travelAt?: any, images?: Array<string>, subscribed: boolean, createdAt: any, updatedAt: any, origin?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } }, destination?: { __typename?: 'Address', id: string, name?: string, address1?: string, address2?: string, latitude?: string, longitude?: string, country?: { __typename?: 'Country', id: string, name: string }, state?: { __typename?: 'State', id: string, name: string }, district?: { __typename?: 'District', id: string, name: string }, quarter?: { __typename?: 'Quarter', id: string, name: string } } } };
 
 
 export const CloseOrderDocument = gql`
-    mutation CloseOrder($mobile: String!, $number: String!) {
-  closeOrder(input: {mobile: $mobile, number: $number}) {
-    id
-    number
-    status
+    mutation CloseOrder($number: String!, $status: String, $comment: String) {
+  closeOrder(input: {number: $number, status: $status, comment: $comment}) {
+    ...OrderFragment
   }
 }
-    `;
+    ${OrderFragmentFragmentDoc}`;
 export type CloseOrderMutationFn = ApolloReactCommon.MutationFunction<CloseOrderMutation, CloseOrderMutationVariables>;
 
 /**
@@ -37,8 +37,9 @@ export type CloseOrderMutationFn = ApolloReactCommon.MutationFunction<CloseOrder
  * @example
  * const [closeOrderMutation, { data, loading, error }] = useCloseOrderMutation({
  *   variables: {
- *      mobile: // value for 'mobile'
  *      number: // value for 'number'
+ *      status: // value for 'status'
+ *      comment: // value for 'comment'
  *   },
  * });
  */

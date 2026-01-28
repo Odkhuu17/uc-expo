@@ -1,0 +1,41 @@
+query GetMyNotifications(
+  $first: Int
+  $after: String
+  $before: String
+  $last: Int
+  $offset: Int
+  $sort: SortFilter
+) {
+  me {
+    id
+    notifications(
+      first: $first
+      after: $after
+      before: $before
+      last: $last
+      offset: $offset
+      sort: $sort
+    ) {
+      edges {
+        cursor
+        node {
+          id
+          message
+          createdAt
+        }
+      }
+      nodes {
+        id
+        message
+        createdAt
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      totalCount
+    }
+  }
+}
