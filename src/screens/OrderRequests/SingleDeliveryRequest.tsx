@@ -120,15 +120,15 @@ const SingleDeliveryRequest = ({ item, isRent, number }: Props) => {
             }
           />
           <RowValue
-            label="Жолоочын овог:"
+            label="Жолоочийн овог:"
             value={item?.user?.lastName || '-'}
           />
           <RowValue
-            label="Жолоочын нэр:"
+            label="Жолоочийн нэр:"
             value={item?.user?.firstName || '-'}
           />
           <RowValue
-            label="Жолоочын дугаар:"
+            label="Жолоочийн дугаар:"
             value={item?.user?.mobile || '-'}
           />
           <RowValue label="Төлөв:">

@@ -6,13 +6,19 @@ import {
   useGetOrdersMyQuery,
 } from '@/gql/queries/getOrdersMy.generated';
 import SingleMyOrder from './SingleMyOrder';
+import Tab from '@/components/Tab';
 
 const MyOrders = () => {
   const [isRefetching, setIsRefetching] = useState(false);
+  const [filter, setFilter] = useState('accepted');
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const { data, loading, fetchMore, refetch } = useGetOrdersMyQuery({
     variables: {
       ordersFirst: 10,
+      filter: {
+        status: { eq: filter },
+      },
     },
     notifyOnNetworkStatusChange: true,
   });
@@ -69,6 +75,30 @@ const MyOrders = () => {
     return null;
   };
 
+  const renderTab = () => {
+    const onPressTab = (index: number) => {
+      setActiveIndex(index);
+      switch (index) {
+        case 0:
+          setFilter('accepted');
+          break;
+        case 1:
+          setFilter('completed');
+          break;
+        default:
+          setFilter('accepted');
+      }
+    };
+
+    return (
+      <Tab
+        tabs={['Баталгаажсан', 'Дууссан']}
+        onPressTab={onPressTab}
+        activeIndex={activeIndex}
+      />
+    );
+  };
+
   const renderItem = ({
     item,
   }: {
@@ -79,6 +109,8 @@ const MyOrders = () => {
 
   return (
     <CustomFlatList
+      ListHeaderComponent={renderTab}
+      stickyHeaderIndices={[0]}
       data={orders}
       loading={loading}
       refreshing={isRefetching}

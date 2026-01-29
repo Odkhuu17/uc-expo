@@ -56,7 +56,7 @@ const OrderCloseButton = ({ order }: Props) => {
     },
     validationSchema: schema,
     onSubmit: async () => {
-      if (values?.mobile === user?.mobile) {
+      if (values?.mobile === order?.acceptedDeliveryRequest?.user?.mobile) {
         await closeOrder({
           variables: {
             status: 'completed',
@@ -118,8 +118,8 @@ const OrderCloseButton = ({ order }: Props) => {
           <BottomContainer listenKeyboard>
             <Box gap="m">
               <Input
-                label="Та утасны дугаараа оруулна уу"
-                placeholder="Та утасны дугаараа оруулна уу"
+                label="Жолоочийн утасны дугаар"
+                placeholder="Та жолоочийн утасны дугаарыг оруулна уу"
                 maxLength={8}
                 keyboardAvoiding
                 keyboardType="number-pad"

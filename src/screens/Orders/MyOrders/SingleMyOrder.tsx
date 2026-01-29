@@ -17,6 +17,13 @@ const SingleMyOrder = ({ item }: Props) => {
   const isRent = isRentOrder(item?.carType);
 
   const onNavigateToDetail = () => {
+    if (item?.status === 'completed') {
+      return navigation.navigate('MsgModal', {
+        type: 'error',
+        msg: 'Дууссан захиалга байна!',
+      });
+    }
+
     navigation.navigate('OrderDetail', { number: item?.number! });
   };
 

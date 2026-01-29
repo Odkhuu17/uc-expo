@@ -21,7 +21,7 @@ export const login = async (username: string, password: string) => {
     { headers: { Authorization: `Basic ${authHeader}` } },
   );
 
-  console.log(data?.refresh_token, data?.access_token, '123123123');
+  console.log(data);
 
   await Keychain.setGenericPassword(data?.refresh_token, data?.access_token, {
     service: constants.keyChainAuthServiceKey,

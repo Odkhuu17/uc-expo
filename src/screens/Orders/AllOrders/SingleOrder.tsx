@@ -67,7 +67,9 @@ const SingleOrder = ({ item, children }: Props) => {
                 color={isRent ? 'rent' : 'primary'}
                 variant="title"
                 textDecorationLine={
-                  item?.status === 'accepted' || item?.status === 'completed'
+                  item?.status === 'accepted' ||
+                  item?.status === 'completed' ||
+                  item?.status === 'cancelled'
                     ? 'line-through'
                     : 'none'
                 }
@@ -75,7 +77,9 @@ const SingleOrder = ({ item, children }: Props) => {
                 {isRent ? item?.carType : item?.packageType}
               </Text>
             </Box>
-            {item?.status === 'accepted' || item?.status === 'completed' ? (
+            {item?.status === 'accepted' ||
+            item?.status === 'completed' ||
+            item?.status === 'cancelled' ? (
               <Label text="Идэвхгүй" backgroundColor="grey2" />
             ) : (
               <Label

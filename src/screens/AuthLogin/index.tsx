@@ -7,11 +7,12 @@ import {
 } from '@hugeicons/core-free-icons';
 import * as yup from 'yup';
 import { INavigationProps } from '@/navigations';
-import { TextInput } from 'react-native';
+import { TextInput, Platform, Alert } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import * as Keychain from 'react-native-keychain';
 import { isSensorAvailable } from '@sbaiahmed1/react-native-biometrics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 import {
   Button,
@@ -29,6 +30,7 @@ import authSlice from '@/redux/slices/auth';
 import { useGetMeLazyQuery } from '@/gql/queries/getMe.generated';
 import { login } from './helpers';
 import constants from '@/constants';
+import { useAuthCheckLoginMutation } from '@/gql/mutations/authCheckLogin.generated';
 
 const schema = yup.object().shape({
   username: yup
@@ -54,15 +56,18 @@ const AuthLogin = ({ navigation }: Props) => {
   const [availableBiometric, setAvailableBiometric] =
     useState<IBiometricType>();
   const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const [authCheckLogin, { loading }] = useAuthCheckLoginMutation();
 
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
+    // Request biometric permission on init
+    await requestBiometricPermission();
+
     const result = await isSensorAvailable();
 
-    console.log('Biometric availability result:', result);
     const enabled = await AsyncStorage.getItem(constants.bioMetricEnabledKey);
     setBiometricEnabled(enabled === 'true');
 
@@ -70,6 +75,20 @@ const AuthLogin = ({ navigation }: Props) => {
       available: result.available,
       biometryType: result.biometryType as IBiometricType['biometryType'],
     });
+  };
+
+  const requestBiometricPermission = async () => {
+    if (Platform.OS === 'ios') {
+      try {
+        const result = await request(PERMISSIONS.IOS.FACE_ID);
+        return result === RESULTS.GRANTED || result === RESULTS.LIMITED;
+      } catch (error) {
+        console.log('Face ID permission request error:', error);
+        return false;
+      }
+    }
+    // Android biometric permission is handled automatically
+    return true;
   };
 
   const onBiometricLogin = async () => {
@@ -101,6 +120,19 @@ const AuthLogin = ({ navigation }: Props) => {
     password: string;
   }) => {
     try {
+      const { data: checkLoginData } = await authCheckLogin({
+        variables: {
+          login: values.username,
+          sendToken: false,
+        },
+      });
+
+      if (!checkLoginData?.exists.exists) {
+        return navigation.navigate('MsgModal', {
+          type: 'error',
+          msg: 'Та бүртгэлгүй байна.',
+        });
+      }
       await login(username, password);
 
       const { data } = await getMe();
@@ -158,6 +190,15 @@ const AuthLogin = ({ navigation }: Props) => {
   };
 
   const onToggleBiometricCheckbox = async (value: boolean) => {
+    if (value && !availableBiometric?.available) {
+      Alert.alert(
+        'Биометрик боломжгүй',
+        'Таны төхөөрөмж биометрик баталгаажуулалтыг дэмждэггүй байна.',
+        [{ text: 'OK' }],
+      );
+      return;
+    }
+
     await AsyncStorage.setItem(
       constants.bioMetricEnabledKey,
       value ? 'true' : 'false',
@@ -220,7 +261,7 @@ const AuthLogin = ({ navigation }: Props) => {
                 <Button
                   title="Нэвтрэх"
                   onPress={handleSubmit}
-                  loading={isSubmitting}
+                  loading={isSubmitting || loading}
                 />
               </Box>
               {availableBiometric?.available && biometricEnabled && (
@@ -231,7 +272,7 @@ const AuthLogin = ({ navigation }: Props) => {
                       ? FaceIdIcon
                       : FingerAccessIcon
                   }
-                  loading={isSubmitting}
+                  loading={isSubmitting || loading}
                   onPress={onBiometricLogin}
                 />
               )}

@@ -157,12 +157,10 @@ const OrderDetail = ({ navigation, route }: Props) => {
                 <OrderDetailDelivery order={data?.order} />
               )}
               {data?.order?.my &&
-                data?.order?.status === 'accepted' &&
-                mode === 'shipper' && <OrderCloseButton order={data?.order} />}
-              {data?.order?.my &&
                 mode === 'shipper' &&
                 data?.order?.status !== 'accepted' &&
-                data?.order?.status !== 'completed' && (
+                data?.order?.status !== 'completed' &&
+                data?.order?.status !== 'cancelled' && (
                   <Box flexDirection="row" gap="s">
                     <ButtonIcon
                       shape="square"
@@ -184,7 +182,7 @@ const OrderDetail = ({ navigation, route }: Props) => {
               {mode === 'shipper' && data?.order?.acceptedDeliveryRequest && (
                 <BoxContainer gap="m">
                   <Title
-                    title="Жолоочын мэдээлэл"
+                    title="Жолоочийн мэдээлэл"
                     color={isRent ? 'rent' : 'delivery'}
                   />
                   <RowValue
@@ -251,14 +249,16 @@ const OrderDetail = ({ navigation, route }: Props) => {
               {mode === 'driver' && (
                 <>
                   {data?.order?.status !== 'accepted' &&
-                  data?.order?.status !== 'completed' ? (
+                  data?.order?.status !== 'completed' &&
+                  data?.order?.status !== 'cancelled' ? (
                     <OrderRequestButton
                       data={data?.order}
                       refetch={refetch}
                       isRent={isRent}
                     />
                   ) : (
-                    data?.order?.status !== 'completed' && (
+                    data?.order?.status !== 'completed' &&
+                    data?.order?.status !== 'cancelled' && (
                       <Box flexDirection="row" gap="m">
                         {data?.order?.origin && (
                           <Box flex={1}>
@@ -283,8 +283,17 @@ const OrderDetail = ({ navigation, route }: Props) => {
                   )}
                 </>
               )}
+              {data?.order?.my &&
+                data?.order?.status === 'accepted' &&
+                mode === 'shipper' && <OrderCloseButton order={data?.order} />}
               {data?.order?.status === 'completed' && (
                 <Warning type="warning" description="Захиалга дууссан байна!" />
+              )}
+              {data?.order?.status === 'cancelled' && (
+                <Warning
+                  type="warning"
+                  description="Захиалга цуцлагдсан байна!"
+                />
               )}
             </Box>
           )}
